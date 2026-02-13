@@ -1,7 +1,9 @@
 // Main JavaScript Entry Point
-import 'flowbite';
+// Flowbite is loaded via CDN in HTML files
 
-// Initialize Flowbite components
-if (typeof initFlowbite === 'function') {
+// Initialize Flowbite components when available
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof initFlowbite === 'function') {
     initFlowbite();
-}
+  }
+});
