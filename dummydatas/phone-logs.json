@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PH001",
+    "caller": "Parent - Robert Doe",
+    "receiver": "Class Teacher",
+    "purpose": "Student Progress Inquiry",
+    "date": "2024-02-05",
+    "time": "09:30 AM",
+    "duration": "10 minutes",
+    "notes": "Discussed student performance"
+  }
+]

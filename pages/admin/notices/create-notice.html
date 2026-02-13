@@ -1,0 +1,129 @@
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Notice</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                     <li class="inline-flex items-center">
+                        <a href="#" onclick="loadNoticesList()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-bullhorn mr-2 ml-1"></i> Notices
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Create</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <form id="create-notice-form">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Basic Info Card -->
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Notice Details</h3>
+                    <div class="mb-4">
+                        <label for="notice-title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notice Title</label>
+                        <input type="text" id="notice-title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="notice-content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Content</label>
+                        <textarea id="notice-content" rows="8" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type notice content here..." required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attach Files</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="multiple_files" type="file" multiple>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">SVG, PNG, JPG or PDF (MAX. 5MB).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Options -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- Settings Card -->
+                <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Settings</h3>
+                    
+                    <div class="mb-4">
+                        <label for="notice-type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notice Type</label>
+                        <select id="notice-type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="General">General</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Exam">Exam</option>
+                            <option value="Holiday">Holiday</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="notice-priority" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Priority Level</label>
+                        <select id="notice-priority" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Target Audience</label>
+                        <div class="space-y-2">
+                             <div class="flex items-center">
+                                <input id="audience-all" type="checkbox" value="All" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" checked onchange="toggleAudience(this)">
+                                <label for="audience-all" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">All</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="audience-students" type="checkbox" value="Students" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="toggleAudience(this)">
+                                <label for="audience-students" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Students</label>
+                            </div>
+                             <div class="flex items-center">
+                                <input id="audience-teachers" type="checkbox" value="Teachers" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="toggleAudience(this)">
+                                <label for="audience-teachers" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Teachers</label>
+                            </div>
+                             <div class="flex items-center">
+                                <input id="audience-staff" type="checkbox" value="Staff" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="toggleAudience(this)">
+                                <label for="audience-staff" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Staff</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="publish-date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Publish From</label>
+                        <input type="date" id="publish-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                    Publish Notice
+                </button>
+                <button type="button" onclick="loadNoticesList()" class="w-full text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                    Cancel
+                </button>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Toast -->
+<div id="toast-notice" class="hidden fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/></svg>
+    </div>
+    <div class="ml-3 text-sm font-normal">Notice published successfully!</div>
+</div>

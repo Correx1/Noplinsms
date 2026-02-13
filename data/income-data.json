@@ -1,0 +1,46 @@
+[
+    {
+        "id": "INC001",
+        "date": "2023-10-01",
+        "type": "School Fees",
+        "name": "John Doe (S001)",
+        "invoice": "INV-1001",
+        "amount": 50000,
+        "method": "Bank Transfer",
+        "description": "First Term Fees",
+        "addedBy": "Admin"
+    },
+    {
+        "id": "INC002",
+        "date": "2023-10-05",
+        "type": "Book Sales",
+        "name": "Jane Smith (S002)",
+        "invoice": "INV-1002",
+        "amount": 15000,
+        "method": "Cash",
+        "description": "Textbooks purchase",
+        "addedBy": "Librarian"
+    },
+    {
+        "id": "INC003",
+        "date": "2023-10-10",
+        "type": "Uniform Sales",
+        "name": "Michael Brown (S003)",
+        "invoice": "INV-1003",
+        "amount": 12000,
+        "method": "Card",
+        "description": "Full uniform set",
+        "addedBy": "Admin"
+    },
+    {
+        "id": "INC004",
+        "date": "2023-10-15",
+        "type": "Donations",
+        "name": "Alumni Association",
+        "invoice": "INV-1004",
+        "amount": 100000,
+        "method": "Cheque",
+        "description": "Library Fund Donation",
+        "addedBy": "Principal"
+    }
+]

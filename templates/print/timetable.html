@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Timetable</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/print.css">
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="print-template bg-white shadow-lg p-8 mx-auto landscape-print">
+        
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold uppercase">Class Timetable - SSS 2B</h1>
+            <p class="text-gray-600">Effective from: Sept 12, 2023</p>
+        </div>
+
+        <table class="w-full border-collapse border border-gray-800 text-center">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-800 p-2">Day / Time</th>
+                    <th class="border border-gray-800 p-2">08:00 - 09:00</th>
+                    <th class="border border-gray-800 p-2">09:00 - 10:00</th>
+                    <th class="border border-gray-800 p-2 bg-gray-300">10:00 - 10:30</th>
+                    <th class="border border-gray-800 p-2">10:30 - 11:30</th>
+                    <th class="border border-gray-800 p-2">11:30 - 12:30</th>
+                    <th class="border border-gray-800 p-2 bg-gray-300">12:30 - 13:00</th>
+                    <th class="border border-gray-800 p-2">13:00 - 14:00</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="font-bold border border-gray-800 bg-gray-50">Monday</td>
+                    <td class="border border-gray-800">Mathematics</td>
+                    <td class="border border-gray-800">English</td>
+                    <td class="border border-gray-800 bg-gray-100 font-bold vertical-text" rowspan="5"><span style="writing-mode: vertical-rl;">BREAK</span></td>
+                    <td class="border border-gray-800">Physics</td>
+                    <td class="border border-gray-800">Chemistry</td>
+                    <td class="border border-gray-800 bg-gray-100 font-bold vertical-text" rowspan="5"><span style="writing-mode: vertical-rl;">LUNCH</span></td>
+                    <td class="border border-gray-800">Biology</td>
+                </tr>
+                <tr>
+                    <td class="font-bold border border-gray-800 bg-gray-50">Tuesday</td>
+                    <td class="border border-gray-800">Physics</td>
+                    <td class="border border-gray-800">Mathematics</td>
+                    <td class="border border-gray-800">Geography</td>
+                    <td class="border border-gray-800">English</td>
+                    <td class="border border-gray-800">Sports</td>
+                </tr>
+                <tr>
+                    <td class="font-bold border border-gray-800 bg-gray-50">Wednesday</td>
+                    <td class="border border-gray-800">Chemistry</td>
+                    <td class="border border-gray-800">Biology</td>
+                    <td class="border border-gray-800">Mathematics</td>
+                    <td class="border border-gray-800">Economics</td>
+                    <td class="border border-gray-800">Club Activity</td>
+                </tr>
+                <tr>
+                    <td class="font-bold border border-gray-800 bg-gray-50">Thursday</td>
+                    <td class="border border-gray-800">English</td>
+                    <td class="border border-gray-800">Government</td>
+                    <td class="border border-gray-800">Biology</td>
+                    <td class="border border-gray-800">Physics</td>
+                    <td class="border border-gray-800">Library</td>
+                </tr>
+                <tr>
+                    <td class="font-bold border border-gray-800 bg-gray-50">Friday</td>
+                    <td class="border border-gray-800">Mathematics</td>
+                    <td class="border border-gray-800">Further Math</td>
+                    <td class="border border-gray-800">Chemistry</td>
+                    <td class="border border-gray-800">Civic Ed</td>
+                    <td class="border border-gray-800">Assembly</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- Print Controls -->
+    <div class="fixed bottom-4 right-4 no-print flex gap-2">
+        <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">Print Timetable</button>
+        <button onclick="window.close()" class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600">Close</button>
+    </div>
+
+</body>
+</html>

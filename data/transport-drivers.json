@@ -1,0 +1,32 @@
+[
+    {
+        "id": "DRV001",
+        "name": "Mr. Sunday Okon",
+        "license": "LIC-99887766",
+        "expiry": "2025-05-10",
+        "phone": "08012345678",
+        "vehicleId": "VH001",
+        "routeId": "RT001",
+        "photo": "driver1.jpg"
+    },
+    {
+        "id": "DRV002",
+        "name": "Mr. Emeka Nnamdi",
+        "license": "LIC-55443322",
+        "expiry": "2024-11-20",
+        "phone": "08098765432",
+        "vehicleId": "VH003",
+        "routeId": "RT002",
+        "photo": "driver2.jpg"
+    },
+    {
+        "id": "DRV003",
+        "name": "Mr. Musa Ibrahim",
+        "license": "LIC-11001100",
+        "expiry": "2026-02-15",
+        "phone": "07055555555",
+        "vehicleId": "VH002",
+        "routeId": "RT003",
+        "photo": "driver3.jpg"
+    }
+]

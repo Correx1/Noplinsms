@@ -1,0 +1,23 @@
+[
+    {
+        "id": "MSG001",
+        "dateTime": "2023-10-25T09:00",
+        "sender": "08011223344",
+        "message": "Good morning, I am yet to receive my child's result. Name: Musa Ibrahim, JSS1.",
+        "status": "Unread"
+    },
+    {
+        "id": "MSG002",
+        "dateTime": "2023-10-24T14:30",
+        "sender": "08099887766",
+        "message": "Please confirm if tomorrow is a public holiday.",
+        "status": "Read"
+    },
+    {
+        "id": "MSG003",
+        "dateTime": "2023-10-23T10:15",
+        "sender": "07055443322",
+        "message": "Thank you for the update on the excursion.",
+        "status": "Read"
+    }
+]

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fee Receipt</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/print.css">
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="print-template bg-white shadow-lg p-8 mx-auto max-w-2xl min-h-[500px]">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b-2 border-gray-800 pb-4 mb-6">
+            <div class="flex items-center">
+                <img src="../../assets/logo.png" class="h-16 w-16 mr-4" onerror="this.src='https://via.placeholder.com/64'">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 uppercase">Springfield High School</h1>
+                    <p class="text-sm text-gray-600">123 Education Lane, Academic City</p>
+                    <p class="text-sm text-gray-600">Phone: (555) 123-4567 | Email: fees@springfield.edu</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <h2 class="text-xl font-bold text-gray-500 uppercase">Fee Receipt</h2>
+                <p class="text-sm font-mono mt-2">RCP-2023-8492</p>
+                <p class="text-sm">Date: 25 Oct 2023</p>
+            </div>
+        </div>
+
+        <!-- Student Details -->
+        <div class="grid grid-cols-2 gap-8 mb-6 text-sm">
+            <div>
+                <p class="text-gray-500 uppercase text-xs">Received From</p>
+                <p class="font-bold text-lg">Alex Johnson</p>
+                <p>Class: SSS 2B | Roll No: 24</p>
+                <p>ID: STU-2023-001</p>
+            </div>
+            <div class="text-right">
+                <p class="text-gray-500 uppercase text-xs">Payment Method</p>
+                <p class="font-bold">Bank Transfer</p>
+                <p>Ref: TXN-99887766</p>
+            </div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <table class="w-full mb-6">
+            <thead class="bg-gray-100 border-b border-gray-300">
+                <tr>
+                    <th class="text-left p-2">Description</th>
+                    <th class="text-right p-2">Amount (₦)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="p-2 border-b">Tuition Fee (Term 1)</td>
+                    <td class="text-right p-2 border-b">45,000.00</td>
+                </tr>
+                <tr>
+                    <td class="p-2 border-b">ICT Development Levy</td>
+                    <td class="text-right p-2 border-b">5,000.00</td>
+                </tr>
+                <tr>
+                    <td class="p-2 border-b">Sports Fee</td>
+                    <td class="text-right p-2 border-b">2,000.00</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="bg-gray-50 font-bold">
+                    <td class="p-2 text-right">TOTAL PAID</td>
+                    <td class="p-2 text-right text-lg">₦ 52,000.00</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Amount in Words -->
+        <div class="mb-12">
+            <p class="text-xs text-gray-500 uppercase">Amount in words</p>
+            <p class="italic text-gray-700">Fifty-two thousand Naira only.</p>
+        </div>
+
+        <!-- Signatures -->
+        <div class="flex justify-between mt-12 pt-4">
+            <div class="text-center">
+                <div class="border-t border-gray-400 w-32 mx-auto mb-2"></div>
+                <p class="text-xs text-gray-500">Cashier Signature</p>
+            </div>
+            <div class="text-center">
+                <div class="border-t border-gray-400 w-32 mx-auto mb-2"></div>
+                <p class="text-xs text-gray-500">Authorized Signatory</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Print Controls -->
+    <div class="fixed bottom-4 right-4 no-print flex gap-2">
+        <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">Print Receipt</button>
+        <button onclick="window.close()" class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600">Close</button>
+    </div>
+
+</body>
+</html>

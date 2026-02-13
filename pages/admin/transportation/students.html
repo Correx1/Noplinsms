@@ -1,0 +1,83 @@
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Transportation</span>
+                    </div>
+                </li>
+                <li>
+                     <span class="ml-1 text-gray-500 md:ml-2 dark:text-gray-400">Allocations</span>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Student Allocation</h1>
+    </div>
+</div>
+
+<div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Allocate Form -->
+    <div class="md:col-span-1">
+        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 sticky top-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Assign Transport</h3>
+            <form id="trans-allocate-form">
+                <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Student</label>
+                     <input type="text" id="alloc-student-name" placeholder="Student Name" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Route</label>
+                     <select id="alloc-route-id" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Choose Route...</option>
+                        <!-- Populated via JS -->
+                     </select>
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pickup/Drop Stop</label>
+                     <input type="text" id="alloc-stop" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Term</label>
+                     <select id="alloc-term" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="1st Term">1st Term</option>
+                        <option value="2nd Term">2nd Term</option>
+                        <option value="3rd Term">3rd Term</option>
+                     </select>
+                </div>
+                <button type="submit" class="w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-500 dark:hover:bg-green-600 focus:outline-none dark:focus:ring-green-800">
+                    Allocate Transport
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Allocation List -->
+    <div class="md:col-span-2">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Allocation List</h3>
+            </div>
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Student</th>
+                            <th scope="col" class="px-6 py-3">Route</th>
+                            <th scope="col" class="px-6 py-3">Stop</th>
+                            <th scope="col" class="px-6 py-3">Term</th>
+                             <th scope="col" class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trans-allocation-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+[
+    {
+        "id": "BK001",
+        "title": "Introduction to Physics",
+        "author": "John Smith",
+        "isbn": "978-3-16-148410-0",
+        "category": "Science",
+        "publisher": "Academic Press",
+        "year": "2020",
+        "totalCopies": 10,
+        "available": 8,
+        "issued": 2,
+        "shelf": "A1-05",
+        "description": "Fundamental concepts of physics for high school students.",
+        "cover": "physics_intro.jpg"
+    },
+    {
+        "id": "BK002",
+        "title": "Modern History of Nigeria",
+        "author": "Chika Okeke",
+        "isbn": "978-1-56-148410-1",
+        "category": "History",
+        "publisher": "Heritage Books",
+        "year": "2018",
+        "totalCopies": 5,
+        "available": 5,
+        "issued": 0,
+        "shelf": "B2-10",
+        "description": "Comprehensive history of Nigeria from independence to date.",
+        "cover": "nigeria_history.jpg"
+    },
+    {
+        "id": "BK003",
+        "title": "Advanced Mathematics",
+        "author": "Alan Turing",
+        "isbn": "978-0-12-345678-9",
+        "category": "Mathematics",
+        "publisher": "MathWorld",
+        "year": "2021",
+        "totalCopies": 15,
+        "available": 10,
+        "issued": 5,
+        "shelf": "C3-15",
+        "description": "Advanced topics in calculus and algebra.",
+        "cover": "adv_math.jpg"
+    }
+]

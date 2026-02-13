@@ -1,0 +1,82 @@
+/* Print Specific Styles */
+
+/* General Print Reset */
+@media print {
+    @page {
+        margin: 0.5cm;
+        size: auto; /* auto is the initial value */
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        font-family: 'Times New Roman', Times, serif; /* Serifs read better in print */
+        color: black;
+    }
+
+    /* Hide UI elements */
+    .no-print, 
+    nav, 
+    aside, 
+    .sidebar, 
+    button, 
+    .btn, 
+    footer,
+    .modal {
+        display: none !important;
+    }
+
+    /* Force background colors/images */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* Layout tweaks */
+    .print-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Page Breaks */
+    .page-break {
+        page-break-after: always;
+        break-after: page;
+    }
+
+    .avoid-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Tables */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #000;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    /* ID Cards Grid */
+    .id-card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* 2 cols for standard paper */
+        gap: 20px;
+    }
+}
+
+/* Screen styles for Preview (Optional: makes templates look okay on screen too) */
+.print-template {
+    background: white;
+    max-width: 210mm; /* A4 width */
+    margin: 0 auto;
+    padding: 20px;
+}

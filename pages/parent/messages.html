@@ -1,0 +1,153 @@
+<!-- Messages Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">Messages</h1>
+        <p class="text-gray-600 dark:text-gray-300">Communicate with teachers and school administration</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Compose Message -->
+        <div class="lg:col-span-1">
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Compose Message</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">To</label>
+                        <select id="messageRecipient" class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                            <option value="">Select Recipient</option>
+                            <option value="Class Teacher - SSS 2B">Class Teacher - SSS 2B</option>
+                            <option value="Class Teacher - JSS 3A">Class Teacher - JSS 3A</option>
+                            <option value="Principal">Principal</option>
+                            <option value="Admin Office">Admin Office</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Subject</label>
+                        <input type="text" id="messageSubject" class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" placeholder="Message subject">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Message</label>
+                        <textarea id="messageText" rows="6" class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" placeholder="Type your message here..."></textarea>
+                    </div>
+                    <button type="button" onclick="sendMessage()" class="w-full px-5 py-2.5 text-white bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 font-medium rounded-lg text-sm">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Messages List -->
+        <div class="lg:col-span-2">
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Inbox</h3>
+                </div>
+                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                    <!-- Message 1 -->
+                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onclick="viewMessage('Class Teacher - SSS 2B', 'Parent-Teacher Meeting Request', 'Oct 10, 2026')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center">
+                                    <i class="fas fa-user text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100">Class Teacher - SSS 2B</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Parent-Teacher Meeting Request</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Oct 10, 2026</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 ml-13">Dear Parent, I would like to schedule a meeting to discuss Alex's recent performance...</p>
+                        <div class="mt-2">
+                            <span class="px-2 py-1 bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 text-xs font-medium rounded-full">Unread</span>
+                        </div>
+                    </div>
+
+                    <!-- Message 2 -->
+                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onclick="viewMessage('Principal', 'PTA Meeting Notice', 'Oct 8, 2026')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100">Principal</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">PTA Meeting Notice</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Oct 8, 2026</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 ml-13">Dear Parents, This is to inform you about the upcoming PTA meeting scheduled for...</p>
+                        <div class="mt-2">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">Read</span>
+                        </div>
+                    </div>
+
+                    <!-- Message 3 -->
+                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onclick="viewMessage('Class Teacher - JSS 3A', 'Excellent Progress Update', 'Oct 5, 2026')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+                                    <i class="fas fa-user text-green-600 dark:text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100">Class Teacher - JSS 3A</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Excellent Progress Update</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Oct 5, 2026</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 ml-13">Dear Mr. Johnson, I'm pleased to inform you that Emily has shown excellent progress...</p>
+                        <div class="mt-2">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">Read</span>
+                        </div>
+                    </div>
+
+                    <!-- Message 4 -->
+                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onclick="viewMessage('Admin Office', 'Fee Payment Reminder', 'Oct 1, 2026')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-800 flex items-center justify-center">
+                                    <i class="fas fa-building text-orange-600 dark:text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100">Admin Office</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Fee Payment Reminder</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Oct 1, 2026</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 ml-13">Dear Parent, This is a friendly reminder that the tuition fee for Alex Johnson...</p>
+                        <div class="mt-2">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">Read</span>
+                        </div>
+                    </div>
+
+                    <!-- Message 5 -->
+                    <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer" onclick="viewMessage('Class Teacher - SSS 2B', 'Assignment Submission Notice', 'Sep 28, 2026')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center">
+                                    <i class="fas fa-user text-primary-600 dark:text-primary-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900 dark:text-gray-100">Class Teacher - SSS 2B</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-300">Assignment Submission Notice</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Sep 28, 2026</span>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 ml-13">Dear Parent, Please remind Alex to submit the pending mathematics assignment...</p>
+                        <div class="mt-2">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full">Read</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../js/parent-pages.js"></script>

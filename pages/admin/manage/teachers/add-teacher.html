@@ -1,0 +1,223 @@
+<!-- Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add New Teacher</h1>
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome(); return false;" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <i class="fas fa-home mr-2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                        <a href="#" onclick="loadTeachersPage(); return false;" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Teachers</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Add New</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <button onclick="loadTeachersPage()" class="mt-4 md:mt-0 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back
+    </button>
+</div>
+
+<!-- Tabs -->
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6">
+    <div class="border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="teacherTabs" role="tablist">
+            <li class="mr-2">
+                <button onclick="switchTeacherTab('personal')" class="inline-block p-4 border-b-2 rounded-t-lg active text-primary-600 border-primary-600 dark:text-primary-500 dark:border-primary-500" id="personal-tab" type="button" role="tab">Personal Info</button>
+            </li>
+            <li class="mr-2">
+                <button onclick="switchTeacherTab('employment')" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="employment-tab" type="button" role="tab">Employment Info</button>
+            </li>
+            <li class="mr-2">
+                <button onclick="switchTeacherTab('documents')" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="documents-tab" type="button" role="tab">Documents</button>
+            </li>
+        </ul>
+    </div>
+
+    <form id="addTeacherForm" class="p-6">
+        <div id="teacherTabContent">
+            
+            <!-- Personal Info -->
+            <div id="personal" role="tabpanel">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                     <div class="md:col-span-2 flex items-center gap-4">
+                        <img id="photo-preview" class="w-20 h-20 rounded-full border-2 border-gray-200 object-cover" src="https://ui-avatars.com/api/?name=New+Teacher&background=random" alt="Preview">
+                        <label class="block">
+                             <span class="sr-only">Choose profile photo</span>
+                             <input type="file" id="teacher-photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                        </label>
+                     </div>
+
+                     <div>
+                         <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name *</label>
+                         <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white" required>
+                     </div>
+                     <div>
+                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name *</label>
+                         <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white" required>
+                     </div>
+                     <div>
+                         <label for="dob" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth</label>
+                         <input type="date" id="dob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
+                     </div>
+                     <div>
+                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender *</label>
+                         <div class="flex items-center space-x-4">
+                             <div class="flex items-center">
+                                 <input id="gender-male" type="radio" value="Male" name="gender" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" checked>
+                                 <label for="gender-male" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
+                             </div>
+                             <div class="flex items-center">
+                                 <input id="gender-female" type="radio" value="Female" name="gender" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
+                                 <label for="gender-female" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
+                             </div>
+                         </div>
+                     </div>
+                     <div>
+                         <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone</label>
+                         <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
+                     </div>
+                     <div>
+                         <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                         <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
+                     </div>
+                     <div class="md:col-span-2">
+                         <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                         <textarea id="address" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"></textarea>
+                     </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="switchTeacherTab('employment')" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Next: Employment Info <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Employment Info -->
+            <div id="employment" role="tabpanel" class="hidden">
+                 <div class="grid gap-6 mb-6 md:grid-cols-2">
+                     <div>
+                         <label for="joining_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Joining Date *</label>
+                         <input type="date" id="joining_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white" required>
+                     </div>
+                     <div>
+                         <label for="qualification" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Qualification</label>
+                         <input type="text" id="qualification" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white" placeholder="e.g. B.Ed, M.Sc">
+                     </div>
+                     <div>
+                         <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salary (₦)</label>
+                         <input type="number" id="salary" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white">
+                     </div>
+                     <div>
+                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Employment Type</label>
+                          <div class="flex items-center space-x-4">
+                             <div class="flex items-center">
+                                 <input id="type-full" type="radio" value="Full-time" name="emp_type" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500" checked>
+                                 <label for="type-full" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Full-time</label>
+                             </div>
+                             <div class="flex items-center">
+                                 <input id="type-part" type="radio" value="Part-time" name="emp_type" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
+                                 <label for="type-part" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Part-time</label>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     <!-- Multi-select for Subjects -->
+                     <div class="md:col-span-2">
+                        <label for="subjects" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject Specialization (Hold Ctrl/Cmd to select multiple)</label>
+                        <select multiple id="subjects" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white h-24">
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="English">English</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Geography">Geography</option>
+                            <option value="History">History</option>
+                            <option value="Economics">Economics</option>
+                        </select>
+                     </div>
+
+                     <!-- Multi-select for Classes -->
+                     <div class="md:col-span-2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assign Classes</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 bg-gray-50 p-4 rounded-lg border border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+                             <!-- Checkboxes generated here normally, hardcoding for demo -->
+                             <label class="flex items-center"><input type="checkbox" value="JSS1 A" class="mr-2 class-checkbox text-primary-600 rounded"> JSS1 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="JSS1 B" class="mr-2 class-checkbox text-primary-600 rounded"> JSS1 B</label>
+                             <label class="flex items-center"><input type="checkbox" value="JSS2 A" class="mr-2 class-checkbox text-primary-600 rounded"> JSS2 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="JSS2 B" class="mr-2 class-checkbox text-primary-600 rounded"> JSS2 B</label>
+                             <label class="flex items-center"><input type="checkbox" value="JSS3 A" class="mr-2 class-checkbox text-primary-600 rounded"> JSS3 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="JSS3 B" class="mr-2 class-checkbox text-primary-600 rounded"> JSS3 B</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS1 A" class="mr-2 class-checkbox text-primary-600 rounded"> SS1 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS1 B" class="mr-2 class-checkbox text-primary-600 rounded"> SS1 B</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS2 A" class="mr-2 class-checkbox text-primary-600 rounded"> SS2 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS2 B" class="mr-2 class-checkbox text-primary-600 rounded"> SS2 B</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS3 A" class="mr-2 class-checkbox text-primary-600 rounded"> SS3 A</label>
+                             <label class="flex items-center"><input type="checkbox" value="SS3 B" class="mr-2 class-checkbox text-primary-600 rounded"> SS3 B</label>
+                        </div>
+                     </div>
+                </div>
+                 <div class="flex justify-between mt-6">
+                    <button type="button" onclick="switchTeacherTab('personal')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <button type="button" onclick="switchTeacherTab('documents')" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Next: Documents <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div id="documents" role="tabpanel" class="hidden">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="border p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_resume">Resume / CV</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white dark:text-gray-400 focus:outline-none dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400" id="file_resume" type="file">
+                    </div>
+                    <div class="border p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_cert">Certificates</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white dark:text-gray-400 focus:outline-none dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400" id="file_cert" type="file" multiple>
+                    </div>
+                    <div class="border p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_id">ID Proof</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white dark:text-gray-400 focus:outline-none dark:bg-gray-600 dark:border-gray-600 dark:placeholder-gray-400" id="file_id" type="file">
+                    </div>
+                </div>
+
+                <div class="flex justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                     <button type="button" onclick="switchTeacherTab('employment')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <div class="space-x-2">
+                        <button onclick="loadTeachersPage()" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                            Cancel
+                        </button>
+                        <button type="submit" id="save-teacher-btn" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                            Save Teacher
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- Toast -->
+<div id="toast-teacher" class="hidden fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/></svg>
+    </div>
+    <div class="ml-3 text-sm font-normal">Teacher saved successfully!</div>
+</div>

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "A001",
+    "date": "2024-02-05",
+    "classId": "C001",
+    "className": "Grade 10 - A",
+    "studentId": "S001",
+    "studentName": "John Doe",
+    "status": "Present"
+  },
+  {
+    "id": "A002",
+    "date": "2024-02-05",
+    "classId": "C001",
+    "className": "Grade 10 - A",
+    "studentId": "S002",
+    "studentName": "Jane Smith",
+    "status": "Present"
+  },
+  {
+    "id": "A003",
+    "date": "2024-02-05",
+    "classId": "C002",
+    "className": "Grade 9 - B",
+    "studentId": "S003",
+    "studentName": "Michael Johnson",
+    "status": "Absent"
+  }
+]

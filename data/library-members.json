@@ -1,0 +1,26 @@
+[
+    {
+        "id": "STU001",
+        "name": "Ade Bowale",
+        "type": "Student",
+        "dateJoined": "2022-09-10",
+        "status": "Active",
+        "booksIssued": 1
+    },
+    {
+        "id": "TCH005",
+        "name": "Mr. Okonkwo",
+        "type": "Teacher",
+        "dateJoined": "2021-01-15",
+        "status": "Active",
+        "booksIssued": 1
+    },
+    {
+        "id": "STf010",
+        "name": "Mrs. Johnson",
+        "type": "Staff",
+        "dateJoined": "2023-05-20",
+        "status": "Active",
+        "booksIssued": 0
+    }
+]

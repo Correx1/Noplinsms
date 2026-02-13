@@ -1,0 +1,79 @@
+<header class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-30">
+  <div class="px-4 py-3 lg:px-6">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <button id="sidebar-toggle" class="p-2 text-gray-600 rounded-lg lg:hidden hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+        <a href="/pages/admin/dashboard.html" class="flex items-center ml-2 lg:ml-0">
+          <span class="text-xl font-semibold text-primary-600">School MS</span>
+        </a>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <!-- Notifications -->
+        <button type="button" class="p-2 text-gray-500 rounded-lg hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+          </svg>
+        </button>
+
+        <!-- User Menu -->
+        <button type="button" class="flex items-center gap-2 p-2 text-sm rounded-lg hover:bg-gray-100" id="user-menu-button">
+          <div class="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-medium">
+            A
+          </div>
+          <span class="hidden md:block text-gray-700 font-medium">Admin</span>
+          <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="user-dropdown" class="hidden absolute right-4 top-14 z-50 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-44">
+          <div class="px-4 py-3 text-sm text-gray-900">
+            <div class="font-medium">Admin User</div>
+            <div class="text-gray-500 truncate">admin@school.com</div>
+          </div>
+          <ul class="py-2 text-sm text-gray-700">
+            <li>
+              <a href="/pages/admin/settings/profile.html" class="block px-4 py-2 hover:bg-gray-100">Profile</a>
+            </li>
+            <li>
+              <a href="/pages/admin/settings/users.html" class="block px-4 py-2 hover:bg-gray-100">Settings</a>
+            </li>
+          </ul>
+          <div class="py-2">
+            <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sign out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script type="module">
+  
+  // User menu toggle
+  const userMenuBtn = document.getElementById('user-menu-button');
+  const userDropdown = document.getElementById('user-dropdown');
+  
+  userMenuBtn?.addEventListener('click', () => {
+    userDropdown.classList.toggle('hidden');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!userMenuBtn?.contains(e.target) && !userDropdown?.contains(e.target)) {
+      userDropdown?.classList.add('hidden');
+    }
+  });
+
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    Auth.logout();
+  });
+</script>

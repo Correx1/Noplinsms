@@ -1,0 +1,46 @@
+[
+    {
+        "id": "EXP001",
+        "date": "2023-10-02",
+        "type": "Salaries",
+        "payee": "Teaching Staff",
+        "invoice": "BILL-5001",
+        "amount": 450000,
+        "method": "Bank Transfer",
+        "description": "October Salaries",
+        "addedBy": "Accountant"
+    },
+    {
+        "id": "EXP002",
+        "date": "2023-10-05",
+        "type": "Utilities",
+        "payee": "Power Holding Company",
+        "invoice": "BILL-5002",
+        "amount": 25000,
+        "method": "Online",
+        "description": "Electricity Bill",
+        "addedBy": "Admin"
+    },
+    {
+        "id": "EXP003",
+        "date": "2023-10-12",
+        "type": "Maintenance",
+        "payee": "FixIt Services",
+        "invoice": "BILL-5003",
+        "amount": 15000,
+        "method": "Cash",
+        "description": "AC Repair in Staff Room",
+        "addedBy": "Admin"
+    },
+    {
+        "id": "EXP004",
+        "date": "2023-10-20",
+        "type": "Office Supplies",
+        "payee": "Stationery World",
+        "invoice": "BILL-5004",
+        "amount": 8000,
+        "method": "Card",
+        "description": "Paper, Pens, Markers",
+        "addedBy": "Admin"
+    }
+]

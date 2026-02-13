@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report Card</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/print.css">
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="print-template bg-white shadow-lg p-8 mx-auto max-w-4xl">
+        
+        <!-- School Header -->
+        <div class="text-center border-b-2 border-gray-800 pb-4 mb-6">
+            <img src="../../assets/logo.png" class="h-20 w-20 mx-auto mb-2" onerror="this.src='https://via.placeholder.com/80'">
+            <h1 class="text-3xl font-bold text-gray-900 uppercase">Springfield High School</h1>
+            <p class="text-gray-600">First Term Student Report Card - 2023/2024 Session</p>
+        </div>
+
+        <!-- Student Info -->
+        <div class="flex justify-between mb-6 bg-gray-50 p-4 rounded border border-gray-200">
+            <div>
+                <p><strong>Name:</strong> Alex Johnson</p>
+                <p><strong>Student ID:</strong> STU-2023-001</p>
+                <p><strong>Class:</strong> SSS 2B</p>
+            </div>
+            <div class="text-right">
+                <p><strong>Attendance:</strong> 95%</p>
+                <p><strong>Class Teacher:</strong> Mr. Anderson</p>
+                <p><strong>Position:</strong> 4th</p>
+            </div>
+        </div>
+
+        <!-- Marks Table -->
+        <table class="w-full text-sm mb-6 border-collapse border border-gray-300">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 p-2 text-left">Subject</th>
+                    <th class="border border-gray-300 p-2 text-center w-24">C.A (40)</th>
+                    <th class="border border-gray-300 p-2 text-center w-24">Exam (60)</th>
+                    <th class="border border-gray-300 p-2 text-center w-24">Total (100)</th>
+                    <th class="border border-gray-300 p-2 text-center w-24">Grade</th>
+                    <th class="border border-gray-300 p-2 text-left">Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-gray-300 p-2">Mathematics</td>
+                    <td class="border border-gray-300 p-2 text-center">35</td>
+                    <td class="border border-gray-300 p-2 text-center">48</td>
+                    <td class="border border-gray-300 p-2 text-center font-bold">83</td>
+                    <td class="border border-gray-300 p-2 text-center">A</td>
+                    <td class="border border-gray-300 p-2">Excellent</td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 p-2">English Language</td>
+                    <td class="border border-gray-300 p-2 text-center">32</td>
+                    <td class="border border-gray-300 p-2 text-center">50</td>
+                    <td class="border border-gray-300 p-2 text-center font-bold">82</td>
+                    <td class="border border-gray-300 p-2 text-center">A</td>
+                    <td class="border border-gray-300 p-2">Very Good</td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 p-2">Physics</td>
+                    <td class="border border-gray-300 p-2 text-center">28</td>
+                    <td class="border border-gray-300 p-2 text-center">42</td>
+                    <td class="border border-gray-300 p-2 text-center font-bold">70</td>
+                    <td class="border border-gray-300 p-2 text-center">B</td>
+                    <td class="border border-gray-300 p-2">Good</td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 p-2">Chemistry</td>
+                    <td class="border border-gray-300 p-2 text-center">25</td>
+                    <td class="border border-gray-300 p-2 text-center">40</td>
+                    <td class="border border-gray-300 p-2 text-center font-bold">65</td>
+                    <td class="border border-gray-300 p-2 text-center">B</td>
+                    <td class="border border-gray-300 p-2">Credit</td>
+                </tr>
+            </tbody>
+            <tfoot class="bg-gray-50">
+                <tr>
+                    <td colspan="3" class="border border-gray-300 p-2 text-right font-bold">OVERALL PERCENTAGE</td>
+                    <td class="border border-gray-300 p-2 text-center font-bold text-lg">75.0%</td>
+                    <td colspan="2" class="border border-gray-300"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Grading Key -->
+        <div class="mb-6 text-xs text-gray-500">
+            <p><strong>Grading System:</strong> A: 75-100 (Excellent), B: 65-74 (Very Good), C: 50-64 (Credit), D: 40-49 (Pass), F: 0-39 (Fail)</p>
+        </div>
+
+        <!-- Remarks -->
+        <div class="grid grid-cols-2 gap-8 mt-12">
+            <div>
+                <p class="font-bold border-b border-gray-300 mb-2">Class Teacher's Remark:</p>
+                <p class="italic text-gray-700 h-16">Alex is a focused student but needs to put more effort into practical Chemistry.</p>
+                <p class="text-right text-sm mt-2">Signature: ________________</p>
+            </div>
+            <div>
+                 <p class="font-bold border-b border-gray-300 mb-2">Principal's Remark:</p>
+                 <p class="italic text-gray-700 h-16">Promoted to the next class. Keep up the good work.</p>
+                 <p class="text-right text-sm mt-2">Signature: ________________</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Print Controls -->
+    <div class="fixed bottom-4 right-4 no-print flex gap-2">
+        <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">Print Report</button>
+        <button onclick="window.close()" class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600">Close</button>
+        <button id="download-pdf-btn" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">Download PDF</button>
+    </div>
+
+    <!-- PDF Lib -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../../js/pdf-generator.js"></script>
+
+</body>
+</html>

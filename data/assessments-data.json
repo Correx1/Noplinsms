@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ASM001",
+    "title": "Period 1 Math Quiz",
+    "type": "Quiz",
+    "class": "SS3",
+    "section": ["A", "B"],
+    "subject": "Mathematics",
+    "date": "2024-05-15",
+    "duration": "45 mins",
+    "totalMarks": 20,
+    "passMarks": 10,
+    "status": "Completed",
+    "description": "Quiz covering Algebra and Calculus basics."
+  },
+  {
+    "id": "ASM002",
+    "title": "Mid-Term Physics Test",
+    "type": "Class Test",
+    "class": "SS3",
+    "section": ["A"],
+    "subject": "Physics",
+    "date": "2024-06-10",
+    "duration": "90 mins",
+    "totalMarks": 50,
+    "passMarks": 25,
+    "status": "Upcomimg",
+    "description": "Comprehensive test on Mechanics and Thermodynamics."
+  },
+  {
+    "id": "ASM003",
+    "title": "English Essay Assignment",
+    "type": "Assignment",
+    "class": "JSS1",
+    "section": ["A", "B", "C"],
+    "subject": "English",
+    "date": "2024-05-20",
+    "duration": "N/A",
+    "totalMarks": 10,
+    "passMarks": 5,
+    "status": "Ongoing",
+    "description": "Write an essay on 'My Summer Holiday'."
+  },
+  {
+    "id": "ASM004",
+    "title": "Chemistry Practical",
+    "type": "Practical",
+    "class": "SS2",
+    "section": ["B"],
+    "subject": "Chemistry",
+    "date": "2024-06-15",
+    "duration": "2 hours",
+    "totalMarks": 30,
+    "passMarks": 15,
+    "status": "Upcoming",
+    "description": "Titration experiment."
+  }
+]

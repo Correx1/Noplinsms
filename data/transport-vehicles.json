@@ -1,0 +1,35 @@
+[
+    {
+        "id": "VH001",
+        "number": "KJA-123-LG",
+        "type": "Bus",
+        "model": "Toyota Coaster 2020",
+        "capacity": 30,
+        "insurance": "AXA-998877",
+        "expiry": "2024-12-31",
+        "status": "Active",
+        "image": "bus1.jpg"
+    },
+    {
+        "id": "VH002",
+        "number": "ABJ-456-HC",
+        "type": "Van",
+        "model": "Ford Transit",
+        "capacity": 14,
+        "insurance": "LEAD-112233",
+        "expiry": "2024-10-15",
+        "status": "Maintenance",
+        "image": "van1.jpg"
+    },
+    {
+        "id": "VH003",
+        "number": "LAG-789-XY",
+        "type": "Bus",
+        "model": "Mercedes Sprinter",
+        "capacity": 25,
+        "insurance": "AIICO-445566",
+        "expiry": "2025-01-20",
+        "status": "Active",
+        "image": "bus2.jpg"
+    }
+]

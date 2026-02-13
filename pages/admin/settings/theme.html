@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Settings - School Management System</title>
+    <link rel="stylesheet" href="../../../css/output.css">
+    <link rel="stylesheet" href="../../../css/theme.css">
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+    <script src="../../../js/theme.js"></script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <div class="p-4 sm:ml-64">
+        <div class="p-4 mt-14">
+            <!-- Page Header -->
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Theme Settings</h1>
+                <p class="text-gray-600 dark:text-gray-400">Customize the appearance of your school management system</p>
+            </div>
+
+            <!-- Theme Selection Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Select Theme Color</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Choose a color theme for your dashboard. This will apply across all user dashboards (Admin, Teachers, Students, Parents).</p>
+                </div>
+
+                <!-- Current Theme Display -->
+                <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Current Theme</p>
+                            <p class="text-lg font-bold text-gray-900 dark:text-white capitalize" id="current-theme-name">Blue</p>
+                        </div>
+                        <div class="w-16 h-16 rounded-lg shadow-md" id="current-theme-preview" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));"></div>
+                    </div>
+                </div>
+
+                <!-- Theme Options Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+                    <!-- Blue Theme -->
+                    <button onclick="selectTheme('blue')" class="theme-option group" data-theme="blue">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Blue</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Green Theme -->
+                    <button onclick="selectTheme('green')" class="theme-option group" data-theme="green">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #22c55e, #15803d);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Green</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Red Theme -->
+                    <button onclick="selectTheme('red')" class="theme-option group" data-theme="red">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #ef4444, #b91c1c);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Red</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Purple Theme -->
+                    <button onclick="selectTheme('purple')" class="theme-option group" data-theme="purple">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #a855f7, #7e22ce);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Purple</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Teal Theme -->
+                    <button onclick="selectTheme('teal')" class="theme-option group" data-theme="teal">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #14b8a6, #0f766e);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Teal</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Gold Theme -->
+                    <button onclick="selectTheme('gold')" class="theme-option group" data-theme="gold">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #eab308, #a16207);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Gold</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Navy Blue Theme -->
+                    <button onclick="selectTheme('navy-blue')" class="theme-option group" data-theme="navy-blue">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #3b82f6, #0f172a);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Navy Blue</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- Slate Theme -->
+                    <button onclick="selectTheme('slate')" class="theme-option group" data-theme="slate">
+                        <div class="relative p-4 border-2 border-gray-200 dark:border-gray-600 rounded-lg hover:border-primary-500 dark:hover:border-primary-400 transition-all duration-200 cursor-pointer">
+                            <div class="w-full h-24 rounded-md mb-3 shadow-md" style="background: linear-gradient(135deg, #64748b, #334155);"></div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white text-center">Slate</p>
+                            <div class="absolute top-2 right-2 hidden group-[.active]:block">
+                                <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Info Alert -->
+                <div class="p-4 mb-4 text-sm text-primary-800 rounded-lg bg-primary-50 dark:bg-gray-700 dark:text-primary-400" role="alert">
+                    <div class="flex items-start">
+                        <svg class="flex-shrink-0 w-5 h-5 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        <div>
+                            <span class="font-medium">Theme applies globally!</span>
+                            <p class="mt-1">The selected theme will be applied across all dashboards including Admin, Teachers, Students, and Parents. Changes take effect immediately.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <button onclick="applyTheme()" class="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors duration-200">
+                        Apply Theme
+                    </button>
+                    <button onclick="resetToDefault()" class="px-6 py-2.5 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-lg transition-colors duration-200">
+                        Reset to Default
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/theme-settings.js"></script>
+</body>
+</html>

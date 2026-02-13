@@ -1,0 +1,29 @@
+[
+    {
+        "id": "MAIL001",
+        "dateTime": "2023-10-25T08:30",
+        "from": "parent@example.com",
+        "to": "info@school.com",
+        "subject": "Inquiry about Scholarship",
+        "body": "Dear Sir/Ma, I would like to inquire about the scholarship opportunities available for incoming SS1 students...",
+        "status": "Unread"
+    },
+    {
+        "id": "MAIL002",
+        "dateTime": "2023-10-24T16:45",
+        "from": "vendor@supplies.com",
+        "to": "admin@school.com",
+        "subject": "Invoice #4567 for Stationery",
+        "body": "Please find attached the invoice for the stationery items supplied yesterday...",
+        "status": "Read"
+    },
+    {
+        "id": "MAIL003",
+        "dateTime": "2023-10-24T10:00",
+        "from": "ministry@education.gov.ng",
+        "to": "principal@school.com",
+        "subject": "Upcoming Inspection Visit",
+        "body": "This is to officially inform you that the Ministry of Education will be conducting a routine inspection...",
+        "status": "Read"
+    }
+]

@@ -1,0 +1,80 @@
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
+                </li>
+                <li>
+                     <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Hostel Management</span>
+                </li>
+                <li>
+                     <span class="ml-1 text-gray-500 md:ml-2 dark:text-gray-400">Allocations</span>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Room Allocation</h1>
+    </div>
+</div>
+
+<div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Allocation Form -->
+    <div class="md:col-span-1">
+        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 sticky top-4">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Allocate Room</h3>
+            <form id="hostel-alloc-form">
+                <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Student</label>
+                     <input type="text" id="alloc-student" required placeholder="Student Name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Hostel</label>
+                     <select id="alloc-hostel" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Select Hostel...</option>
+                        <!-- JS Populated -->
+                     </select>
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Room</label>
+                     <select id="alloc-room" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Select Room...</option>
+                        <!-- JS Populated -->
+                     </select>
+                </div>
+                 <div class="mb-4">
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Check-In Date</label>
+                     <input type="date" id="alloc-date" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-500 dark:hover:bg-primary-600 focus:outline-none dark:focus:ring-primary-800">
+                    Allocate to Room
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Allocation List -->
+    <div class="md:col-span-2">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Current Allocations</h3>
+                 <input type="text" placeholder="Search student..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Student</th>
+                            <th scope="col" class="px-6 py-3">Hostel</th>
+                            <th scope="col" class="px-6 py-3">Room</th>
+                            <th scope="col" class="px-6 py-3">Check-In</th>
+                             <th scope="col" class="px-6 py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hostel-alloc-table-body">
+                        <!-- JS Populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

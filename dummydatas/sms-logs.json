@@ -1,0 +1,11 @@
+[
+  {
+    "id": "SMS001",
+    "to": "+1234567891",
+    "recipient": "Robert Doe (Parent)",
+    "message": "Reminder: Parent-Teacher meeting on Feb 10th",
+    "date": "2024-02-05",
+    "time": "08:00 AM",
+    "status": "Delivered"
+  }
+]

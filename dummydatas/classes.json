@@ -1,0 +1,22 @@
+[
+  {
+    "id": "C001",
+    "name": "Grade 10",
+    "section": "A",
+    "classTeacher": "Sarah Williams",
+    "classTeacherId": "T001",
+    "totalStudents": 30,
+    "subjects": ["Mathematics", "English", "Science", "History"],
+    "room": "101"
+  },
+  {
+    "id": "C002",
+    "name": "Grade 9",
+    "section": "B",
+    "classTeacher": "James Brown",
+    "classTeacherId": "T002",
+    "totalStudents": 28,
+    "subjects": ["Mathematics", "English", "Science", "Geography"],
+    "room": "102"
+  }
+]

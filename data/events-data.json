@@ -1,0 +1,56 @@
+[
+    {
+        "id": "EVT001",
+        "name": "Inter-House Sports Competition",
+        "type": "Sports",
+        "date": "2023-11-15",
+        "startTime": "09:00",
+        "endTime": "16:00",
+        "venue": "School Sports Complex",
+        "description": "Annual inter-house sports competition featuring track and field events.",
+        "audience": ["All", "Parents", "Teachers"],
+        "coordinator": "Mr. Okon (Sports Master)",
+        "budget": 500000,
+        "banner": "sports_day.jpg",
+        "status": "Upcoming",
+        "attendees": [
+            { "name": "John Doe", "role": "Student" },
+            { "name": "Parent Association Rep", "role": "Guest" }
+        ],
+        "photos": []
+    },
+    {
+        "id": "EVT002",
+        "name": "Sciencefair 2023",
+        "type": "Academic",
+        "date": "2023-10-20",
+        "startTime": "10:00",
+        "endTime": "14:00",
+        "venue": "School Main Hall",
+        "description": "Exhibition of science projects by students from JSS1 to SS3.",
+        "audience": ["Students", "Teachers", "Parents"],
+        "coordinator": "Mrs. Adebayo (Science HOD)",
+        "budget": 200000,
+        "banner": "science_fair.jpg",
+        "status": "Completed",
+        "attendees": [],
+        "photos": ["sf1.jpg", "sf2.jpg"]
+    },
+    {
+        "id": "EVT003",
+        "name": "Staff Meeting",
+        "type": "Meeting",
+        "date": "2023-10-30",
+        "startTime": "14:30",
+        "endTime": "16:00",
+        "venue": "Staff Room",
+        "description": "Monthly general staff meeting to discuss term progress.",
+        "audience": ["Teachers", "Staff"],
+        "coordinator": "Principal",
+        "budget": 5000,
+        "banner": "",
+        "status": "Upcoming",
+        "attendees": [],
+        "photos": []
+    }
+]

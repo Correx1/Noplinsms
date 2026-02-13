@@ -1,0 +1,97 @@
+<!-- Attendance Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My Attendance</h1>
+        <p class="text-gray-600 dark:text-gray-300">View your attendance record and statistics</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Overall Attendance</p>
+            <h3 class="text-3xl font-bold text-green-600">92%</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Excellent</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Total Days</p>
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">120</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Present</p>
+            <h3 class="text-3xl font-bold text-green-600">110</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Absent</p>
+            <h3 class="text-3xl font-bold text-red-600">10</h3>
+        </div>
+    </div>
+
+    <!-- Subject-wise Attendance -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Subject-wise Attendance</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
+                <thead class="text-xs text-gray-700 dark:text-gray-400 uppercase bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Subject</th>
+                        <th scope="col" class="px-6 py-3">Total Classes</th>
+                        <th scope="col" class="px-6 py-3">Present</th>
+                        <th scope="col" class="px-6 py-3">Absent</th>
+                        <th scope="col" class="px-6 py-3">Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Mathematics</td>
+                        <td class="px-6 py-4">25</td>
+                        <td class="px-6 py-4 text-green-600">24</td>
+                        <td class="px-6 py-4 text-red-600">1</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-400 text-xs font-medium rounded-full">96%</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Physics</td>
+                        <td class="px-6 py-4">24</td>
+                        <td class="px-6 py-4 text-green-600">22</td>
+                        <td class="px-6 py-4 text-red-600">2</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-400 text-xs font-medium rounded-full">92%</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Chemistry</td>
+                        <td class="px-6 py-4">24</td>
+                        <td class="px-6 py-4 text-green-600">21</td>
+                        <td class="px-6 py-4 text-red-600">3</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-400 text-xs font-medium rounded-full">88%</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">English</td>
+                        <td class="px-6 py-4">23</td>
+                        <td class="px-6 py-4 text-green-600">22</td>
+                        <td class="px-6 py-4 text-red-600">1</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-400 text-xs font-medium rounded-full">96%</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">Biology</td>
+                        <td class="px-6 py-4">24</td>
+                        <td class="px-6 py-4 text-green-600">21</td>
+                        <td class="px-6 py-4 text-red-600">3</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-400 text-xs font-medium rounded-full">88%</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

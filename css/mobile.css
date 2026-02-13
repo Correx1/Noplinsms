@@ -1,0 +1,89 @@
+/* Mobile Enhancements */
+
+/* 1. Touch Targets */
+button, 
+a, 
+input, 
+select, 
+textarea {
+    touch-action: manipulation; /* Improves tap delay */
+}
+
+/* Ensure minimum touch target size roughly 44px for key interactive elements on mobile */
+@media (max-width: 768px) {
+    .btn-mobile-touch {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    input[type="checkbox"], 
+    input[type="radio"] {
+        transform: scale(1.2); /* Make checks easier to hit */
+    }
+}
+
+/* 2. Table Responsiveness */
+/* Global wrapper class for tables if not using Tailwind's overflow-x-auto directly */
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
+
+/* 3. Back To Top Button */
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #3b82f6; /* Blue-500 */
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    z-index: 100;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#back-to-top:hover {
+    background-color: #2563eb; /* Blue-600 */
+    transform: translateY(-2px);
+}
+
+#back-to-top.visible {
+    display: flex;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 4. Mobile Utilities */
+.mobile-hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .desktop-hidden {
+        display: none !important;
+    }
+    .mobile-hidden {
+        display: block !important;
+    }
+    
+    /* Center modals on mobile */
+    .modal-content {
+        margin: 10px;
+        width: auto !important;
+    }
+}

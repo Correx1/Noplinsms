@@ -1,0 +1,120 @@
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mark Attendance</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Date: <span id="current-date-display" class="font-medium text-gray-900 dark:text-white"></span></p>
+        </div>
+        <div class="mt-4 md:mt-0 flex space-x-2">
+             <button onclick="window.history.back()" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                Cancel
+            </button>
+            <button onclick="saveAttendance()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                <i class="fas fa-save mr-2"></i> Save Attendance
+            </button>
+        </div>
+    </div>
+
+    <!-- Selection Card -->
+    <div class="p-4 mb-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Attendance Details</h3>
+        <form id="attendance-filter-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <!-- Date -->
+            <div>
+                <label for="attendance-date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                    <input type="date" id="attendance-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                </div>
+            </div>
+
+            <!-- Class -->
+            <div>
+                 <label for="class-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
+                 <select id="class-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="">Select Class</option>
+                    <option value="JSS1">JSS1</option>
+                    <option value="JSS2">JSS2</option>
+                    <option value="JSS3">JSS3</option>
+                    <option value="SS1">SS1</option>
+                    <option value="SS2">SS2</option>
+                    <option value="SS3">SS3</option>
+                </select>
+            </div>
+
+            <!-- Section -->
+            <div>
+                 <label for="section-select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                 <select id="section-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                </select>
+            </div>
+            
+            <!-- Load Button -->
+            <div>
+                <button type="submit" class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                    Load List
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Attendance Table Container -->
+    <div id="attendance-container" class="hidden">
+        <!-- Quick Actions -->
+        <div class="flex flex-wrap gap-2 mb-4">
+            <button onclick="markAll('Present')" class="px-3 py-2 text-xs font-medium text-center text-green-700 bg-green-100 rounded-lg hover:bg-green-200 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800">
+                <i class="fas fa-check-circle mr-1"></i> Mark All Present
+            </button>
+            <button onclick="markAll('Absent')" class="px-3 py-2 text-xs font-medium text-center text-red-700 bg-red-100 rounded-lg hover:bg-red-200 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800">
+                <i class="fas fa-times-circle mr-1"></i> Mark All Absent
+            </button>
+            <button onclick="markAll('Late')" class="px-3 py-2 text-xs font-medium text-center text-yellow-700 bg-yellow-100 rounded-lg hover:bg-yellow-200 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:bg-yellow-900 dark:text-yellow-300 dark:hover:bg-yellow-800">
+                <i class="fas fa-clock mr-1"></i> Mark All Late
+            </button>
+            <button type="button" class="ml-auto px-3 py-2 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700">
+                <i class="fas fa-copy mr-1"></i> Copy Yesterday
+            </button>
+        </div>
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">ID</th>
+                        <th scope="col" class="px-6 py-3">Photo</th>
+                        <th scope="col" class="px-6 py-3">Name</th>
+                        <th scope="col" class="px-6 py-3 text-center">Status</th>
+                        <th scope="col" class="px-6 py-3">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="attendance-table-body">
+                    <!-- Rows generated by JS -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="flex justify-end mt-6 space-x-3">
+             <button onclick="saveAttendance()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                <i class="fas fa-save mr-2"></i> Save Attendance
+            </button>
+            <button onclick="saveAttendance(true)" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                <i class="fas fa-print mr-2"></i> Save & Print
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-attendance" class="hidden fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/></svg>
+    </div>
+    <div class="ml-3 text-sm font-normal">Attendance saved successfully!</div>
+</div>

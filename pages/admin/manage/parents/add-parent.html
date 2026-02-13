@@ -1,0 +1,85 @@
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
+                </li>
+                <li>
+                     <a href="#" onclick="loadParentsPage()" class="ml-1 text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-300 dark:hover:text-white">Parents</a>
+                </li>
+                <li>
+                    <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" id="page-action-title">Add Parent</span>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white" id="form-main-title">Add New Parent</h1>
+    </div>
+</div>
+
+<div class="p-6">
+    <form id="addParentForm" class="space-y-6">
+        <div class="grid grid-cols-6 gap-6">
+            <!-- Photo -->
+            <div class="col-span-6 sm:col-span-6 flex items-center space-x-4">
+                <img id="photo-preview" src="https://ui-avatars.com/api/?name=New+Parent&background=random" class="w-24 h-24 rounded-full object-cover">
+                <div>
+                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Parent Photo</label>
+                   <input type="file" id="parent-photo" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                </div>
+            </div>
+
+            <div class="col-span-6 sm:col-span-3">
+                <label for="parent-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full Name *</label>
+                <input type="text" id="parent-name" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+            </div>
+            <div class="col-span-6 sm:col-span-3">
+                <label for="parent-relation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Relation *</label>
+                <select id="parent-relation" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Guardian">Guardian</option>
+                </select>
+            </div>
+            <div class="col-span-6 sm:col-span-3">
+                <label for="parent-phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number *</label>
+                <input type="tel" id="parent-phone" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+            </div>
+            <div class="col-span-6 sm:col-span-3">
+                <label for="parent-email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                <input type="email" id="parent-email" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+             <div class="col-span-6 sm:col-span-3">
+                <label for="parent-occupation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Occupation</label>
+                <input type="text" id="parent-occupation" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+             <div class="col-span-6 sm:col-span-3">
+                <label for="parent-status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                <select id="parent-status" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="col-span-6">
+                <label for="parent-address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                <textarea id="parent-address" rows="3" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+            </div>
+            
+            <div class="col-span-6">
+                 <label class="flex items-center">
+                    <input type="checkbox" id="emergency-contact" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <span class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is Emergency Contact?</span>
+                 </label>
+            </div>
+        </div>
+        
+        <div class="flex items-center space-x-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+            <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Save Parent</button>
+             <button type="button" onclick="loadParentsPage()" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-700">Cancel</button>
+        </div>
+    </form>
+</div>
+<script>
+    // Add logic to populate form if in Edit Mode (window.editingParentId)
+    // Add logic to save data to localStorage on submit
+</script>

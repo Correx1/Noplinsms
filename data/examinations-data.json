@@ -1,0 +1,35 @@
+[
+  {
+    "id": "EXM202401",
+    "name": "First Term Examination 2023/2024",
+    "type": "Terminal",
+    "session": "2023/2024",
+    "startDate": "2023-12-05",
+    "endDate": "2023-12-15",
+    "classes": ["JSS 1", "JSS 2", "JSS 3", "SS 1", "SS 2", "SS 3"],
+    "status": "Completed",
+    "description": "End of first term comprehensive examinations."
+  },
+  {
+    "id": "EXM202402",
+    "name": "Second Term Mid-Term Test",
+    "type": "Mid-term",
+    "session": "2023/2024",
+    "startDate": "2024-02-20",
+    "endDate": "2024-02-24",
+    "classes": ["JSS 1", "JSS 2", "JSS 3"],
+    "status": "Ongoing",
+    "description": "Mid-term assessment for Junior Secondary classes."
+  },
+  {
+    "id": "EXM202403",
+    "name": "Mock Examination 2024",
+    "type": "Mock",
+    "session": "2023/2024",
+    "startDate": "2024-03-10",
+    "endDate": "2024-03-20",
+    "classes": ["SS 3"],
+    "status": "Upcoming",
+    "description": "Preparatory mock exams for WAEC/NECO candidates."
+  }
+]

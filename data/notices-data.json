@@ -1,0 +1,50 @@
+[
+  {
+    "id": "NOT001",
+    "title": "Mid-Term Examination Schedule",
+    "type": "Exam",
+    "priority": "High",
+    "audience": ["Students", "Teachers"],
+    "content": "The mid-term examinations for the 2025-2026 academic session will commence on October 15th, 2025. Does please ensure all continuous assessment scores are submitted before then.",
+    "date": "2025-09-28",
+    "expiry": "2025-10-20",
+    "status": "Active",
+    "author": "Admin"
+  },
+  {
+    "id": "NOT002",
+    "title": "Public Holiday - Independence Day",
+    "type": "Holiday",
+    "priority": "Medium",
+    "audience": ["All"],
+    "content": "The school will be closed on October 1st in observance of Independence Day. Classes will resume strictly on October 2nd.",
+    "date": "2025-09-25",
+    "expiry": "2025-10-02",
+    "status": "Active",
+    "author": "Propreitor"
+  },
+  {
+    "id": "NOT003",
+    "title": "Emergency Staff Meeting",
+    "type": "Emergency",
+    "priority": "Urgent",
+    "audience": ["Teachers", "Staff"],
+    "content": "All staff members are required to attend a mandatory briefing at the main hall tomorrow at 8:00 AM.",
+    "date": "2025-10-05",
+    "expiry": "2025-10-06",
+    "status": "Active",
+    "author": "Principal"
+  },
+  {
+    "id": "NOT004",
+    "title": "Inter-House Sports Competition",
+    "type": "General",
+    "priority": "Low",
+    "audience": ["Students", "Parents"],
+    "content": "We are excited to announce the annual Inter-House Sports competition scheduled for next month. Parents are invited to cheer for their children.",
+    "date": "2025-09-10",
+    "expiry": "2025-09-30",
+    "status": "Expired",
+    "author": "Sports Director"
+  }
+]

@@ -1,0 +1,74 @@
+{
+    "summary": {
+        "students": 1250,
+        "teachers": 75,
+        "staff": 40,
+        "classes": 32
+    },
+    "attendance": {
+        "percentage": 94,
+        "present": 1175,
+        "absent": 75
+    },
+    "finance": {
+        "income": 52000,
+        "expense": 18500,
+        "currency": "₦"
+    },
+    "recentActivities": [
+        {
+            "id": 1,
+            "text": "New student registration: John Doe",
+            "time": "10 mins ago",
+            "type": "registration"
+        },
+        {
+            "id": 2,
+            "text": "Teacher meeting scheduled for 2 PM",
+            "time": "1 hour ago",
+            "type": "event"
+        },
+        {
+            "id": 3,
+            "text": "Fees collected from Class 10A",
+            "time": "3 hours ago",
+            "type": "finance"
+        },
+        {
+            "id": 4,
+            "text": "Library books audit completed",
+            "time": "Yesterday",
+            "type": "library"
+        },
+        {
+            "id": 5,
+            "text": "System maintenance update",
+            "time": "2 days ago",
+            "type": "system"
+        }
+    ],
+    "events": [
+        {
+            "id": 1,
+            "title": "Annual Sports Day",
+            "date": "2024-03-15",
+            "time": "09:00 AM"
+        },
+        {
+            "id": 2,
+            "title": "Parent-Teacher Meeting",
+            "date": "2024-03-20",
+            "time": "10:00 AM"
+        },
+        {
+            "id": 3,
+            "title": "Science Exhibition",
+            "date": "2024-03-25",
+            "time": "11:00 AM"
+        }
+    ],
+    "charts": {
+        "enrollment": [100, 110, 150, 120, 190, 172, 210, 230, 170, 310, 250, 200],
+        "attendance": [90, 85, 95]
+    }
+}

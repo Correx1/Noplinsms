@@ -1,0 +1,20 @@
+[
+    {
+        "id": "H001",
+        "name": "Mandela Hall",
+        "type": "Boys",
+        "rooms": 20,
+        "warden": "Mr. Yakubu",
+        "contact": "08011223344",
+        "address": "North Campus Wing A"
+    },
+    {
+        "id": "H002",
+        "name": "Moremi Hall",
+        "type": "Girls",
+        "rooms": 25,
+        "warden": "Mrs. Ubong",
+        "contact": "08055667788",
+        "address": "South Campus Wing B"
+    }
+]

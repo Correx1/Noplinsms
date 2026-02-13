@@ -1,0 +1,11 @@
+[
+  {
+    "id": "EM001",
+    "from": "admin@school.com",
+    "to": "parent@example.com",
+    "subject": "Monthly Progress Report",
+    "date": "2024-02-01",
+    "time": "10:00 AM",
+    "status": "Sent"
+  }
+]

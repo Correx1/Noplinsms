@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - School Management System</title>
+    
+    <!-- Local Tailwind CSS -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- Theme System -->
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script src="../../js/theme.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+
+    <!-- Sidebar -->
+    <aside id="logo-sidebar"   aria-label="Sidebar"
+     class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-primary-600 border-r border-primary-700 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900">
+        <div class="h-full px pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
+            <ul class="space-y-2 font-medium">
+                <li onclick="loadTeacherHome() ; setActiveLink(this); return false;"  class="border-b  border-white/20  flex items-center p-4 text-white  hover:bg-primary-700 dark:hover:bg-primary-900 group  active-nav-link">
+                    <a href="#" >
+                        <i class="fas fa-home w-5 h-5 text-white"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li onclick="loadMyClasses(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit  hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-chalkboard w-5 h-5 text-white"></i>
+                        <span class="ml-3">My Classes</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherTimetable(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#"     >
+                        <i class="fas fa-calendar-alt w-5 h-5 text-white"></i>
+                        <span class="ml-3">Timetable</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherStudents(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-user-graduate w-5 h-5 text-white"></i>
+                        <span class="ml-3">Students</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherAttendance(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-calendar-check w-5 h-5 text-white"></i>
+                        <span class="ml-3">Attendance</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherAssignments(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-file-alt w-5 h-5 text-white"></i>
+                        <span class="ml-3">Assignments</span>
+                    </a>
+                </li>
+                <li onclick="loadGradeBook(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-book w-5 h-5 text-white"></i>
+                        <span class="ml-3">Grade Book</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherExams(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-clipboard-list w-5 h-5 text-white"></i>
+                        <span class="ml-3">Exams</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherMessages(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-envelope w-5 h-5 text-white"></i>
+                        <span class="ml-3">Messages</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherReports(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-chart-bar w-5 h-5 text-white"></i>
+                        <span class="ml-3">Reports</span>
+                    </a>
+                </li>
+                <li onclick="loadTeacherProfile(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
+                    <a href="#" >
+                        <i class="fas fa-user w-5 h-5 text-white"></i>
+                        <span class="ml-3">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="p-4 sm:ml-64 mt-14">
+        <div id="main-content" class="p-4">
+            <!-- Page Header -->
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Teacher Dashboard</h1>
+                <p class="text-gray-600 mt-1 dark:text-gray-300">Welcome back! Here's what's happening today.</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- My Classes -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-primary-100 text-primary-600">
+                            <i class="fas fa-chalkboard text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">My Classes</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">5</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Students -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                            <i class="fas fa-user-graduate text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Total Students</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">120</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classes Today -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600 dark:text-green-400">
+                            <i class="fas fa-clock text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Classes Today</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">3</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Grading -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+                            <i class="fas fa-check-double text-2xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Pending Grading</p>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">12</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Today's Schedule -->
+                <div class="lg:col-span-2 bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Today's Schedule</h3>
+                        <a href="#" onclick="loadTeacherTimetable()" class="text-primary-600 dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200 text-sm font-medium">View Full Timetable →</a>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700  border border-gray-200">
+                            <div class="flex-1">
+                                <div class="text-sm font-semibold text-gray-900 dark:text-white">08:00 - 08:45</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Mathematics • JSS 2A • Room 101</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Upcoming</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700  border border-gray-200">
+                            <div class="flex-1">
+                                <div class="text-sm font-semibold text-gray-900 dark:text-white">10:00 - 10:45</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Physics • SSS 1B • Room 204</div>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Pending</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700  border border-gray-200">
+                            <div class="flex-1">
+                                <div class="text-sm font-semibold text-gray-900 dark:text-white">13:00 - 13:45</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Chemistry • SSS 2A • Lab 1</div>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Pending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button onclick="loadTeacherAttendance()" class="w-full flex items-center justify-center px-4 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white font-medium  transition-colors">
+                            <i class="fas fa-calendar-check mr-2"></i>
+                            Mark Attendance
+                        </button>
+                        <button onclick="loadTeacherAssignments()" class="w-full flex items-center justify-center px-4 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white font-medium  transition-colors">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            Create Assignment
+                        </button>
+                        <button onclick="loadGradeBook()" class="w-full flex items-center justify-center px-4 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white font-medium  transition-colors">
+                            <i class="fas fa-book mr-2"></i>
+                            Enter Grades
+                        </button>
+                        <button onclick="loadTeacherMessages()" class="w-full flex items-center justify-center px-4 py-3 bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 text-white font-medium  transition-colors">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Send Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity & Upcoming Tasks -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Activity -->
+                <div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">Recent Activity</h3>
+                    <ol class="relative border-l border-gray-200">                  
+                        <li class="mb-6 ml-4">
+                            <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                            <time class="mb-1 text-xs font-normal text-gray-500">Just now</time>
+                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Posted "Physics Homework"</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">To Class JSS 2A. Due tomorrow.</p>
+                        </li>
+                        <li class="mb-6 ml-4">
+                            <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                            <time class="mb-1 text-xs font-normal text-gray-500">2 hours ago</time>
+                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Marked Attendance</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Class SSS 1B - 2 Absent.</p>
+                        </li>
+                        <li class="ml-4">
+                            <div class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                            <time class="mb-1 text-xs font-normal text-gray-500">Yesterday</time>
+                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white">Graded Assignments</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Mathematics Test - JSS 2A (25 students)</p>
+                        </li>
+                    </ol>
+                </div>
+<!-- Upcoming Tasks -->
+<div class="bg-white border border-gray-200  shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">Upcoming Tasks</h3>
+    <div class="space-y-3">
+        <!-- Red Task -->
+        <div class="flex items-start p-3 bg-red-50 border border-red-200  dark:bg-red-900/30 dark:border-red-700">
+            <i class="fas fa-exclamation-circle text-red-600 dark:text-red-400 mt-1 mr-3"></i>
+            <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Grade Physics Test</p>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">Due: Today, 5:00 PM</p>
+            </div>
+        </div>
+
+        <!-- Yellow Task -->
+        <div class="flex items-start p-3 bg-yellow-50 border border-yellow-200  dark:bg-yellow-900/30 dark:border-yellow-700">
+            <i class="fas fa-clock text-yellow-600 dark:text-yellow-400 mt-1 mr-3"></i>
+            <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Submit Lesson Plans</p>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">Due: Tomorrow</p>
+            </div>
+        </div>
+
+        <!-- Primary Task -->
+        <div class="flex items-start p-3 bg-primary-50 border border-primary-200  dark:bg-blue-900/30 dark:border-blue-700">
+            <i class="fas fa-info-circle text-primary-600 dark:text-primary-400 mt-1 mr-3"></i>
+            <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Parent-Teacher Meeting</p>
+                <p class="text-xs text-gray-600 dark:text-gray-300 mt-1">Friday, 3:00 PM</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+ 
+    <script type="module" src="../../js/main.js"></script>
+    <script src="../../js/sidebar.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script src="../../js/theme-toggle.js"></script>
+    <script src="../../js/teacher-pages.js"></script>
+    <script src="../../js/teacher-dashboard.js"></script>
+    
+
+    
+
+</body>
+</html>
+
+

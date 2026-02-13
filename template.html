@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAGE_TITLE - School Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div id="header-container"></div>
+  <div id="sidebar-container"></div>
+  <div class="p-4 lg:ml-64 mt-14">
+    <div class="p-4">
+      <div id="breadcrumb-container"></div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">PAGE_TITLE</h1>
+      <div class="card"><p>PAGE_TITLE page content</p></div>
+    </div>
+  </div>
+  <script type="module">
+    import Auth from '/js/auth.js';
+    import Utils from '/js/utils.js';
+    import Sidebar from '/js/sidebar.js';
+    import Breadcrumb from '/js/breadcrumb.js';
+    Auth.protectPage();
+    async function init() {
+      await Utils.loadComponent('header-container', '/components/header.html');
+      await Utils.loadComponent('sidebar-container', '/components/sidebar.html');
+      await Utils.loadComponent('breadcrumb-container', '/components/breadcrumb.html');
+      setTimeout(() => { Sidebar.init(); Breadcrumb.generate(); }, 100);
+    }
+    init();
+  </script>
+</body>
+</html>

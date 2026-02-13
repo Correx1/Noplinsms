@@ -1,0 +1,156 @@
+[
+  {
+    "id": "C001",
+    "name": "JSS1",
+    "level": 7,
+    "totalStudents": 45,
+    "classTeacherId": "T002",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S001",
+        "name": "A",
+        "teacherId": "T002",
+        "capacity": 30,
+        "studentCount": 25,
+        "room": "Block A - 101"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Basic Science", "Social Studies"]
+  },
+  {
+    "id": "C002",
+    "name": "JSS2",
+    "level": 8,
+    "totalStudents": 40,
+    "classTeacherId": "T003",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S002",
+        "name": "A",
+        "teacherId": "T003",
+        "capacity": 30,
+        "studentCount": 22,
+        "room": "Block A - 201"
+      },
+      {
+        "id": "S003",
+        "name": "B",
+        "teacherId": "T006",
+        "capacity": 30,
+        "studentCount": 18,
+        "room": "Block A - 202"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Basic Science", "Social Studies", "Computer Science"]
+  },
+  {
+    "id": "C003",
+    "name": "JSS3",
+    "level": 9,
+    "totalStudents": 42,
+    "classTeacherId": "T004",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S004",
+        "name": "A",
+        "teacherId": "T004",
+        "capacity": 30,
+        "studentCount": 24,
+        "room": "Block B - 101"
+      },
+      {
+        "id": "S005",
+        "name": "B",
+        "teacherId": "T007",
+        "capacity": 30,
+        "studentCount": 18,
+        "room": "Block B - 102"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Basic Science", "Social Studies", "Computer Science"]
+  },
+  {
+    "id": "C004",
+    "name": "SS1",
+    "level": 10,
+    "totalStudents": 35,
+    "classTeacherId": "T005",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S006",
+        "name": "A",
+        "teacherId": "T005",
+        "capacity": 25,
+        "studentCount": 20,
+        "room": "Block C - 101"
+      },
+      {
+        "id": "S007",
+        "name": "B",
+        "teacherId": "T008",
+        "capacity": 25,
+        "studentCount": 15,
+        "room": "Block C - 102"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Physics", "Chemistry", "Biology", "Economics", "Computer Science"]
+  },
+  {
+    "id": "C005",
+    "name": "SS2",
+    "level": 11,
+    "totalStudents": 32,
+    "classTeacherId": "T006",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S008",
+        "name": "A",
+        "teacherId": "T006",
+        "capacity": 25,
+        "studentCount": 18,
+        "room": "Block C - 201"
+      },
+      {
+        "id": "S009",
+        "name": "B",
+        "teacherId": "T009",
+        "capacity": 25,
+        "studentCount": 14,
+        "room": "Block C - 202"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Physics", "Chemistry", "Biology", "Economics", "Computer Science"]
+  },
+  {
+    "id": "C006",
+    "name": "SS3",
+    "level": 12,
+    "totalStudents": 38,
+    "classTeacherId": "T001",
+    "academicYear": "2023/2024",
+    "sections": [
+      {
+        "id": "S010",
+        "name": "A",
+        "teacherId": "T001",
+        "capacity": 25,
+        "studentCount": 20,
+        "room": "Block C - 301"
+      },
+      {
+        "id": "S011",
+        "name": "B",
+        "teacherId": "T004",
+        "capacity": 25,
+        "studentCount": 18,
+        "room": "Block C - 302"
+      }
+    ],
+    "subjects": ["Mathematics", "English Language", "Physics", "Chemistry", "Biology", "Economics", "Computer Science"]
+  }
+]

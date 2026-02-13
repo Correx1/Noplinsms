@@ -1,0 +1,38 @@
+[
+    {
+        "id": "R001",
+        "hostelId": "H001",
+        "hostelName": "Mandela Hall",
+        "number": "101",
+        "type": "Double",
+        "capacity": 2,
+        "occupied": 1,
+        "rent": 50000,
+        "facilities": "Fan, Table, Wardrobe",
+        "status": "Available"
+    },
+    {
+        "id": "R002",
+        "hostelId": "H001",
+        "hostelName": "Mandela Hall",
+        "number": "102",
+        "type": "Dormitory",
+        "capacity": 6,
+        "occupied": 4,
+        "rent": 20000,
+        "facilities": "Bunk beds, Lockers",
+        "status": "Available"
+    },
+    {
+        "id": "R003",
+        "hostelId": "H002",
+        "hostelName": "Moremi Hall",
+        "number": "205",
+        "type": "Single",
+        "capacity": 1,
+        "occupied": 1,
+        "rent": 100000,
+        "facilities": "AC, Ensuite",
+        "status": "Full"
+    }
+]

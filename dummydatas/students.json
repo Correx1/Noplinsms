@@ -1,0 +1,50 @@
+[
+  {
+    "id": "S001",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@student.com",
+    "phone": "+1234567890",
+    "dateOfBirth": "2010-05-15",
+    "gender": "Male",
+    "class": "Grade 10",
+    "section": "A",
+    "admissionDate": "2020-09-01",
+    "guardianName": "Robert Doe",
+    "guardianPhone": "+1234567891",
+    "address": "123 Main St, City",
+    "status": "Active"
+  },
+  {
+    "id": "S002",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@student.com",
+    "phone": "+1234567892",
+    "dateOfBirth": "2010-08-22",
+    "gender": "Female",
+    "class": "Grade 10",
+    "section": "A",
+    "admissionDate": "2020-09-01",
+    "guardianName": "Mary Smith",
+    "guardianPhone": "+1234567893",
+    "address": "456 Oak Ave, City",
+    "status": "Active"
+  },
+  {
+    "id": "S003",
+    "firstName": "Michael",
+    "lastName": "Johnson",
+    "email": "michael.j@student.com",
+    "phone": "+1234567894",
+    "dateOfBirth": "2011-03-10",
+    "gender": "Male",
+    "class": "Grade 9",
+    "section": "B",
+    "admissionDate": "2021-09-01",
+    "guardianName": "David Johnson",
+    "guardianPhone": "+1234567895",
+    "address": "789 Pine Rd, City",
+    "status": "Active"
+  }
+]

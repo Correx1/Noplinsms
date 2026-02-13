@@ -1,0 +1,20 @@
+[
+    {
+        "id": "ALL001",
+        "studentId": "STU001",
+        "studentName": "Ade Bowale",
+        "hostelId": "H001",
+        "roomId": "R001",
+        "roomNo": "101",
+        "checkIn": "2023-09-10"
+    },
+    {
+        "id": "ALL002",
+        "studentId": "STU005",
+        "studentName": "Mary Kayode",
+        "hostelId": "H002",
+        "roomId": "R003",
+        "roomNo": "205",
+        "checkIn": "2023-09-12"
+    }
+]

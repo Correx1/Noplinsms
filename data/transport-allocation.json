@@ -1,0 +1,20 @@
+[
+    {
+        "id": "ALLOC001",
+        "studentId": "STU001",
+        "studentName": "Ade Bowale",
+        "class": "JSS 1A",
+        "routeId": "RT001",
+        "stop": "Allen Avenue",
+        "term": "1st Term"
+    },
+    {
+        "id": "ALLOC002",
+        "studentId": "STU002",
+        "studentName": "Chinwe Eze",
+        "class": "SS 2B",
+        "routeId": "RT002",
+        "stop": "Ikoyi",
+        "term": "1st Term"
+    }
+]

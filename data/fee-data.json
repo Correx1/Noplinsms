@@ -1,0 +1,152 @@
+[
+  {
+    "studentId": "STU001",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 173000,
+    "transactions": [
+      { "id": "TXN001234", "date": "2024-09-15", "amount": 100000, "method": "Bank Transfer", "remarks": "First installment" },
+      { "id": "TXN001456", "date": "2024-10-20", "amount": 73000, "method": "Cash", "remarks": "Final payment" }
+    ]
+  },
+  {
+    "studentId": "STU002",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 173000,
+    "transactions": [
+      { "id": "TXN002100", "date": "2024-09-01", "amount": 173000, "method": "Card", "remarks": "Full Payment" }
+    ]
+  },
+  {
+    "studentId": "STU003",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 0,
+    "transactions": []
+  },
+  {
+    "studentId": "STU004",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 50000,
+    "transactions": [
+      { "id": "TXN004567", "date": "2024-09-25", "amount": 50000, "method": "Bank Transfer", "remarks": "First installment" }
+    ]
+  },
+  {
+    "studentId": "STU005",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 100000,
+    "transactions": [
+      { "id": "TXN005789", "date": "2024-09-05", "amount": 100000, "method": "Cheque", "remarks": "Partial payment" }
+    ]
+  },
+  {
+    "studentId": "STU006",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 150000,
+    "transactions": [
+      { "id": "TXN006111", "date": "2024-09-12", "amount": 80000, "method": "Cash", "remarks": "First payment" },
+      { "id": "TXN006222", "date": "2024-10-15", "amount": 70000, "method": "Bank Transfer", "remarks": "Second payment" }
+    ]
+  },
+  {
+    "studentId": "STU007",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 25000,
+    "transactions": [
+      { "id": "TXN007333", "date": "2024-10-01", "amount": 25000, "method": "Card", "remarks": "Partial payment" }
+    ]
+  },
+  {
+    "studentId": "STU008",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 173000,
+    "transactions": [
+      { "id": "TXN008444", "date": "2024-09-08", "amount": 90000, "method": "Bank Transfer", "remarks": "First installment" },
+      { "id": "TXN008555", "date": "2024-09-30", "amount": 83000, "method": "Cash", "remarks": "Final payment" }
+    ]
+  },
+  {
+    "studentId": "STU009",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 120000,
+    "transactions": [
+      { "id": "TXN009666", "date": "2024-09-18", "amount": 60000, "method": "Cash", "remarks": "First payment" },
+      { "id": "TXN009777", "date": "2024-10-10", "amount": 60000, "method": "Bank Transfer", "remarks": "Second payment" }
+    ]
+  },
+  {
+    "studentId": "STU010",
+    "feeStructure": [
+      { "type": "Tuition Fee", "amount": 120000 },
+      { "type": "Development Levy", "amount": 25000 },
+      { "type": "Exam Fee", "amount": 15000 },
+      { "type": "Sports Fee", "amount": 8000 },
+      { "type": "Library Fee", "amount": 5000 }
+    ],
+    "totalFee": 173000,
+    "paidAmount": 0,
+    "transactions": []
+  }
+]

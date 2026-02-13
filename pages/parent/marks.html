@@ -1,0 +1,152 @@
+<!-- Marks Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">Marks & Performance</h1>
+        <p class="text-gray-600 dark:text-gray-300">View your children's academic performance</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Child Selector -->
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Select Child</label>
+        <select onchange="selectChild(this.value)" class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+            <option value="1">Alex Johnson - SSS 2B</option>
+            <option value="2">Emily Johnson - JSS 3A</option>
+        </select>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Overall Average</p>
+            <h3 class="text-3xl font-bold text-primary-600 dark:text-primary-400">85.4%</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Grade: A</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Class Rank</p>
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-gray-100">5th</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Out of 45 students</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Highest Score</p>
+            <h3 class="text-3xl font-bold text-green-600 dark:text-green-400">96%</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Mathematics</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Lowest Score</p>
+            <h3 class="text-3xl font-bold text-orange-600 dark:text-orange-400">72%</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Chemistry</p>
+        </div>
+    </div>
+
+    <!-- Term Selector -->
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Academic Year</label>
+                <select class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    <option>2025/2026</option>
+                    <option>2024/2025</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Term</label>
+                <select class="bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    <option>First Term</option>
+                    <option>Second Term</option>
+                    <option>Third Term</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button class="w-full px-5 py-2.5 text-white bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 font-medium rounded-lg text-sm">
+                    <i class="fas fa-filter mr-2"></i>Filter
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marks Table -->
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Subject-wise Marks</h3>
+            <button class="px-4 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg text-sm">
+                <i class="fas fa-download mr-2"></i>Download Report Card
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
+                <thead class="text-xs text-gray-700 dark:text-gray-200 uppercase bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Subject</th>
+                        <th scope="col" class="px-6 py-3">Theory (70)</th>
+                        <th scope="col" class="px-6 py-3">CA 1 (10)</th>
+                        <th scope="col" class="px-6 py-3">CA 2 (10)</th>
+                        <th scope="col" class="px-6 py-3">CA 3 (10)</th>
+                        <th scope="col" class="px-6 py-3">Total (100)</th>
+                        <th scope="col" class="px-6 py-3">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Mathematics</td>
+                        <td class="px-6 py-4">65</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4">10</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-gray-100">93</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs font-medium rounded-full">A</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Physics</td>
+                        <td class="px-6 py-4">58</td>
+                        <td class="px-6 py-4">8</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4">10</td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-gray-100">85</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs font-medium rounded-full">A</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Chemistry</td>
+                        <td class="px-6 py-4">48</td>
+                        <td class="px-6 py-4">8</td>
+                        <td class="px-6 py-4">8</td>
+                        <td class="px-6 py-4">8</td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-gray-100">72</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 text-xs font-medium rounded-full">B</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">English</td>
+                        <td class="px-6 py-4">60</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4">8</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-gray-100">86</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs font-medium rounded-full">A</span>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">Biology</td>
+                        <td class="px-6 py-4">56</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4">9</td>
+                        <td class="px-6 py-4">7</td>
+                        <td class="px-6 py-4 font-bold text-gray-900 dark:text-gray-100">81</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 text-xs font-medium rounded-full">A</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="../../js/parent-pages.js"></script>

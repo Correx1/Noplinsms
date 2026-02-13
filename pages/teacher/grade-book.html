@@ -1,0 +1,184 @@
+<!-- Grade Book Page Content -->
+<div class="p-6 bg-white dark:bg-gray-900 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <div class="mb-4">
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Grade Book</h1>
+            <p class="text-gray-600 dark:text-gray-400">Enter and manage student grades</p>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 bg-gray-50 dark:bg-gray-900">
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
+        <form id="loadGradesForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
+                <select id="gradeClassSelect"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">Select Class</option>
+                    <option value="JSS 2A">JSS 2A</option>
+                    <option value="SSS 1B">SSS 1B</option>
+                    <option value="SSS 2A">SSS 2A</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject</label>
+                <select id="gradeSubjectSelect"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>Mathematics</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assessment</label>
+                <select id="gradeAssessmentSelect"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                               dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>First Term Test</option>
+                    <option>Mid-Term Exam</option>
+                    <option>Final Exam</option>
+                </select>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit"
+                        class="w-full px-5 py-2.5 text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm">
+                    <i class="fas fa-users mr-2"></i>Load Students
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Grade Entry Table -->
+    <div id="gradeTableContainer"
+         class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden"
+         style="display:none;">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                <span id="gradeTableTitle"></span>
+            </h3>
+            <button onclick="saveGrades()"
+                    class="px-4 py-2 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm">
+                <i class="fas fa-save mr-2"></i>Save Grades
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
+                <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-4 py-3">Roll No</th>
+                        <th class="px-4 py-3">Student Name</th>
+                        <th class="px-4 py-3">Theory (70)</th>
+                        <th class="px-4 py-3">Assessment 1 (10)</th>
+                        <th class="px-4 py-3">Assessment 2 (10)</th>
+                        <th class="px-4 py-3">Assessment 3 (10)</th>
+                        <th class="px-4 py-3">Total (100)</th>
+                        <th class="px-4 py-3">Grade</th>
+                        <th class="px-4 py-3">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="gradeTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="gradeEmptyState"
+         class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-12 text-center">
+        <i class="fas fa-book text-6xl text-gray-300 dark:text-gray-500 mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Students Loaded</h3>
+        <p class="text-gray-600 dark:text-gray-400">
+            Select a class, subject, and assessment, then click "Load Students".
+        </p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div id="gradeSummary" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6" style="display:none;">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Total Students</p>
+            <h3 id="totalStudents" class="text-2xl font-bold text-gray-900 dark:text-white">0</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Graded</p>
+            <h3 id="gradedCount" class="text-2xl font-bold text-green-600">0</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Pending</p>
+            <h3 id="pendingCount" class="text-2xl font-bold text-orange-600">0</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Class Average</p>
+            <h3 id="classAverage" class="text-2xl font-bold text-primary-600">0%</h3>
+        </div>
+    </div>
+</div>
+
+<script>
+const gradeStudentData = {
+    'JSS 2A': [
+        {rollNo:'001',name:'John Doe'},
+        {rollNo:'002',name:'Jane Smith'},
+        {rollNo:'003',name:'David Brown'}
+    ],
+    'SSS 1B': [
+        {rollNo:'101',name:'Alice Cooper'},
+        {rollNo:'102',name:'Bob Martin'}
+    ],
+    'SSS 2A': [
+        {rollNo:'201',name:'Emma Davis'}
+    ]
+};
+
+document.getElementById('loadGradesForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const cls = gradeClassSelect.value;
+    if (!cls) return alert('Please select a class');
+
+    const tbody = gradeTableBody;
+    tbody.innerHTML = '';
+
+    gradeStudentData[cls].forEach(s => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b hover:bg-gray-50 dark:hover:bg-gray-700';
+
+        tr.innerHTML = `
+            <td class="px-4 py-4 bg-white dark:bg-gray-800 font-medium text-gray-900 dark:text-white">${s.rollNo}</td>
+            <td class="px-4 py-4 bg-white dark:bg-gray-800">${s.name}</td>
+            ${[70,10,10,10].map((m,i)=>`
+            <td class="px-4 py-4 bg-white dark:bg-gray-800">
+                <input type="number" min="0" max="${m}"
+                    onchange="calculateTotal('${s.rollNo}')"
+                    id="${['theory','assess1','assess2','assess3'][i]}_${s.rollNo}"
+                    class="w-20 px-2 py-1 border border-gray-300 rounded
+                           dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </td>`).join('')}
+            <td class="px-4 py-4 bg-white dark:bg-gray-800 font-semibold text-gray-900 dark:text-white">
+                <span id="total_${s.rollNo}">0</span>
+            </td>
+            <td class="px-4 py-4 bg-white dark:bg-gray-800">
+                <span id="grade_${s.rollNo}"
+                      class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-medium rounded">-</span>
+            </td>
+            <td class="px-4 py-4 bg-white dark:bg-gray-800">
+                <input class="w-32 px-2 py-1 border border-gray-300 rounded
+                              dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    gradeTableTitle.textContent = `${cls} - ${gradeSubjectSelect.value} - ${gradeAssessmentSelect.value}`;
+    gradeTableContainer.style.display = 'block';
+    gradeEmptyState.style.display = 'none';
+    gradeSummary.style.display = 'grid';
+});
+</script>

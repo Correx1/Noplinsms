@@ -1,0 +1,40 @@
+[
+    {
+        "id": "CALL001",
+        "dateTime": "2023-10-25T08:45",
+        "callerName": "Mr. Okonkwo",
+        "callerNumber": "08055555555",
+        "type": "Incoming",
+        "duration": "5 mins",
+        "receivedBy": "Receptionist",
+        "purpose": "Inquiry about admission forms",
+        "followUp": true,
+        "followUpDate": "2023-10-27",
+        "status": "Pending"
+    },
+    {
+        "id": "CALL002",
+        "dateTime": "2023-10-25T09:30",
+        "callerName": "Mrs. Adebayo",
+        "callerNumber": "07033333333",
+        "type": "Incoming",
+        "duration": "2 mins",
+        "receivedBy": "Receptionist",
+        "purpose": "Reporting child absence",
+        "followUp": false,
+        "status": "Closed"
+    },
+    {
+        "id": "CALL003",
+        "dateTime": "2023-10-25T10:15",
+        "callerName": "Ministry of Education",
+        "callerNumber": "01-4567890",
+        "type": "Outgoing",
+        "duration": "15 mins",
+        "receivedBy": "Principal",
+        "purpose": "Confirming inspection date",
+        "followUp": true,
+        "followUpDate": "2023-11-01",
+        "status": "Pending"
+    }
+]

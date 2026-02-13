@@ -1,0 +1,22 @@
+[
+  {
+    "id": "V001",
+    "visitorName": "John Parent",
+    "purpose": "Meeting with Principal",
+    "personToMeet": "Principal",
+    "date": "2024-02-05",
+    "timeIn": "10:00 AM",
+    "timeOut": "11:00 AM",
+    "phone": "+1234567802"
+  },
+  {
+    "id": "V002",
+    "visitorName": "Sarah Vendor",
+    "purpose": "Book Delivery",
+    "personToMeet": "Librarian",
+    "date": "2024-02-05",
+    "timeIn": "02:00 PM",
+    "timeOut": null,
+    "phone": "+1234567803"
+  }
+]

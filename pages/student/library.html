@@ -1,0 +1,87 @@
+<!-- Library Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Library</h1>
+        <p class="text-gray-600 dark:text-gray-300">Browse and borrow books from the school library</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Total Books</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">83</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Available</p>
+            <h3 class="text-2xl font-bold text-green-600">42</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Borrowed by You</p>
+            <h3 class="text-2xl font-bold text-primary-600">2</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Borrow Limit</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">5</h3>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="md:col-span-2">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search Books</label>
+                <input type="text" id="searchInput" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5" placeholder="Search by title, author, or ISBN">
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                <select id="categoryFilter" onchange="filterBooks(this.value)" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-200 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    <option value="all">All Categories</option>
+                    <option value="Science">Science</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Literature">Literature</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Technology">Technology</option>
+                </select>
+            </div>
+            <div class="flex items-end md:col-span-2">
+                <button onclick="searchBooks()" class="w-full px-5 py-2.5 text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-700 dark:hover:bg-primary-800 font-medium rounded-lg text-sm">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Grid -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Available Books</h3>
+        <div id="booksContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Books will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Borrowed Books -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">My Borrowed Books</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Book Title</th>
+                        <th scope="col" class="px-6 py-3">Author</th>
+                        <th scope="col" class="px-6 py-3">Borrow Date</th>
+                        <th scope="col" class="px-6 py-3">Due Date</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowedBooksTable">
+                    <!-- Borrowed books will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

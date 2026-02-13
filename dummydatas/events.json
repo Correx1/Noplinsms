@@ -1,0 +1,22 @@
+[
+  {
+    "id": "E001",
+    "title": "Annual Sports Day",
+    "description": "School annual sports competition",
+    "date": "2024-03-15",
+    "time": "09:00 AM",
+    "location": "School Ground",
+    "organizer": "Sports Department",
+    "status": "Upcoming"
+  },
+  {
+    "id": "E002",
+    "title": "Science Fair",
+    "description": "Student science project exhibition",
+    "date": "2024-04-20",
+    "time": "10:00 AM",
+    "location": "Main Hall",
+    "organizer": "Science Department",
+    "status": "Upcoming"
+  }
+]

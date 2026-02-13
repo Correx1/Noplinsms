@@ -1,0 +1,122 @@
+<!-- Teacher Profile Page -->
+<div class="p-6 bg-white dark:bg-gray-900 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <div class="mb-4">
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">My Profile</h1>
+            <p class="text-gray-600 dark:text-gray-300">View and edit your profile information</p>
+        </div>
+    </div>
+</div>
+
+<div class="p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Profile Card -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+            <div class="flex flex-col items-center">
+                <img class="w-32 h-32 rounded-full mb-4" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Teacher">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Mr. Anderson</h3>
+                <p class="text-gray-600 dark:text-gray-300">Mathematics & Physics Teacher</p>
+                <button class="mt-4 px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 rounded-lg">
+                    <i class="fas fa-camera mr-2"></i>Change Photo
+                </button>
+            </div>
+            <div class="mt-6 space-y-3">
+                <div class="flex items-center text-sm">
+                    <i class="fas fa-envelope w-5 text-gray-500 dark:text-gray-400 mr-3"></i>
+                    <span class="text-gray-900 dark:text-gray-100">t.anderson@school.com</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <i class="fas fa-phone w-5 text-gray-500 dark:text-gray-400 mr-3"></i>
+                    <span class="text-gray-900 dark:text-gray-100">+234 123 456 7890</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <i class="fas fa-id-card w-5 text-gray-500 dark:text-gray-400 mr-3"></i>
+                    <span class="text-gray-900 dark:text-gray-100">EMP-2024-001</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="lg:col-span-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Personal Information</h3>
+            <form class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">First Name</label>
+                        <input type="text" value="Thomas" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Last Name</label>
+                        <input type="text" value="Anderson" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Email</label>
+                        <input type="email" value="t.anderson@school.com" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Phone</label>
+                        <input type="tel" value="+234 123 456 7890" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Address</label>
+                    <textarea rows="3" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">123 School Street, Lagos, Nigeria</textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Date of Birth</label>
+                        <input type="date" value="1985-05-15" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Gender</label>
+                        <select class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" class="px-5 py-2.5 text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium rounded-lg text-sm">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600 font-medium rounded-lg text-sm">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Professional Information -->
+    <div class="mt-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Professional Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Employee ID</label>
+                <input type="text" value="EMP-2024-001" disabled class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg block w-full p-2.5">
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Department</label>
+                <input type="text" value="Science" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Joining Date</label>
+                <input type="date" value="2020-09-01" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
+            </div>
+        </div>
+        <div class="mt-4">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Subjects Teaching</label>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-primary-100 dark:bg-primary-700 text-primary-800 dark:text-primary-100 text-sm font-medium rounded-full">Mathematics</span>
+                <span class="px-3 py-1 bg-purple-100 dark:bg-purple-700 text-purple-800 dark:text-purple-100 text-sm font-medium rounded-full">Physics</span>
+                <span class="px-3 py-1 bg-green-100 dark:bg-green-700 text-green-800 dark:text-green-100 text-sm font-medium rounded-full">Chemistry</span>
+            </div>
+        </div>
+        <div class="mt-4">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Qualifications</label>
+            <textarea rows="3" class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">B.Sc. Mathematics, M.Ed. Education, Teaching Certification</textarea>
+        </div>
+    </div>
+</div>

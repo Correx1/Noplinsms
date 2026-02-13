@@ -1,0 +1,24 @@
+[
+  {
+    "id": "TR001",
+    "routeName": "Route A",
+    "vehicleNumber": "SCH-001",
+    "driverName": "Mike Wilson",
+    "driverPhone": "+1234567898",
+    "capacity": 40,
+    "stops": ["Stop 1", "Stop 2", "Stop 3"],
+    "departureTime": "07:00 AM",
+    "status": "Active"
+  },
+  {
+    "id": "TR002",
+    "routeName": "Route B",
+    "vehicleNumber": "SCH-002",
+    "driverName": "Tom Anderson",
+    "driverPhone": "+1234567899",
+    "capacity": 35,
+    "stops": ["Stop 4", "Stop 5", "Stop 6"],
+    "departureTime": "07:30 AM",
+    "status": "Active"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "B001",
+    "title": "Introduction to Physics",
+    "author": "Richard Feynman",
+    "isbn": "978-0-465-02414-8",
+    "category": "Science",
+    "quantity": 10,
+    "available": 7,
+    "location": "Shelf A-12"
+  },
+  {
+    "id": "B002",
+    "title": "World History",
+    "author": "John Green",
+    "isbn": "978-0-143-12708-0",
+    "category": "History",
+    "quantity": 8,
+    "available": 5,
+    "location": "Shelf B-05"
+  }
+]

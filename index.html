@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - School Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-white h-screen overflow-hidden">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 h-full w-full">
+        <!-- Left Side: Illustration -->
+        <div class="hidden md:flex items-center justify-center bg-gray-50 relative">
+             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/images/login-illustration.png');"></div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="flex flex-col justify-center px-8 md:px-16 lg:px-24 bg-white relative">
+            <!-- Top Right Menu Icon -->
+            <div class="absolute top-6 right-6">
+                <button class="text-primary-500 hover:text-primary-700 bg-primary-100 p-2 rounded-full h-10 w-10 flex items-center justify-center">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+
+            <div class="w-full max-w-md mx-auto space-y-8">
+            <!-- Header -->
+<div class="text-left">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">Welcome</h1> <!-- static black -->
+    <p class="text-gray-500 text-sm">Please select your portal to continue</p>
+</div>
+
+<!-- Portal Selection Cards -->
+<div class="mt-8 space-y-4">
+    <!-- Staff Portal Card -->
+    <a href="login-staff.html" class="block">
+        <div class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition-all duration-200 cursor-pointer group">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-gray-300 rounded-lg group-hover:bg-gray-400 transition-colors">
+                        <i class="fas fa-user-tie text-2xl text-black"></i> <!-- static black -->
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Staff Portal</h3>
+                        <p class="text-sm text-gray-500">Admin & Teacher Login</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-black group-hover:text-primary-600 transition-colors"></i> <!-- icon static black -->
+            </div>
+        </div>
+    </a>
+
+    <!-- Student & Parent Portal Card -->
+    <a href="login-student-parent.html" class="block">
+        <div class="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition-all duration-200 cursor-pointer group">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-gray-300 rounded-lg group-hover:bg-gray-400 transition-colors">
+                        <i class="fas fa-users text-2xl text-black"></i> <!-- static black -->
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Student & Parent Portal</h3>
+                        <p class="text-sm text-gray-500">Student & Parent Login</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-black group-hover:text-primary-600 transition-colors"></i> <!-- icon static black -->
+            </div>
+        </div>
+    </a>
+</div>
+
+                <!-- Help Text -->
+                <div class="text-center mt-8">
+                    <p class="text-sm text-gray-500">
+                        Need help? <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">Contact Support</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js"></script>
+</body>
+</html>

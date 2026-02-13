@@ -1,0 +1,24 @@
+[
+  {
+    "id": "H001",
+    "name": "Boys Hostel A",
+    "warden": "Mr. Peterson",
+    "wardenPhone": "+1234567800",
+    "capacity": 100,
+    "occupied": 85,
+    "available": 15,
+    "type": "Boys",
+    "address": "Campus Block A"
+  },
+  {
+    "id": "H002",
+    "name": "Girls Hostel A",
+    "warden": "Mrs. Anderson",
+    "wardenPhone": "+1234567801",
+    "capacity": 80,
+    "occupied": 70,
+    "available": 10,
+    "type": "Girls",
+    "address": "Campus Block B"
+  }
+]

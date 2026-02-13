@@ -1,0 +1,297 @@
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Student Details</h1>
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome(); return false;" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <i class="fas fa-home mr-2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                        <a href="#" onclick="loadStudentsList(); return false;" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Students</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Details</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <div class="mt-4 md:mt-0 flex space-x-2">
+        <button onclick="window.print()" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+            <i class="fas fa-print mr-2"></i> Print
+        </button>
+        <button onclick="window.loadAddStudentPage(document.getElementById('view-student-id').textContent)" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+            <i class="fas fa-edit mr-2"></i> Edit
+        </button>
+        <button class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+            <i class="fas fa-trash-alt mr-2"></i> Delete
+        </button>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6 p-6">
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+        <!-- Photo -->
+        <div class="shrink-0 relative">
+            <img id="view-student-photo" class="h-32 w-32 rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 shadow-md" src="https://ui-avatars.com/api/?name=User&background=random" alt="Student Photo">
+            <span id="view-student-status" class="absolute bottom-2 right-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded border border-green-400">Active</span>
+        </div>
+        
+        <!-- Key Info -->
+        <div class="flex-1 w-full text-center md:text-left">
+            <h2 id="view-student-name" class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Loading Name...</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">ID: <span id="view-student-id" class="font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-800 dark:bg-gray-700 dark:text-gray-300">...</span></p>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <div>
+                    <span class="block text-gray-500 dark:text-gray-400">Class</span>
+                    <span id="view-student-class" class="font-semibold text-gray-900 dark:text-white">...</span>
+                </div>
+                <div>
+                    <span class="block text-gray-500 dark:text-gray-400">Roll No</span>
+                    <span id="view-student-roll" class="font-semibold text-gray-900 dark:text-white">...</span>
+                </div>
+                <div>
+                    <span class="block text-gray-500 dark:text-gray-400">Section</span>
+                    <span id="view-student-section" class="font-semibold text-gray-900 dark:text-white">...</span>
+                </div>
+                <div>
+                    <span class="block text-gray-500 dark:text-gray-400">Gender</span>
+                    <span id="view-student-gender" class="font-semibold text-gray-900 dark:text-white">...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <div class="border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="viewStudentTabs" role="tablist">
+            <li class="mr-2">
+                <button onclick="switchViewTab('profile')" id="profile-tab" class="inline-block p-4 border-b-2 rounded-t-lg text-primary-600 border-primary-600 active dark:text-primary-500 dark:border-primary-500" role="tab">Profile</button>
+            </li>
+            <li class="mr-2">
+                <button onclick="switchViewTab('attendance')" id="attendance-tab" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" role="tab">Attendance</button>
+            </li>
+            <li class="mr-2">
+                <button onclick="switchViewTab('marks')" id="marks-tab" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" role="tab">Marks</button>
+            </li>
+            <li class="mr-2">
+                <button onclick="switchViewTab('fees')" id="fees-tab" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" role="tab">Fees</button>
+            </li>
+            <li>
+                <button onclick="switchViewTab('documents')" id="documents-tab" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" role="tab">Documents</button>
+            </li>
+        </ul>
+    </div>
+
+    <div id="viewStudentTabContent" class="p-6">
+        
+        <!-- Tab 1: Profile -->
+        <div id="profile" role="tabpanel">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Personal -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4">Personal Information</h3>
+                    <dl class="space-y-3">
+                        <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                            <dt class="text-gray-500 dark:text-gray-400">Date of Birth</dt>
+                            <dd id="view-dob" class="font-medium text-gray-900 dark:text-white">...</dd>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                            <dt class="text-gray-500 dark:text-gray-400">Blood Group</dt>
+                            <dd id="view-blood" class="font-medium text-gray-900 dark:text-white">...</dd>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                            <dt class="text-gray-500 dark:text-gray-400">Religion</dt>
+                            <dd id="view-religion" class="font-medium text-gray-900 dark:text-white">...</dd>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                            <dt class="text-gray-500 dark:text-gray-400">Phone</dt>
+                            <dd id="view-phone" class="font-medium text-gray-900 dark:text-white">...</dd>
+                        </div>
+                        <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                            <dt class="text-gray-500 dark:text-gray-400">Email</dt>
+                            <dd id="view-email" class="font-medium text-gray-900 dark:text-white">...</dd>
+                        </div>
+                         <div class="flex justify-between pt-2">
+                            <dt class="text-gray-500 dark:text-gray-400">Address</dt>
+                            <dd id="view-address" class="font-medium text-gray-900 dark:text-white text-right w-1/2">...</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Academic & Parenting -->
+                <div class="space-y-8">
+                     <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4">Academic Details</h3>
+                        <dl class="space-y-3">
+                            <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                                <dt class="text-gray-500 dark:text-gray-400">Academic Year</dt>
+                                <dd id="view-academic-year" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                                <dt class="text-gray-500 dark:text-gray-400">Admission Date</dt>
+                                <dd id="view-admission-date" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                        </dl>
+                     </div>
+
+                     <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4">Parent Information</h3>
+                         <dl class="space-y-3">
+                            <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                                <dt class="text-gray-500 dark:text-gray-400">Father's Name</dt>
+                                <dd id="view-father-name" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                                <dt class="text-gray-500 dark:text-gray-400">Father's Phone</dt>
+                                <dd id="view-father-phone" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                             <div class="flex justify-between border-b border-gray-100 pb-2 dark:border-gray-700">
+                                <dt class="text-gray-500 dark:text-gray-400">Mother's Name</dt>
+                                <dd id="view-mother-name" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                             <div class="flex justify-between">
+                                <dt class="text-gray-500 dark:text-gray-400">Emergency Contact</dt>
+                                <dd id="view-emergency" class="font-medium text-gray-900 dark:text-white">...</dd>
+                            </div>
+                        </dl>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Attendance -->
+        <div id="attendance" role="tabpanel" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Calendar (Takes 2 columns) -->
+                <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Monthly Attendance</h4>
+                        <select id="attendance-month" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <option value="1">February 2024</option>
+                            <!-- JS will populate -->
+                        </select>
+                    </div>
+                    <!-- Calendar Container -->
+                    <div id="attendance-calendar" class="grid grid-cols-7 gap-2 text-center text-sm">
+                        <!-- JS renders here -->
+                    </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="space-y-4">
+                     <div class="bg-green-50 text-green-800 p-4 rounded-lg border border-green-200">
+                        <div class="font-semibold">Present Days</div>
+                        <div class="text-3xl font-bold" id="att-present">0</div>
+                     </div>
+                     <div class="bg-red-50 text-red-800 p-4 rounded-lg border border-red-200">
+                        <div class="font-semibold">Absent Days</div>
+                        <div class="text-3xl font-bold" id="att-absent">0</div>
+                     </div>
+                     <div class="bg-primary-50 text-primary-800 p-4 rounded-lg border border-primary-200">
+                        <div class="font-semibold">Total Percentage</div>
+                        <div class="text-3xl font-bold" id="att-percent">0%</div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Marks -->
+        <div id="marks" role="tabpanel" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                 <select id="exam-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <option>Select Exam</option>
+                 </select>
+                 <button class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-4 py-2">
+                    <i class="fas fa-download mr-2"></i> Report Card
+                 </button>
+            </div>
+            <div class="relative overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Subject</th>
+                            <th scope="col" class="px-6 py-3 text-center">Theory</th>
+                            <th scope="col" class="px-6 py-3 text-center">Practical</th>
+                            <th scope="col" class="px-6 py-3 text-center">Total</th>
+                            <th scope="col" class="px-6 py-3 text-center">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marks-table-body">
+                         <!-- JS renders here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 4: Fees -->
+        <div id="fees" role="tabpanel" class="hidden">
+             <!-- Fees Summary -->
+            <div class="mb-8">
+                <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Fee Summary</h4>
+                <div class="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-700 mb-2">
+                    <div id="fee-progress" class="bg-green-600 h-4 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-green-600 font-semibold" id="fee-paid">Paid: ₦0</span>
+                    <span class="text-red-500 font-semibold" id="fee-pending">Pending: ₦0</span>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Structure -->
+                <div>
+                    <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Fee Structure</h4>
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2">Type</th>
+                                <th class="px-4 py-2 text-right">Amount</th>
+                                <th class="px-4 py-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fee-structure-body"></tbody>
+                    </table>
+                </div>
+                 <!-- History -->
+                <div>
+                    <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Payment History</h4>
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2">Date</th>
+                                <th class="px-4 py-2">Amount</th>
+                                <th class="px-4 py-2">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fee-history-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Documents -->
+        <div id="documents" role="tabpanel" class="hidden">
+            <div class="flex justify-end mb-4">
+                 <button class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-4 py-2">
+                    <i class="fas fa-upload mr-2"></i> Upload New
+                 </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="documents-grid">
+                <!-- JS Renders here -->
+            </div>
+        </div>
+    </div>
+</div>

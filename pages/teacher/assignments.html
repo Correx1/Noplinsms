@@ -1,0 +1,117 @@
+<div class="p-4">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Assignments</h1>
+        <button onclick="document.getElementById('create-assignment-form').classList.toggle('hidden')" class="text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-5 py-2.5">
+            + Create New
+        </button>
+    </div>
+    
+   <!-- Create Form -->
+<div id="create-assignment-form"
+     class="hidden mb-6 p-6 bg-white border border-gray-200 rounded-lg shadow-sm
+            dark:bg-gray-800 dark:border-gray-700">
+
+    <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+        Post New Assignment
+    </h3>
+
+    <form class="space-y-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+                type="text"
+                placeholder="Assignment Title"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                       dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+            >
+
+            <select
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                       dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+                <option>Select Class (JSS 2A)</option>
+                <option>Select Class (SSS 1B)</option>
+            </select>
+        </div>
+
+        <textarea
+            rows="3"
+            placeholder="Description / Instructions"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                   dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+        ></textarea>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input
+                type="date"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                       dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+
+            <input
+                type="file"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5
+                       dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+        </div>
+
+        <div class="flex justify-end space-x-2">
+            <button
+                type="button"
+                onclick="document.getElementById('create-assignment-form').classList.add('hidden')"
+                class="text-gray-900 bg-white border border-gray-300 font-medium rounded-lg text-sm px-5 py-2.5
+                       hover:bg-gray-100
+                       dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="submit"
+                class="text-white bg-primary-700 hover:bg-primary-800
+                       font-medium rounded-lg text-sm px-5 py-2.5"
+            >
+                Post Assignment
+            </button>
+        </div>
+
+    </form>
+</div>
+
+    <!-- Assignment List -->
+    <div class="grid gap-4">
+        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h5 class="text-xl font-bold text-gray-900 dark:text-white">Calculus Problem Set 1</h5>
+                    <p class="text-sm text-gray-500">Class: SSS 1B • Due: 25 Oct 2023</p>
+                </div>
+                 <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Active</span>
+            </div>
+            <div class="mt-4 flex space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                <span><i class="fas fa-file-alt mr-1"></i> 1 Attachment</span>
+                <span><i class="fas fa-users mr-1"></i> 32/42 Submitted</span>
+            </div>
+             <div class="mt-4">
+                <button class="text-primary-600 hover:underline">View Submissions</button>
+            </div>
+        </div>
+
+         <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h5 class="text-xl font-bold text-gray-900 dark:text-white">Motion Project</h5>
+                    <p class="text-sm text-gray-500">Class: JSS 2A • Due: 20 Oct 2023</p>
+                </div>
+                 <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Graded</span>
+            </div>
+            <div class="mt-4 flex space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                <span><i class="fas fa-file-alt mr-1"></i> 0 Attachments</span>
+                <span><i class="fas fa-users mr-1"></i> 35/35 Submitted</span>
+            </div>
+             <div class="mt-4">
+                <button class="text-primary-600 hover:underline">View Results</button>
+            </div>
+        </div>
+    </div>
+</div>

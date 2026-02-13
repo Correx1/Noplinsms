@@ -1,0 +1,254 @@
+<!-- My Classes Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My Classes</h1>
+        <p class="text-gray-600 dark:text-gray-300">Overview of all classes you're teaching this semester</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Total Classes</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">5</h3>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Total Students</p>
+            <h3 class="text-2xl font-bold text-primary-600 dark:text-primary-400">187</h3>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Classes Today</p>
+            <h3 class="text-2xl font-bold text-green-600 dark:text-green-400">3</h3>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Avg. Attendance</p>
+            <h3 class="text-2xl font-bold text-orange-600 dark:text-orange-400">92%</h3>
+        </div>
+    </div>
+
+    <!-- Classes Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Class Card 1 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-4 text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold">Mathematics</h3>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">JSS 2A</span>
+                </div>
+                <p class="text-primary-100 text-sm">Room 101 • Period 1-2</p>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Students</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">35</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Attendance</p>
+                        <p class="text-lg font-semibold text-green-600 dark:text-green-400">94%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Assignments</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">8</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Avg. Grade</p>
+                        <p class="text-lg font-semibold text-primary-600 dark:text-primary-400">B+</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button onclick="viewClassStudents('JSS 2A', 'Mathematics')" class="w-full px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                        <i class="fas fa-users mr-2"></i>View Students
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="markClassAttendance('JSS 2A', 'Mathematics')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-check mr-1"></i>Attendance
+                        </button>
+                        <button onclick="viewClassAssignments('JSS 2A', 'Mathematics')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-book mr-1"></i>Assignments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Card 2 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold">Physics</h3>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">SSS 1B</span>
+                </div>
+                <p class="text-green-100 text-sm">Room 204 • Period 3-4</p>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Students</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">42</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Attendance</p>
+                        <p class="text-lg font-semibold text-green-600 dark:text-green-400">91%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Assignments</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">12</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Avg. Grade</p>
+                        <p class="text-lg font-semibold text-primary-600 dark:text-primary-400">A-</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button onclick="viewClassStudents('SSS 1B', 'Physics')" class="w-full px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                        <i class="fas fa-users mr-2"></i>View Students
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="markClassAttendance('SSS 1B', 'Physics')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-check mr-1"></i>Attendance
+                        </button>
+                        <button onclick="viewClassAssignments('SSS 1B', 'Physics')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-book mr-1"></i>Assignments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Card 3 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-4 text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold">Chemistry</h3>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">SSS 2A</span>
+                </div>
+                <p class="text-purple-100 text-sm">Lab 1 • Period 5-6</p>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Students</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">38</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Attendance</p>
+                        <p class="text-lg font-semibold text-green-600 dark:text-green-400">89%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Assignments</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">10</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Avg. Grade</p>
+                        <p class="text-lg font-semibold text-primary-600 dark:text-primary-400">B</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button onclick="viewClassStudents('SSS 2A', 'Chemistry')" class="w-full px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                        <i class="fas fa-users mr-2"></i>View Students
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="markClassAttendance('SSS 2A', 'Chemistry')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-check mr-1"></i>Attendance
+                        </button>
+                        <button onclick="viewClassAssignments('SSS 2A', 'Chemistry')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-book mr-1"></i>Assignments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Card 4 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 p-4 text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold">Biology</h3>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">JSS 3A</span>
+                </div>
+                <p class="text-orange-100 text-sm">Room 305 • Period 7-8</p>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Students</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">40</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Attendance</p>
+                        <p class="text-lg font-semibold text-green-600 dark:text-green-400">95%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Assignments</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">9</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Avg. Grade</p>
+                        <p class="text-lg font-semibold text-primary-600 dark:text-primary-400">A</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button onclick="viewClassStudents('JSS 3A', 'Biology')" class="w-full px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                        <i class="fas fa-users mr-2"></i>View Students
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="markClassAttendance('JSS 3A', 'Biology')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-check mr-1"></i>Attendance
+                        </button>
+                        <button onclick="viewClassAssignments('JSS 3A', 'Biology')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-book mr-1"></i>Assignments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Card 5 -->
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div class="bg-gradient-to-r from-red-500 to-red-600 p-4 text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold">Computer Science</h3>
+                    <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">SSS 3B</span>
+                </div>
+                <p class="text-red-100 text-sm">Lab 2 • Period 9-10</p>
+            </div>
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Students</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">32</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Attendance</p>
+                        <p class="text-lg font-semibold text-green-600 dark:text-green-400">93%</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Assignments</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white">15</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Avg. Grade</p>
+                        <p class="text-lg font-semibold text-primary-600 dark:text-primary-400">A+</p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button onclick="viewClassStudents('SSS 3B', 'Computer Science')" class="w-full px-4 py-2 text-sm text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                        <i class="fas fa-users mr-2"></i>View Students
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="markClassAttendance('SSS 3B', 'Computer Science')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-check mr-1"></i>Attendance
+                        </button>
+                        <button onclick="viewClassAssignments('SSS 3B', 'Computer Science')" class="px-3 py-2 text-sm text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">
+                            <i class="fas fa-book mr-1"></i>Assignments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

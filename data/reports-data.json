@@ -1,0 +1,39 @@
+{
+  "student": {
+    "summary": { "total": 1200, "boys": 650, "girls": 550, "new": 120 },
+    "chart": {
+      "labels": ["JSS1", "JSS2", "JSS3", "SSS1", "SSS2", "SSS3"],
+      "data": [210, 195, 205, 180, 200, 210]
+    },
+    "table": [
+      { "class": "JSS1", "total": 210, "boys": 110, "girls": 100 },
+      { "class": "JSS2", "total": 195, "boys": 105, "girls": 90 },
+      { "class": "JSS3", "total": 205, "boys": 115, "girls": 90 }
+    ]
+  },
+  "finance": {
+    "summary": { "income": 5000000, "expense": 1200000, "pending": 800000 },
+    "chart": {
+      "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      "data": [800000, 950000, 700000, 1100000, 600000, 850000]
+    },
+    "table": [
+      { "category": "Tuition Fees", "amount": 3500000, "type": "Income" },
+      { "category": "Transport Fees", "amount": 800000, "type": "Income" },
+      { "category": "Staff Salaries", "amount": -1000000, "type": "Expense" },
+      { "category": "Infrastructure", "amount": -200000, "type": "Expense" }
+    ]
+  },
+  "attendance": {
+    "summary": { "avg_presence": "92%", "absent_today": 45, "late_today": 12 },
+    "chart": {
+      "labels": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+      "data": [95, 93, 88, 92, 90]
+    },
+    "table": [
+      { "date": "2023-10-23", "present": "95%", "absent": "5%" },
+      { "date": "2023-10-24", "present": "93%", "absent": "7%" },
+      { "date": "2023-10-25", "present": "88%", "absent": "12%" }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "inventory": [
+    {
+      "id": "BK001",
+      "title": "Introduction to Physics",
+      "author": "H.C. Verma",
+      "isbn": "978-8123456789",
+      "category": "Science",
+      "publisher": "Bharti Bhawan",
+      "year": "2022",
+      "total_copies": 20,
+      "available": 15,
+      "location": "Shelf A-1"
+    },
+    {
+      "id": "BK002",
+      "title": "Organic Chemistry",
+      "author": "Morrison & Boyd",
+      "isbn": "978-0136436690",
+      "category": "Science",
+      "publisher": "Pearson",
+      "year": "2020",
+      "total_copies": 10,
+      "available": 2,
+      "location": "Shelf A-2"
+    },
+    {
+      "id": "BK003",
+      "title": "Things Fall Apart",
+      "author": "Chinua Achebe",
+      "isbn": "978-0385474542",
+      "category": "Literature",
+      "publisher": "Anchor",
+      "year": "1994",
+      "total_copies": 30,
+      "available": 28,
+      "location": "Shelf B-1"
+    }
+  ],
+  "issued": [
+    {
+      "txnId": "TXN501",
+      "bookId": "BK002",
+      "bookTitle": "Organic Chemistry",
+      "memberId": "STU1001",
+      "memberName": "John Doe",
+      "type": "Student",
+      "issueDate": "2023-10-10",
+      "dueDate": "2023-10-24",
+      "status": "Issued"
+    },
+    {
+      "txnId": "TXN502",
+      "bookId": "BK001",
+      "bookTitle": "Introduction to Physics",
+      "memberId": "TCH202",
+      "memberName": "Sarah Smith",
+      "type": "Teacher",
+      "issueDate": "2023-09-01",
+      "dueDate": "2023-09-30",
+      "status": "Overdue"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+    {
+        "id": "STF001",
+        "name": "Sarah Wilson",
+        "photo": "https://ui-avatars.com/api/?name=Sarah+Wilson&background=random&size=150",
+        "department": "Teaching Staff",
+        "designation": "Senior Teacher",
+        "shift": "Morning"
+    },
+    {
+        "id": "STF002",
+        "name": "Michael Brown",
+        "photo": "https://ui-avatars.com/api/?name=Michael+Brown&background=random&size=150",
+        "department": "Teaching Staff",
+        "designation": "Teacher",
+        "shift": "Morning"
+    },
+    {
+        "id": "STF003",
+        "name": "John Smith",
+        "photo": "https://ui-avatars.com/api/?name=John+Smith&background=random&size=150",
+        "department": "Administrative",
+        "designation": "Accountant",
+        "shift": "Morning"
+    },
+    {
+        "id": "STF004",
+        "name": "Mary Johnson",
+        "photo": "https://ui-avatars.com/api/?name=Mary+Johnson&background=random&size=150",
+        "department": "Non-Teaching Staff",
+        "designation": "Librarian",
+        "shift": "Morning"
+    },
+    {
+        "id": "STF005",
+        "name": "Robert Davis",
+        "photo": "https://ui-avatars.com/api/?name=Robert+Davis&background=random&size=150",
+        "department": "Non-Teaching Staff",
+        "designation": "Security Guard",
+        "shift": "Night"
+    }
+]

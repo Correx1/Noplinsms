@@ -1,0 +1,213 @@
+<!-- Mark Attendance Page -->
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Mark Attendance</h1>
+        <p class="text-gray-600 dark:text-gray-400">Record student attendance for your classes</p>
+    </div>
+</div>
+
+<div class="p-4 dark:bg-gray-900">
+    <!-- Filters -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6 dark:bg-gray-800 dark:border-gray-700">
+        <form id="fetchStudentsForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Select Class</label>
+                <select id="classSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">Select Class</option>
+                    <option value="JSS 2A">JSS 2A - Mathematics</option>
+                    <option value="SSS 1B">SSS 1B - Physics</option>
+                    <option value="SSS 2A">SSS 2A - Chemistry</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Date</label>
+                <input type="date" id="attendanceDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Period</label>
+                <select id="periodSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>Period 1 (08:00-08:45)</option>
+                    <option>Period 2 (09:00-09:45)</option>
+                    <option>Period 3 (10:00-10:45)</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5">
+                    <i class="fas fa-users mr-2"></i>Fetch Students
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Attendance Table -->
+    <div id="attendanceTableContainer" class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700" style="display: none;">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Attendance Sheet - <span id="selectedClass"></span>
+            </h3>
+            <div class="flex gap-2">
+                <button onclick="markAllPresent()" class="px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg">
+                    <i class="fas fa-check-double mr-2"></i>Mark All Present
+                </button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-6 py-3">Roll No</th>
+                        <th class="px-6 py-3">Student Name</th>
+                        <th class="px-6 py-3">Status</th>
+                        <th class="px-6 py-3">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="attendanceTableBody" class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
+                    <!-- Students will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        <div class="p-4 border-t border-gray-200 flex justify-between items-center dark:border-gray-700">
+            <div class="text-sm text-gray-600 dark:text-gray-300">
+                Present: <span id="presentCount" class="font-semibold text-green-600 dark:text-green-400">0</span> |
+                Absent: <span id="absentCount" class="font-semibold text-red-600 dark:text-red-400">0</span> |
+                Total: <span id="totalCount" class="font-semibold text-gray-900 dark:text-gray-100">0</span>
+            </div>
+            <button onclick="saveAttendance()" class="px-5 py-2.5 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm">
+                <i class="fas fa-save mr-2"></i>Save Attendance
+            </button>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="bg-white border border-gray-200 rounded-lg shadow-sm p-12 text-center dark:bg-gray-800 dark:border-gray-700">
+        <i class="fas fa-users text-6xl text-gray-300 dark:text-gray-500 mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Students Loaded</h3>
+        <p class="text-gray-600 dark:text-gray-400">
+            Select a class and date, then click "Fetch Students" to begin marking attendance.
+        </p>
+    </div>
+</div>
+
+<script>
+// Sample student data
+const studentData = {
+    'JSS 2A': [
+        {rollNo: '001', name: 'John Doe'},
+        {rollNo: '002', name: 'Jane Smith'},
+        {rollNo: '003', name: 'David Brown'},
+        {rollNo: '004', name: 'Sarah Williams'},
+        {rollNo: '005', name: 'Michael Johnson'}
+    ],
+    'SSS 1B': [
+        {rollNo: '101', name: 'Alice Cooper'},
+        {rollNo: '102', name: 'Bob Martin'},
+        {rollNo: '103', name: 'Carol White'}
+    ],
+    'SSS 2A': [
+        {rollNo: '201', name: 'Emma Davis'},
+        {rollNo: '202', name: 'Frank Miller'},
+        {rollNo: '203', name: 'Grace Lee'}
+    ]
+};
+
+// Set today's date
+document.getElementById('attendanceDate').valueAsDate = new Date();
+
+// Fetch Students
+document.getElementById('fetchStudentsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const selectedClass = document.getElementById('classSelect').value;
+
+    if (!selectedClass) {
+        alert('Please select a class');
+        return;
+    }
+
+    const students = studentData[selectedClass] || [];
+    const tbody = document.getElementById('attendanceTableBody');
+    tbody.innerHTML = '';
+
+students.forEach(student => {
+   const row = `
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+        <td class="px-6 py-4 text-gray-900 dark:text-white ">
+            ${student.rollNo}
+        </td>
+        <td class="px-6 py-4 text-gray-700 dark:text-gray-200 dark:bg-gray-800">
+            ${student.name}
+        </td>
+        <td class="px-6 py-4 dark:bg-gray-800">
+            <div class="flex gap-4">
+                <label class="flex items-center gap-2 text-green-600 dark:text-green-400">
+                    <input type="radio" name="att_${student.rollNo}" value="present" checked onchange="updateCounts()">
+                    Present
+                </label>
+                <label class="flex items-center gap-2 text-red-600 dark:text-red-400">
+                    <input type="radio" name="att_${student.rollNo}" value="absent" onchange="updateCounts()">
+                    Absent
+                </label>
+            </div>
+        </td>
+        <td class="px-6 py-4 dark:bg-gray-800">
+            <input type="text"
+                class="w-full p-2 rounded-lg border bg-gray-50 border-gray-300
+                       dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </td>
+    </tr>
+`;
+    tbody.innerHTML += row;
+});
+
+    document.getElementById('selectedClass').textContent = selectedClass;
+    document.getElementById('attendanceTableContainer').style.display = 'block';
+    document.getElementById('emptyState').style.display = 'none';
+    updateCounts();
+});
+
+
+
+function updateCounts() {
+    const radios = document.querySelectorAll('input[type="radio"]:checked');
+    let present = 0, absent = 0;
+
+    radios.forEach(radio => {
+        if (radio.value === 'present') present++;
+        else if (radio.value === 'absent') absent++;
+    });
+
+    document.getElementById('presentCount').textContent = present;
+    document.getElementById('absentCount').textContent = absent;
+    document.getElementById('totalCount').textContent = present + absent;
+}
+
+function markAllPresent() {
+    const presentRadios = document.querySelectorAll('input[type="radio"][value="present"]');
+    presentRadios.forEach(radio => radio.checked = true);
+    updateCounts();
+}
+
+function saveAttendance() {
+    const classVal = document.getElementById('classSelect').value;
+    const date = document.getElementById('attendanceDate').value;
+
+    if (!classVal || !date) {
+        alert('Please select class and date');
+        return;
+    }
+
+    const attendanceData = [];
+    const rows = document.querySelectorAll('#attendanceTableBody tr');
+
+    rows.forEach(row => {
+        const rollNo = row.querySelector('td:first-child').textContent;
+        const name = row.querySelector('td:nth-child(2)').textContent;
+        const status = row.querySelector('input[type="radio"]:checked').value;
+        const remarks = row.querySelector('input[type="text"]').value;
+
+        attendanceData.push({rollNo, name, status, remarks});
+    });
+
+    console.log('Attendance Data:', {class: classVal, date, data: attendanceData});
+    alert('Attendance saved successfully!');
+}
+</script>

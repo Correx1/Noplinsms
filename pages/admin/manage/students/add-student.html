@@ -1,0 +1,396 @@
+<!-- Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add New Student</h1>
+        <nav class="flex" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome(); return false;" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                        <svg class="w-3 h-3 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                           <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                        <a href="#" onclick="loadStudentsList(); return false;" class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Students</a>
+                    </div>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Add New</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </div>
+    <button onclick="loadStudentsList()" class="mt-4 md:mt-0 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back
+    </button>
+</div>
+
+<!-- Form Card -->
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    
+    <!-- Tabs -->
+    <div class="border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400" id="studentTabs" role="tablist">
+            <li class="mr-2" role="presentation">
+                <button onclick="switchTab('personal')" class="inline-block p-4 border-b-2 rounded-t-lg active text-primary-600 border-primary-600 dark:text-primary-500 dark:border-primary-500" id="personal-tab" type="button" role="tab">Personal Info</button>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button onclick="switchTab('parent')" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="parent-tab" type="button" role="tab">Parent Info</button>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button onclick="switchTab('academic')" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="academic-tab" type="button" role="tab">Academic Info</button>
+            </li>
+            <li role="presentation">
+                <button onclick="switchTab('documents')" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="documents-tab" type="button" role="tab">Documents</button>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Form Content -->
+    <form id="addStudentForm" class="p-6">
+        <div id="studentTabContent">
+            
+            <!-- Personal Info Tab -->
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="personal" role="tabpanel" aria-labelledby="personal-tab">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4">Basic Information</h3>
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <!-- Photo Upload -->
+                    <div class="md:col-span-2 flex items-center gap-4">
+                         <div class="shrink-0">
+                            <img id="photo-preview" class="h-24 w-24 object-cover rounded-full border-2 border-gray-200 dark:border-gray-600" src="https://ui-avatars.com/api/?name=New+Student&background=random" alt="Current profile photo" />
+                          </div>
+                          <label class="block">
+                            <span class="sr-only">Choose profile photo</span>
+                            <div class="flex flex-col">
+                                <label for="student-photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload Photo</label>
+                                <input type="file" id="student-photo" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">SVG, PNG, JPG or GIF (MAX. 800x400px).</p>
+                            </div>
+                          </label>
+                    </div>
+
+                    <!-- First Name -->
+                    <div>
+                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First name <span class="text-red-500">*</span></label>
+                        <input type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="John" required>
+                    </div>
+                    <!-- Last Name -->
+                    <div>
+                        <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last name <span class="text-red-500">*</span></label>
+                        <input type="text" id="last_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Doe" required>
+                    </div>
+                    <!-- Date of Birth -->
+                    <div class="relative">
+                        <label for="dob" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth <span class="text-red-500">*</span></label>
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pt-8 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                            </svg>
+                        </div>
+                        <input type="date" id="dob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <!-- Gender -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender <span class="text-red-500">*</span></label>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center">
+                                <input id="gender-male" type="radio" value="Male" name="gender" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" checked>
+                                <label for="gender-male" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="gender-female" type="radio" value="Female" name="gender" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="gender-female" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Blood Group -->
+                     <div>
+                        <label for="blood_group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blood Group</label>
+                        <select id="blood_group" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="">Select</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <!-- Religion -->
+                     <div>
+                        <label for="religion" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Religion</label>
+                        <select id="religion" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="">Select</option>
+                            <option value="Christianity">Christianity</option>
+                            <option value="Islam">Islam</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4 mt-6">Contact Information</h3>
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                     <!-- Email -->
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Address</label>
+                        <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="student@example.com">
+                    </div>
+                     <!-- Phone -->
+                    <div>
+                        <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+                        <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="08012345678">
+                    </div>
+                    <!-- Address -->
+                    <div class="md:col-span-2">
+                         <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                         <textarea id="address" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Full residential address..."></textarea>
+                    </div>
+                    <!-- City -->
+                    <div>
+                        <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
+                        <input type="text" id="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Lagos">
+                    </div>
+                    <!-- State -->
+                    <div>
+                        <label for="state" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">State</label>
+                        <select id="state" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="">Select State</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Abuja">Abuja</option>
+                            <option value="Rivers">Rivers</option>
+                            <option value="Ogun">Ogun</option>
+                            <option value="Kano">Kano</option>
+                            <!-- Add more states as needed -->
+                        </select>
+                    </div>
+                    <!-- Postal Code -->
+                    <div>
+                        <label for="postal_code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Postal Code</label>
+                        <input type="text" id="postal_code" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="100001">
+                    </div>
+                </div>
+                <!-- Tab Actions -->
+                <div class="flex justify-end mt-6">
+                    <button type="button" onclick="document.querySelector('#parent-tab').click()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Next: Parent Info <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Parent Info Tab -->
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="parent" role="tabpanel" aria-labelledby="parent-tab">
+                 <div class="grid gap-6 mb-6 md:grid-cols-2">
+                     <h3 class="md:col-span-2 text-lg font-semibold text-gray-900 dark:text-white border-b pb-2">Father's Information</h3>
+                     <div>
+                        <label for="father_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Father's Name</label>
+                        <input type="text" id="father_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                     <div>
+                        <label for="father_phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Father's Phone</label>
+                        <input type="tel" id="father_phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="father_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Father's Email</label>
+                        <input type="email" id="father_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="father_occupation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Father's Occupation</label>
+                        <input type="text" id="father_occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+
+                    <h3 class="md:col-span-2 text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mt-4">Mother's Information</h3>
+                    <div>
+                        <label for="mother_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mother's Name</label>
+                        <input type="text" id="mother_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                     <div>
+                        <label for="mother_phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mother's Phone</label>
+                        <input type="tel" id="mother_phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="mother_email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mother's Email</label>
+                        <input type="email" id="mother_email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="mother_occupation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mother's Occupation</label>
+                        <input type="text" id="mother_occupation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    
+                    <h3 class="md:col-span-2 text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mt-4">Emergency Contact</h3>
+                    <div>
+                        <label for="emergency_phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Emergency Contact Number <span class="text-red-500">*</span></label>
+                        <input type="tel" id="emergency_phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                 </div>
+                 <!-- Tab Actions -->
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="document.querySelector('#personal-tab').click()" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <button type="button" onclick="document.querySelector('#academic-tab').click()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Next: Academic Info <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Academic Info Tab -->
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="academic" role="tabpanel" aria-labelledby="academic-tab">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year <span class="text-red-500">*</span></label>
+                        <select id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            <option value="2024-2025">2024-2025</option>
+                            <option value="2025-2026">2025-2026</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="admission_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Admission Date</label>
+                        <div class="relative max-w-sm">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                               <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                               </svg>
+                            </div>
+                        <input type="date" id="admission_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Select date">
+                         </div>
+                    </div>
+                     <div>
+                        <label for="class_select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class <span class="text-red-500">*</span></label>
+                        <select id="class_select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            <option value="">Select Class</option>
+                            <option value="JSS1">JSS1</option>
+                            <option value="JSS2">JSS2</option>
+                            <option value="JSS3">JSS3</option>
+                            <option value="SS1">SS1</option>
+                            <option value="SS2">SS2</option>
+                            <option value="SS3">SS3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="section_select" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section <span class="text-red-500">*</span></label>
+                        <select id="section_select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            <option value="">Select Section</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="roll_no" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Roll Number</label>
+                        <input type="text" id="roll_no" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Auto-generated or Manual">
+                    </div>
+
+                    <h3 class="md:col-span-2 text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mt-4">Previous School Details</h3>
+                    <div>
+                        <label for="previous_school" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Previous School Name</label>
+                        <input type="text" id="previous_school" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="previous_class" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Previous Class</label>
+                        <input type="text" id="previous_class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                </div>
+                <!-- Tab Actions for Academic -->
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="document.querySelector('#parent-tab').click()" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <button type="button" onclick="document.querySelector('#documents-tab').click()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Next: Documents <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div> <!-- End Academic Tab -->
+            
+            <!-- Documents Tab -->
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4">Upload Documents</h3>
+                 <div class="grid gap-6 mb-6 md:grid-cols-2">
+                     <!-- Birth Certificate -->
+                     <div class="border p-4 rounded-lg bg-white dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_birth_cert">Birth Certificate</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_birth_cert" type="file" multiple>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">SVG, PNG, JPG or PDF. Multiple files allowed.</p>
+                     </div>
+                     <!-- Transfer Certificate -->
+                     <div class="border p-4 rounded-lg bg-white dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_transfer_cert">Transfer Certificate</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_transfer_cert" type="file" multiple>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">SVG, PNG, JPG or PDF. Multiple files allowed.</p>
+                     </div>
+                     <!-- Photos -->
+                     <div class="border p-4 rounded-lg bg-white dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_photos">Student Photos</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_photos" type="file" multiple>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">JPG, PNG. Multiple files allowed.</p>
+                     </div>
+                     <!-- Other Docs -->
+                     <div class="border p-4 rounded-lg bg-white dark:bg-gray-700">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_other">Other Documents</label>
+                        <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_other" type="file" multiple>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">Multiple files allowed.</p>
+                     </div>
+                 </div>
+                 
+                 <!-- Uploaded List Container -->
+                 <h4 class="text-md font-medium text-gray-900 dark:text-white mb-2">Uploaded Files</h4>
+                 <div id="file-list" class="space-y-2 border-t pt-2">
+                     <p class="text-sm text-gray-500 italic">No files selected yet.</p>
+                 </div>
+
+                 <!-- Tab Actions for Documents -->
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button type="button" onclick="window.switchTab('academic')" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                    <button type="button" onclick="document.getElementById('save-student-btn').click()" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        Save Student <i class="fas fa-check ml-2"></i>
+                    </button>
+                </div>
+            </div> <!-- End Documents Tab -->
+            
+        </div>
+
+        <!-- Sticky Actions (Main Save Buttons) -->
+        <div class="flex items-center justify-end space-x-2 mt-6 border-t pt-4 border-gray-200 dark:border-gray-700">
+             <button onclick="loadStudentsList()" type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+                Cancel
+             </button>
+             <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                Save Note & Add Another
+             </button>
+             <button type="submit" id="save-student-btn" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                Save Student
+             </button>
+        </div>
+    </form>
+</div>
+
+<!-- Toast -->
+<div id="toast-success" class="fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 hidden" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+        </svg>
+        <span class="sr-only">Check icon</span>
+    </div>
+    <div class="ml-3 text-sm font-normal">Student added successfully.</div>
+    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+    </button>
+</div>

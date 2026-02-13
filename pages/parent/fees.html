@@ -1,0 +1,150 @@
+<!-- Fees Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100 sm:text-2xl">Fees & Payments</h1>
+        <p class="text-gray-600 dark:text-gray-300">Manage fee payments for your children</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Overall Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Total Fees (All Children)</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">₦300,000</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Total Paid</p>
+            <h3 class="text-2xl font-bold text-green-600 dark:text-green-400">₦275,000</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Total Pending</p>
+            <h3 class="text-2xl font-bold text-orange-600 dark:text-orange-400">₦25,000</h3>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4">
+            <p class="text-sm text-gray-600 dark:text-gray-300">Next Due Date</p>
+            <h3 class="text-xl font-bold text-red-600 dark:text-red-400">30 Oct</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2026</p>
+        </div>
+    </div>
+
+    <!-- Fee Breakdown by Child -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Alex Johnson Fees -->
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+            <div class="p-4 bg-primary-50 dark:bg-primary-900 border-b border-primary-200 dark:border-primary-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Alex Johnson - SSS 2B</h3>
+            </div>
+            <div class="p-4">
+                <div class="space-y-3 mb-4">
+                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-gray-100">Tuition Fee (Term 3)</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Due: Apr 15, 2026</p>
+                        </div>
+                        <span class="px-2 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 text-xs font-medium rounded-full">Pending</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 dark:text-gray-300">Amount:</span>
+                        <span class="text-xl font-bold text-red-600 dark:text-red-400">₦25,000</span>
+                    </div>
+                </div>
+                <button onclick="makePayment('Alex Johnson', '25,000')" class="w-full px-4 py-2 text-white bg-primary-600 dark:bg-primary-500 hover:bg-primary-700 dark:hover:bg-primary-600 rounded-lg">
+                    <i class="fas fa-credit-card mr-2"></i>Make Payment
+                </button>
+            </div>
+        </div>
+
+        <!-- Emily Johnson Fees -->
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+            <div class="p-4 bg-green-50 dark:bg-green-900 border-b border-green-200 dark:border-green-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Emily Johnson - JSS 3A</h3>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center justify-center py-8">
+                    <div class="text-center">
+                        <i class="fas fa-check-circle text-6xl text-green-600 dark:text-green-400 mb-3"></i>
+                        <p class="text-lg font-semibold text-green-800 dark:text-green-200">All Fees Paid</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">No pending payments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Payment History</h3>
+            <button class="px-4 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 font-medium rounded-lg text-sm">
+                <i class="fas fa-download mr-2"></i>Download All Receipts
+            </button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-300">
+                <thead class="text-xs text-gray-700 dark:text-gray-200 uppercase bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">Receipt No.</th>
+                        <th scope="col" class="px-6 py-3">Child Name</th>
+                        <th scope="col" class="px-6 py-3">Date</th>
+                        <th scope="col" class="px-6 py-3">Description</th>
+                        <th scope="col" class="px-6 py-3">Amount</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">#RCP-2026-001</td>
+                        <td class="px-6 py-4">Alex Johnson</td>
+                        <td class="px-6 py-4">Jan 10, 2026</td>
+                        <td class="px-6 py-4">Tuition Fee - Term 2</td>
+                        <td class="px-6 py-4 font-semibold text-green-600 dark:text-green-400">₦50,000</td>
+                        <td class="px-6 py-4">
+                            <button onclick="downloadReceipt('#RCP-2026-001', 'Jan 10, 2026', '₦50,000')" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200">
+                                <i class="fas fa-download mr-1"></i>Receipt
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">#RCP-2026-002</td>
+                        <td class="px-6 py-4">Emily Johnson</td>
+                        <td class="px-6 py-4">Jan 10, 2026</td>
+                        <td class="px-6 py-4">Tuition Fee - Term 2</td>
+                        <td class="px-6 py-4 font-semibold text-green-600 dark:text-green-400">₦50,000</td>
+                        <td class="px-6 py-4">
+                            <button onclick="downloadReceipt('#RCP-2026-002', 'Jan 10, 2026', '₦50,000')" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200">
+                                <i class="fas fa-download mr-1"></i>Receipt
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">#RCP-2025-045</td>
+                        <td class="px-6 py-4">Alex Johnson</td>
+                        <td class="px-6 py-4">Sep 15, 2025</td>
+                        <td class="px-6 py-4">Tuition + Other Fees</td>
+                        <td class="px-6 py-4 font-semibold text-green-600 dark:text-green-400">₦75,000</td>
+                        <td class="px-6 py-4">
+                            <button onclick="downloadReceipt('#RCP-2025-045', 'Sep 15, 2025', '₦75,000')" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200">
+                                <i class="fas fa-download mr-1"></i>Receipt
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">#RCP-2025-046</td>
+                        <td class="px-6 py-4">Emily Johnson</td>
+                        <td class="px-6 py-4">Sep 15, 2025</td>
+                        <td class="px-6 py-4">Tuition + Other Fees</td>
+                        <td class="px-6 py-4 font-semibold text-green-600 dark:text-green-400">₦100,000</td>
+                        <td class="px-6 py-4">
+                            <button onclick="downloadReceipt('#RCP-2025-046', 'Sep 15, 2025', '₦100,000')" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200">
+                                <i class="fas fa-download mr-1"></i>Receipt
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="../../js/parent-pages.js"></script>

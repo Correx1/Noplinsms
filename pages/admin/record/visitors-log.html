@@ -1,0 +1,110 @@
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500">Record</span>
+                    </div>
+                </li>
+                <li>
+                     <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Visitors Log</span>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Visitors Management</h1>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Action Bar -->
+    <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+        <button type="button" onclick="document.getElementById('add-visitor-section').classList.toggle('hidden')" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 mb-2 md:mb-0">
+            <i class="fas fa-user-plus mr-2"></i> Add New Visitor
+        </button>
+        <div class="flex space-x-2">
+             <input type="text" id="visitor-search" placeholder="Search visitors..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+    </div>
+
+    <!-- Add Visitor Section -->
+    <div id="add-visitor-section" class="hidden p-4 bg-primary-50 border border-primary-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Visitor Entry</h3>
+        <form id="add-visitor-form">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-2">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Visitor Name</label>
+                    <input type="text" id="v-name" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+                    <input type="tel" id="v-phone" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Vehicle No.</label>
+                     <input type="text" id="v-vehicle" placeholder="Optional" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Proof Type</label>
+                    <select id="v-id-type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="National ID">National ID</option>
+                        <option value="Drivers License">Driver's License</option>
+                        <option value="Voters Card">Voter's Card</option>
+                        <option value="International Passport">Intl. Passport</option>
+                        <option value="Staff ID">Staff ID (Other Org)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Number</label>
+                    <input type="text" id="v-id-no" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Purpose</label>
+                    <select id="v-purpose" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="Meeting">Meeting</option>
+                        <option value="Interview">Interview</option>
+                        <option value="Inquiry">Inquiry</option>
+                        <option value="Delivery">Delivery</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">To Meet</label>
+                    <input type="text" id="v-meet" placeholder="Staff Name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                 <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expected Exit</label>
+                    <input type="time" id="v-exp-exit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                    Check In Visitor
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Visitors Table -->
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Entry Time</th>
+                    <th scope="col" class="px-6 py-3">Visitor Details</th>
+                    <th scope="col" class="px-6 py-3">Purpose / Meet</th>
+                    <th scope="col" class="px-6 py-3">Exit Time</th>
+                    <th scope="col" class="px-6 py-3">Status</th>
+                    <th scope="col" class="px-6 py-3 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="visitors-table-body">
+                <!-- Data Rows -->
+            </tbody>
+        </table>
+    </div>
+</div>

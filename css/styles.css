@@ -1,0 +1,304 @@
+/* Import Flowbite styles */
+@import 'flowbite';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50;
+  }
+
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg px-5 py-2.5 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg px-5 py-2.5 transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-sm p-6;
+  }
+  
+  .input-field {
+    @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5;
+  }
+  
+  .table-header {
+    @apply text-xs text-gray-700 uppercase bg-gray-100;
+  }
+  
+  .table-row {
+    @apply bg-white border-b hover:bg-gray-50;
+  }
+
+  /* Enhanced Select Dropdown Styles - Premium Look */
+  :not(.dark) select:not([class*="dark:"]) {
+    background-color: #ffffff;
+    border: 2px solid #e5e7eb;
+    color: #000000;
+    border-radius: 8px;
+    padding: 8px 36px 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%234b5563' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    display: block;
+    width: 100%;
+  }
+
+/* Hover state for selects (non-dark) */
+:not(.dark) select:hover:not([class*="dark:"]) {
+    border-color: var(--color-primary-400);      
+    background-color: var(--color-primary-50);   
+    box-shadow: 0 4px 6px rgba(var(--color-primary-rgb, 37, 99, 235), 0.1); 
+}
+
+/* Focus state for selects (non-dark) */
+:not(.dark) select:focus:not([class*="dark:"]) {
+    outline: none;
+    border-color: var(--color-primary-500);       
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb, 37, 99, 235), 0.1),
+                0 4px 6px rgba(0, 0, 0, 0.07);
+    background-color: var(--color-primary-50);    
+}
+
+
+  
+  /* Dropdown options styling */
+  select option {
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  select option:hover {
+    background-color: var(--color-primary-50);
+}
+
+select option:checked {
+    background-color: var(--color-primary-100);
+    font-weight: 600;
+    color: var(--color-primary-600);
+}
+
+.dark select {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%9ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+.dark select:hover {
+    background-color: #374151;
+    border-color: #6b7280;
+}
+
+.dark select:focus {
+    background-color: #1f2937;
+}
+
+.dark select option {
+    background-color: #1f2937;
+    color: #ffffff;
+}
+
+.dark select option:checked {
+    background-color: #374151;
+}
+
+  /* Input field enhancements - Fancy Premium Style */
+  /* Only apply to inputs that don't have explicit dark mode classes */
+  :not(.dark) input[type="text"]:not([class*="dark:"]),
+  :not(.dark) input[type="email"]:not([class*="dark:"]),
+  :not(.dark) input[type="password"]:not([class*="dark:"]),
+  :not(.dark) input[type="number"]:not([class*="dark:"]),
+  :not(.dark) input[type="date"]:not([class*="dark:"]),
+  :not(.dark) input[type="time"]:not([class*="dark:"]),
+  :not(.dark) input[type="search"]:not([class*="dark:"]),
+  :not(.dark) textarea:not([class*="dark:"]) {
+    background-color: #ffffff;
+    border: 2px solid #e5e7eb;
+    color: #000000;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    display: block;
+    width: 100%;
+  }
+
+ :not(.dark) input:hover:not([class*="dark:"]),
+:not(.dark) textarea:hover:not([class*="dark:"]) {
+    border-color: var(--color-primary-300, #93c5fd);
+    background-color: var(--color-primary-50, #eff6ff);
+}
+
+:not(.dark) input:focus:not([class*="dark:"]),
+:not(.dark) textarea:focus:not([class*="dark:"]) {
+    outline: none;
+    border-color: var(--color-primary-500, #2563eb);
+    background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-gray-400, #9ca3af);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="search"],
+.dark textarea {
+    background-color: #1f2937;
+    border-color: var(--color-primary-600, #4b5563);
+    color: #ffffff;
+}
+
+.dark input:hover,
+.dark textarea:hover {
+    background-color: #374151;
+    border-color: var(--color-primary-500, #6b7280);
+}
+
+.dark input:focus,
+.dark textarea:focus {
+    background-color: #1f2937;
+    border-color: var(--color-primary-500, #2563eb);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #6b7280;
+}
+
+  /* Card styling - Premium Look */
+  .card,
+  [class*="bg-white"][class*="rounded"],
+  .bg-white.shadow {
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #f3f4f6;
+  }
+
+  .dark .card,
+  .dark [class*="bg-white"][class*="rounded"],
+  .dark .bg-white.shadow {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .card:hover,
+  [class*="bg-white"][class*="rounded"]:hover {
+  }
+
+  /* Modal enhancements */
+  [data-modal-backdrop] {
+    @apply bg-gray-900 bg-opacity-50;
+  }
+
+  .modal-content {
+    @apply bg-white rounded-lg shadow-xl;
+  }
+
+  .modal-header {
+    @apply text-black text-base font-semibold;
+  }
+
+  .modal-body {
+    @apply text-black text-xs;
+  }
+
+  /* Dark mode modal */
+  .dark .modal-content {
+    @apply bg-gray-800;
+  }
+
+  .dark .modal-header {
+    @apply text-white;
+  }
+
+  .dark .modal-body {
+    @apply text-white;
+  }
+
+  /* Dropdown menu styles */
+  [role="menu"],
+  .dropdown-menu {
+    @apply bg-white border border-gray-200 rounded-lg shadow-lg;
+    @apply text-xs;
+  }
+
+  [role="menuitem"],
+  .dropdown-item {
+    @apply text-black hover:bg-gray-100;
+    @apply px-4 py-2 cursor-pointer text-xs;
+    font-weight: 500;
+  }
+
+  .dark [role="menu"],
+  .dark .dropdown-menu {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark [role="menuitem"],
+  .dark .dropdown-item {
+    @apply text-white hover:bg-gray-700;
+  }
+}
+
+
+
+
+/* ===== Scrollbar: Global ===== */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+/* Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}

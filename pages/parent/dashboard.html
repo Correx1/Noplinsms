@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - School Management System</title>
+    
+    <!-- Local Tailwind CSS -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- Theme System -->
+    <link rel="stylesheet" href="../../css/theme.css">
+    <script src="../../js/theme.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+
+
+  
+    <!-- Navbar Container -->
+    <div id="navbar-container"></div>
+    <!-- Sidebar -->
+<aside
+  id="logo-sidebar"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-[4.5rem] transition-transform -translate-x-full bg-primary-800 border-r border-primary-800 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900"
+  aria-label="Sidebar"
+>
+  <div class="h-full pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
+    <ul class="space-y-2 font-medium">
+
+      <!-- Dashboard -->
+      <li onclick="loadParentHome(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group active-nav-link">
+        <a href="#">
+          <i class="fas fa-home w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Dashboard</span>
+        </a>
+      </li>
+
+      <!-- My Children -->
+      <li onclick="loadMyChildren(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#">
+          <i class="fas fa-users w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">My Children</span>
+        </a>
+      </li>
+
+      <!-- Attendance -->
+      <li onclick="loadParentAttendance(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#">
+          <i class="fas fa-calendar-alt w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Attendance</span>
+        </a>
+      </li>
+
+      <!-- Marks -->
+      <li onclick="loadParentMarks(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#">
+          <i class="fas fa-chart-line w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Marks</span>
+        </a>
+      </li>
+
+      <!-- Fees -->
+      <li onclick="loadParentFees(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#">
+          <i class="fas fa-wallet w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Fees</span>
+        </a>
+      </li>
+
+      <!-- Messages -->
+      <li onclick="loadParentMessages(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#">
+          <i class="fas fa-envelope w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Messages</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</aside>
+
+
+    <div class="p-4 sm:ml-64 mt-14" id="main-content">
+        <!-- Dashboard Content -->
+        <div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 mb-4 dark:bg-gray-800 dark:border-gray-700">
+            <div class="w-full mb-1">
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Dashboard</h1>
+                <p class="text-gray-600 dark:text-gray-400">Overview of your children's academic progress</p>
+            </div>
+        </div>
+
+        <!-- Children Overview Cards -->
+        <div class="mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">My Children</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Child 1 Card -->
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-start gap-4">
+                        <img class="w-20 h-20 rounded-full border-2 border-gray-200 dark:border-gray-600" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="Alex Johnson"/>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Alex Johnson</h3>
+                            <p class="text-sm text-gray-600 mb-3 dark:text-gray-400">SSS 2B • Roll No: 24</p>
+                            
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                <div class="text-center p-2 bg-green-50 rounded-lg dark:bg-green-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Attendance</p>
+                                    <p class="text-lg font-bold text-green-600 dark:text-green-400">92%</p>
+                                </div>
+                                <div class="text-center p-2 bg-primary-50 rounded-lg dark:bg-primary-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Average</p>
+                                    <p class="text-lg font-bold text-primary-600 dark:text-primary-400">85%</p>
+                                </div>
+                                <div class="text-center p-2 bg-orange-50 rounded-lg dark:bg-orange-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Fees Due</p>
+                                    <p class="text-lg font-bold text-orange-600 dark:text-orange-400">₦25k</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button onclick="loadParentAttendance()" class="flex-1 px-3 py-2 text-xs text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                                    <i class="fas fa-calendar-alt mr-1"></i>Attendance
+                                </button>
+                                <button onclick="loadParentMarks()" class="flex-1 px-3 py-2 text-xs text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg">
+                                    <i class="fas fa-chart-line mr-1"></i>Marks
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Child 2 Card -->
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex items-start gap-4">
+                        <img class="w-20 h-20 rounded-full border-2 border-gray-200 dark:border-gray-600" src="https://flowbite.com/docs/images/people/profile-picture-4.jpg" alt="Emily Johnson"/>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Emily Johnson</h3>
+                            <p class="text-sm text-gray-600 mb-3 dark:text-gray-400">JSS 3A • Roll No: 10</p>
+                            
+                            <div class="grid grid-cols-3 gap-3 mb-4">
+                                <div class="text-center p-2 bg-green-50 rounded-lg dark:bg-green-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Attendance</p>
+                                    <p class="text-lg font-bold text-green-600 dark:text-green-400">95%</p>
+                                </div>
+                                <div class="text-center p-2 bg-primary-50 rounded-lg dark:bg-primary-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Average</p>
+                                    <p class="text-lg font-bold text-primary-600 dark:text-primary-400">88%</p>
+                                </div>
+                                <div class="text-center p-2 bg-green-50 rounded-lg dark:bg-green-900/20">
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Fees Due</p>
+                                    <p class="text-lg font-bold text-green-600 dark:text-green-400">₦0</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button onclick="loadParentAttendance()" class="flex-1 px-3 py-2 text-xs text-white bg-primary-600 hover:bg-primary-700 rounded-lg dark:bg-primary-700 dark:hover:bg-primary-800">
+                                    <i class="fas fa-calendar-alt mr-1"></i>Attendance
+                                </button>
+                                <button onclick="loadParentMarks()" class="flex-1 px-3 py-2 text-xs text-primary-600 bg-primary-50 hover:bg-primary-100 rounded-lg dark:bg-primary-900/20 dark:text-primary-400 dark:hover:bg-primary-900/30">
+                                    <i class="fas fa-chart-line mr-1"></i>Marks
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Fee Alerts -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">Fee Alerts</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-4 bg-red-50 rounded-lg border border-red-200 dark:bg-red-900/20 dark:border-red-800/30">
+                        <div>
+                            <h4 class="font-semibold text-red-800 dark:text-red-300">Tuition Fee Pending</h4>
+                            <p class="text-sm text-red-700 dark:text-red-400">Alex Johnson • SSS 2B</p>
+                            <p class="text-xs text-red-600 mt-1 dark:text-red-500">Due: Oct 30, 2026</p>
+                        </div>
+                        <span class="font-bold text-red-800 dark:text-red-300">₦25,000</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg border border-green-200 dark:bg-green-900/20 dark:border-green-800/30">
+                        <div>
+                            <h4 class="font-semibold text-green-800 dark:text-green-300">All Fees Paid</h4>
+                            <p class="text-sm text-green-700 dark:text-green-400">Emily Johnson • JSS 3A</p>
+                        </div>
+                        <i class="fas fa-check-circle text-2xl text-green-600 dark:text-green-400"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button onclick="loadParentFees()" class="w-full px-4 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg text-sm dark:bg-primary-700 dark:hover:bg-primary-800">
+                        <i class="fas fa-wallet mr-2"></i>Manage Fees
+                    </button>
+                </div>
+            </div>
+
+            <!-- Important Notices -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4 dark:text-white">Important Notices</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
+                        <i class="fas fa-bullhorn text-gray-900 mt-1 dark:text-gray-300"></i>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">PTA Meeting Scheduled</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">October 25, 2026 at 10:00 AM</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3 border-b border-gray-200 dark:border-gray-700">
+                        <i class="fas fa-calendar text-gray-900 mt-1 dark:text-gray-300"></i>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">Mid-Term Break</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Starts next week (Oct 20-27)</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3 p-3">
+                        <i class="fas fa-tshirt text-gray-900 mt-1 dark:text-gray-300"></i>
+                        <div>
+                            <p class="font-medium text-gray-900 dark:text-white">Uniform Check</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Daily inspection starting Monday</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Main JS -->
+    <script type="module" src="../../js/main.js"></script>
+    <script src="../../js/mobile.js"></script>
+    <script src="../../js/theme-toggle.js"></script>
+    <script src="../../js/parent-dashboard.js"></script>
+    <!-- Config and Sidebar Logic -->
+   <script src="../../js/config.js"></script>
+    <script src="../../js/sidebar.js"></script>
+</body>
+</html>

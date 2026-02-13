@@ -1,0 +1,34 @@
+[
+  {
+    "id": "T001",
+    "firstName": "Sarah",
+    "lastName": "Williams",
+    "email": "sarah.w@school.com",
+    "phone": "+1234567896",
+    "dateOfBirth": "1985-06-20",
+    "gender": "Female",
+    "subject": "Mathematics",
+    "qualification": "M.Sc Mathematics",
+    "experience": "10 years",
+    "joiningDate": "2015-08-01",
+    "salary": 50000,
+    "address": "321 Elm St, City",
+    "status": "Active"
+  },
+  {
+    "id": "T002",
+    "firstName": "James",
+    "lastName": "Brown",
+    "email": "james.b@school.com",
+    "phone": "+1234567897",
+    "dateOfBirth": "1980-11-15",
+    "gender": "Male",
+    "subject": "English",
+    "qualification": "M.A English",
+    "experience": "15 years",
+    "joiningDate": "2010-08-01",
+    "salary": 55000,
+    "address": "654 Maple Dr, City",
+    "status": "Active"
+  }
+]

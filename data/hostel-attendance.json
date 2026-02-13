@@ -1,0 +1,20 @@
+[
+    {
+        "id": "ATT001",
+        "date": "2023-10-25",
+        "studentName": "Ade Bowale",
+        "roomNo": "101",
+        "status": "Present",
+        "timeIn": "18:00",
+        "timeOut": "07:30"
+    },
+    {
+        "id": "ATT002",
+        "date": "2023-10-25",
+        "studentName": "Mary Kayode",
+        "roomNo": "205",
+        "status": "Late",
+        "timeIn": "20:15",
+        "timeOut": "08:00"
+    }
+]

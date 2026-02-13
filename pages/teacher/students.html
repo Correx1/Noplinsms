@@ -1,0 +1,201 @@
+<!-- Students Page Content -->
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <div class="mb-4">
+            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">My Students</h1>
+            <p class="text-gray-600 dark:text-gray-400">View and manage students in your classes</p>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 dark:bg-gray-900">
+    <!-- Filters -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 mb-6 dark:bg-gray-800 dark:border-gray-700">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Class</label>
+                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>All Classes</option>
+                    <option>JSS 2A</option>
+                    <option>SSS 1B</option>
+                    <option>SSS 2A</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Subject</label>
+                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>All Subjects</option>
+                    <option>Mathematics</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Search</label>
+                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Search by name or roll number">
+            </div>
+            <div class="flex items-end">
+                <button class="w-full px-5 py-2.5 text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm">
+                    <i class="fas fa-search mr-2"></i>Search
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-4 border-b border-gray-200 flex justify-between items-center dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Students List</h3>
+            <div class="flex gap-2">
+                <button class="px-4 py-2 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 font-medium rounded-lg text-sm dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600">
+                    <i class="fas fa-download mr-2"></i>Export
+                </button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                    <tr>
+                        <th class="px-6 py-3">Roll No</th>
+                        <th class="px-6 py-3">Student Name</th>
+                        <th class="px-6 py-3">Class</th>
+                        <th class="px-6 py-3">Email</th>
+                        <th class="px-6 py-3">Phone</th>
+                        <th class="px-6 py-3">Attendance</th>
+                        <th class="px-6 py-3">Average</th>
+                        <th class="px-6 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">001</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <img class="w-8 h-8 rounded-full mr-3" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg">
+                                <span class="font-medium text-gray-900 dark:text-white">John Doe</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 dark:text-gray-300">JSS 2A</td>
+                        <td class="px-6 py-4 dark:text-gray-300">john.doe@student.com</td>
+                        <td class="px-6 py-4 dark:text-gray-300">+234 123 456 7890</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full dark:bg-green-900 dark:text-green-200">95%</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded-full dark:bg-primary-900 dark:text-primary-200">85%</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex gap-2">
+                                <button onclick="viewStudent('001')" class="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="openMessageModal('001','John Doe')" class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300">
+                                    <i class="fas fa-envelope"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Remaining rows updated identically -->
+                    <!-- 002 -->
+                    <tr class="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">002</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <img class="w-8 h-8 rounded-full mr-3" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg">
+                                <span class="font-medium text-gray-900 dark:text-white">Jane Smith</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 dark:text-gray-300">JSS 2A</td>
+                        <td class="px-6 py-4 dark:text-gray-300">jane.smith@student.com</td>
+                        <td class="px-6 py-4 dark:text-gray-300">+234 123 456 7891</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full dark:bg-green-900 dark:text-green-200">98%</span></td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded-full dark:bg-primary-900 dark:text-primary-200">92%</span></td>
+                        <td class="px-6 py-4">
+                            <div class="flex gap-2">
+                                <button class="text-primary-600 dark:text-primary-400"><i class="fas fa-eye"></i></button>
+                                <button class="text-green-600 dark:text-green-400"><i class="fas fa-envelope"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex items-center justify-between">
+        <div class="text-sm text-gray-700 dark:text-gray-300">
+            Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">120</span> students
+        </div>
+        <nav>
+            <ul class="inline-flex -space-x-px text-sm">
+                <li><a class="px-3 h-8 flex items-center bg-white border text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">Previous</a></li>
+                <li><a class="px-3 h-8 flex items-center bg-primary-600 text-white">1</a></li>
+                <li><a class="px-3 h-8 flex items-center bg-white border text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">2</a></li>
+                <li><a class="px-3 h-8 flex items-center bg-white border text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Message Modal -->
+<div id="messageModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6 dark:bg-gray-800">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Send Message</h3>
+            <button onclick="closeMessageModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="messageForm" onsubmit="sendMessage(event)">
+            <div class="mb-4">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">To:</label>
+                <input class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            <div class="mb-4">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Subject</label>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            </div>
+            <div class="mb-4">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Message</label>
+                <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg dark:bg-gray-700 dark:text-gray-200">Cancel</button>
+                <button class="px-4 py-2 text-white bg-primary-600 rounded-lg">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+let currentStudentRollNo = '';
+
+function openMessageModal(rollNo, name) {
+    currentStudentRollNo = rollNo;
+    document.getElementById('messageTo').value = name + ' (Roll No: ' + rollNo + ')';
+    document.getElementById('messageModal').classList.remove('hidden');
+    document.getElementById('messageModal').classList.add('flex');
+}
+
+function closeMessageModal() {
+    document.getElementById('messageModal').classList.add('hidden');
+    document.getElementById('messageModal').classList.remove('flex');
+    document.getElementById('messageForm').reset();
+}
+
+function sendMessage(event) {
+    event.preventDefault();
+    const subject = document.getElementById('messageSubject').value;
+    const body = document.getElementById('messageBody').value;
+    
+    console.log('Sending message to:', currentStudentRollNo, {subject, body});
+    alert('Message sent successfully to ' + document.getElementById('messageTo').value);
+    closeMessageModal();
+}
+
+function viewStudent(rollNo) {
+    alert('View student profile: ' + rollNo);
+    // This would navigate to student profile page
+}
+</script>

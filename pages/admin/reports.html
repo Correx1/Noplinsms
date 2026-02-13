@@ -1,0 +1,212 @@
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Reports & Analytics</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Reports</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 12-Grid Category Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        <!-- 1. Students -->
+        <div onclick="selectReportCategory('student')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-blue-600 active-report hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-user-graduate text-2xl text-primary-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Students</h3>
+            </div>
+        </div>
+         <!-- 2. Teachers -->
+        <div onclick="selectReportCategory('teacher')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-chalkboard-teacher text-2xl text-purple-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Teachers</h3>
+            </div>
+        </div>
+        <!-- 3. Parents -->
+        <div onclick="selectReportCategory('parent')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-users text-2xl text-indigo-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Parents</h3>
+            </div>
+        </div>
+         <!-- 4. Finance -->
+        <div onclick="selectReportCategory('finance')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-coins text-2xl text-green-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Finance</h3>
+            </div>
+        </div>
+         <!-- 5. Attendance -->
+        <div onclick="selectReportCategory('attendance')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-clock text-2xl text-red-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Attendance</h3>
+            </div>
+        </div>
+         <!-- 6. Academic -->
+        <div onclick="selectReportCategory('academic')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-graduation-cap text-2xl text-yellow-500 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Academic</h3>
+            </div>
+        </div>
+         <!-- 7. Library -->
+        <div onclick="selectReportCategory('library')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-book text-2xl text-teal-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Library</h3>
+            </div>
+        </div>
+         <!-- 8. Transport -->
+        <div onclick="selectReportCategory('transport')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-bus text-2xl text-orange-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Transport</h3>
+            </div>
+        </div>
+         <!-- 9. Hostel -->
+        <div onclick="selectReportCategory('hostel')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-building text-2xl text-pink-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Hostel</h3>
+            </div>
+        </div>
+         <!-- 10. Events -->
+        <div onclick="selectReportCategory('events')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-calendar-alt text-2xl text-cyan-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Events</h3>
+            </div>
+        </div>
+         <!-- 11. Visitors -->
+        <div onclick="selectReportCategory('visitors')" class="report-card cursor-pointer p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md dark:bg-gray-800 dark:border-gray-700 border-l-4 border-l-transparent hover:bg-gray-50">
+            <div class="text-center">
+                <i class="fas fa-id-card-alt text-2xl text-gray-600 mb-2"></i>
+                <h3 class="text-xs font-bold text-gray-900 dark:text-white">Visitors</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section based on selection -->
+    <div class="p-4 mb-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <h3 class="mb-4 text-sm font-bold text-gray-700 dark:text-gray-300 uppercase" id="current-report-title">Report Configuration</h3>
+        <form id="report-filter-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <!-- Dynamic Filters -->
+            <div class="md:col-span-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Report Type</label>
+                <select id="report-type-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <!-- JS Populated -->
+                </select>
+            </div>
+             <div class="md:col-span-1">
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date Range</label>
+                <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option>Last 30 Days</option>
+                    <option>This Month</option>
+                    <option>Last Month</option>
+                    <option>This Term</option>
+                    <option>This Year</option>
+                </select>
+            </div>
+            
+            <div class="md:col-span-1 md:ml-auto">
+                <button type="button" onclick="generateReport()" class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                    Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Report Result -->
+    <div id="report-result-area" class="space-y-6">
+        <div class="p-10 text-center text-gray-500 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+            <i class="fas fa-file-alt text-4xl mb-4 text-gray-300"></i>
+            <p>Select parameters and click "Generate Report" to view analytics.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Inline Logic for Quick Prototype -->
+<script>
+    function selectReportCategory(cat) {
+        // Highlight logic
+        document.querySelectorAll('.report-card').forEach(c => {
+            c.classList.remove('border-l-blue-600', 'active-report');
+            c.classList.add('border-l-transparent');
+        });
+        event.currentTarget.classList.remove('border-l-transparent');
+        event.currentTarget.classList.add('border-l-blue-600', 'active-report');
+        
+        const title = document.getElementById('current-report-title');
+        const select = document.getElementById('report-type-select');
+        title.textContent = cat.charAt(0).toUpperCase() + cat.slice(1) + ' Reports';
+        
+        // Populate Dropdown based on Cat
+        let opts = [];
+        if(cat==='student') opts = ['Class Strength', 'Gender Ratio', 'New Admissions', 'Student History'];
+        if(cat==='teacher') opts = ['Teacher Workload', 'Subject Allocation', 'Teacher Attendance'];
+        if(cat==='parent') opts = ['PTA Meeting Logs', 'Parent Contact List'];
+        if(cat==='finance') opts = ['Income Statement', 'Expense Report', 'Fee Collection', 'Defaulters List', 'Profit/Loss'];
+        if(cat==='attendance') opts = ['Student Daily Attendance', 'Student Monthly Report', 'Staff Attendance', 'Late Comers'];
+        if(cat==='academic') opts = ['Term Results', 'Subject Performance', 'Toppers List', 'Failure Rate'];
+        if(cat==='library') opts = ['Books Inventory', 'Issued Books', 'Overdue Reports', 'Fine Collection'];
+        if(cat==='transport') opts = ['Route Wise Students', 'Vehicle Utilization', 'Driver Schedule', 'Transport Fees'];
+        if(cat==='hostel') opts = ['Room Occupancy', 'Mess Info', 'Hostel Fee Collection'];
+        if(cat==='events') opts = ['Event Participation', 'Event Budget Report'];
+        if(cat==='visitors') opts = ['Visitor Logs', 'Gate Pass Report'];
+
+        select.innerHTML = opts.map(o => `<option>${o}</option>`).join('');
+    }
+
+    function generateReport() {
+        const area = document.getElementById('report-result-area');
+        area.innerHTML = `
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold">Report Generated: ${new Date().toLocaleDateString()}</h3>
+                    <div class="flex space-x-2">
+                         <button class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Download Excel</button>
+                         <button class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">Download PDF</button>
+                    </div>
+                </div>
+                <div class="h-64 bg-gray-50 flex items-center justify-center rounded border border-dashed border-gray-300">
+                    <div class="text-center">
+                        <i class="fas fa-chart-bar text-4xl text-gray-300 mb-2"></i>
+                        <p class="text-gray-500">Chart Visualization Placeholder</p>
+                    </div>
+                </div>
+                 <div class="mt-4 relative overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                            <tr><th>ID</th><th>Details</th><th>Status</th><th>Date</th><th class="text-right">Amount / Count</th></tr>
+                        </thead>
+                        <tbody>
+                             <tr class="bg-white border-b"><td class="px-6 py-4">001</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-25</td><td class="px-6 py-4 text-right">500</td></tr>
+                             <tr class="bg-white border-b"><td class="px-6 py-4">002</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-26</td><td class="px-6 py-4 text-right">750</td></tr>
+                             <tr class="bg-white border-b"><td class="px-6 py-4">003</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-27</td><td class="px-6 py-4 text-right">240</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    // Init with first selection
+    selectReportCategory('student');
+</script>

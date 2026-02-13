@@ -1,0 +1,97 @@
+[
+    {
+        "id": "T001",
+        "name": "Sarah Wilson",
+        "photo": "https://ui-avatars.com/api/?name=Sarah+Wilson&background=random&size=150",
+        "dob": "1985-04-12",
+        "gender": "Female",
+        "phone": "08012345678",
+        "email": "sarah.wilson@school.com",
+        "address": "123, Maple Street, Lagos",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2018-09-01",
+            "qualification": "M.Sc. Mathematics",
+            "specialization": ["Mathematics", "Physics"],
+            "classes_assigned": ["SS3 A", "SS2 B"],
+            "salary": "150000",
+            "type": "Full-time"
+        }
+    },
+    {
+        "id": "T002",
+        "name": "Michael Brown",
+        "photo": "https://ui-avatars.com/api/?name=Michael+Brown&background=random&size=150",
+        "dob": "1990-06-25",
+        "gender": "Male",
+        "phone": "08087654321",
+        "email": "michael.brown@school.com",
+        "address": "456, Oak Avenue, Abuja",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2020-01-15",
+            "qualification": "B.A. English",
+            "specialization": ["English", "Literature"],
+            "classes_assigned": ["JSS1 A", "JSS1 B", "SS1 A"],
+            "salary": "120000",
+            "type": "Full-time"
+        }
+    },
+    {
+        "id": "T003",
+        "name": "Emily Davis",
+        "photo": "https://ui-avatars.com/api/?name=Emily+Davis&background=random&size=150",
+        "dob": "1992-11-08",
+        "gender": "Female",
+        "phone": "08123456780",
+        "email": "emily.davis@school.com",
+        "address": "789, Pine Road, Kano",
+        "status": "On Leave",
+        "employment": {
+            "joining_date": "2021-05-10",
+            "qualification": "B.Sc. Chemistry",
+            "specialization": ["Chemistry", "Biology"],
+            "classes_assigned": ["SS2 A", "SS3 B"],
+            "salary": "130000",
+            "type": "Part-time"
+        }
+    },
+    {
+        "id": "T004",
+        "name": "James Johnson",
+        "photo": "https://ui-avatars.com/api/?name=James+Johnson&background=random&size=150",
+        "dob": "1988-03-15",
+        "gender": "Male",
+        "phone": "08099887766",
+        "email": "james.johnson@school.com",
+        "address": "321, Cedar Lane, Portharcourt",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2019-08-20",
+            "qualification": "M.Sc. Physics",
+            "specialization": ["Physics"],
+            "classes_assigned": ["SS3 A", "SS3 B"],
+            "salary": "160000",
+            "type": "Full-time"
+        }
+    },
+     {
+        "id": "T005",
+        "name": "Linda Martinez",
+        "photo": "https://ui-avatars.com/api/?name=Linda+Martinez&background=random&size=150",
+        "dob": "1995-07-22",
+        "gender": "Female",
+        "phone": "08155443322",
+        "email": "linda.martinez@school.com",
+        "address": "555, Birch Street, Enugu",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2022-02-01",
+            "qualification": "B.Ed. Social Studies",
+            "specialization": ["Social Studies", "Civic Education"],
+            "classes_assigned": ["JSS2 A", "JSS3 B"],
+            "salary": "110000",
+            "type": "Full-time"
+        }
+    }
+]

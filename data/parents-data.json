@@ -1,0 +1,67 @@
+[
+  {
+    "id": "P001",
+    "name": "Mr. Adebayo Johnson",
+    "relation": "Father",
+    "phone": "08012345678",
+    "email": "adebayo.johnson@email.com",
+    "occupation": "Engineer",
+    "address": "12 Victoria Island, Lagos",
+    "linkedStudents": ["S001", "S015"],
+    "photo": "../../assets/images/parent1.jpg",
+    "emergencyContact": true,
+    "status": "Active"
+  },
+  {
+    "id": "P002",
+    "name": "Mrs. Chioma Okafor",
+    "relation": "Mother",
+    "phone": "08098765432",
+    "email": "chioma.okafor@email.com",
+    "occupation": "Teacher",
+    "address": "45 Lekki Phase 1, Lagos",
+    "linkedStudents": ["S002"],
+    "photo": "../../assets/images/parent2.jpg",
+    "emergencyContact": true,
+    "status": "Active"
+  },
+  {
+    "id": "P003",
+    "name": "Mr. Ibrahim Musa",
+    "relation": "Guardian",
+    "phone": "08087654321",
+    "email": "ibrahim.musa@email.com",
+    "occupation": "Businessman",
+    "address": "78 Ikoyi Crescent, Lagos",
+    "linkedStudents": ["S003"],
+    "photo": "../../assets/images/parent3.jpg",
+    "emergencyContact": false,
+    "status": "Active"
+  },
+  {
+    "id": "P004",
+    "name": "Mrs. Fatima Abdullahi",
+    "relation": "Mother",
+    "phone": "08076543210",
+    "email": "fatima.abdullahi@email.com",
+    "occupation": "Doctor",
+    "address": "23 Surulere Street, Lagos",
+    "linkedStudents": ["S004", "S016"],
+    "photo": "../../assets/images/parent4.jpg",
+    "emergencyContact": true,
+    "status": "Active"
+  },
+  {
+    "id": "P005",
+    "name": "Mr. Emeka Nwosu",
+    "relation": "Father",
+    "phone": "08065432109",
+    "email": "emeka.nwosu@email.com",
+    "occupation": "Accountant",
+    "address": "56 Yaba Road, Lagos",
+    "linkedStudents": ["S005"],
+    "photo": "../../assets/images/parent5.jpg",
+    "emergencyContact": true,
+    "status": "Inactive"
+  }
+]

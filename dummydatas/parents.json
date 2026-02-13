@@ -1,0 +1,26 @@
+[
+  {
+    "id": "P001",
+    "firstName": "Robert",
+    "lastName": "Doe",
+    "email": "robert.doe@parent.com",
+    "phone": "+1234567891",
+    "occupation": "Engineer",
+    "studentId": "S001",
+    "studentName": "John Doe",
+    "relationship": "Father",
+    "address": "123 Main St, City"
+  },
+  {
+    "id": "P002",
+    "firstName": "Mary",
+    "lastName": "Smith",
+    "email": "mary.smith@parent.com",
+    "phone": "+1234567893",
+    "occupation": "Doctor",
+    "studentId": "S002",
+    "studentName": "Jane Smith",
+    "relationship": "Mother",
+    "address": "456 Oak Ave, City"
+  }
+]

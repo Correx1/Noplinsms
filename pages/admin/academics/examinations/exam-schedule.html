@@ -1,0 +1,73 @@
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
+                </li>
+                <li>
+                    <a href="#" onclick="loadExaminationsPage()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Examinations</a>
+                </li>
+                <li>
+                     <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Exam Scheduling</span>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Schedule Examination</h1>
+        <p class="mt-1 text-sm text-gray-500" id="schedule-exam-name-display">Loading Exam...</p>
+    </div>
+</div>
+
+<div class="p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Class Selector Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Select Class</h3>
+                </div>
+                <div class="p-2">
+                    <ul class="space-y-2" id="schedule-class-list">
+                        <!-- Populated via JS -->
+                        <li class="p-2 text-center text-gray-500">No classes found</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Editor -->
+        <div class="lg:col-span-3">
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="schedule-class-name-title">Schedule for Class</h3>
+                    <button type="button" id="btn-add-schedule-row" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+                        + Add Subject
+                    </button>
+                </div>
+
+                <div class="relative overflow-x-auto mb-6">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 min-w-[150px]">Subject</th>
+                                <th scope="col" class="px-4 py-3 min-w-[130px]">Date</th>
+                                <th scope="col" class="px-4 py-3">Time</th>
+                                <th scope="col" class="px-4 py-3">Room</th>
+                                <th scope="col" class="px-4 py-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-table-body">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="btn-save-schedule" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Save Schedule
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

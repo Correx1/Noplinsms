@@ -1,0 +1,41 @@
+[
+    {
+        "id": "TRANS001",
+        "bookId": "BK001",
+        "bookTitle": "Introduction to Physics",
+        "memberId": "STU001",
+        "memberName": "Ade Bowale",
+        "memberType": "Student",
+        "issueDate": "2023-10-15",
+        "dueDate": "2023-10-30",
+        "returnDate": "",
+        "status": "Issued",
+        "fine": 0
+    },
+    {
+        "id": "TRANS002",
+        "bookId": "BK003",
+        "bookTitle": "Advanced Mathematics",
+        "memberId": "TCH005",
+        "memberName": "Mr. Okonkwo",
+        "memberType": "Teacher",
+        "issueDate": "2023-10-01",
+        "dueDate": "2023-10-16",
+        "returnDate": "",
+        "status": "Overdue",
+        "fine": 500
+    },
+    {
+        "id": "TRANS003",
+        "bookId": "BK001",
+        "bookTitle": "Introduction to Physics",
+        "memberId": "STU002",
+        "memberName": "Chinwe Eze",
+        "memberType": "Student",
+        "issueDate": "2023-09-20",
+        "dueDate": "2023-10-05",
+        "returnDate": "2023-10-04",
+        "status": "Returned",
+        "fine": 0
+    }
+]

@@ -1,0 +1,44 @@
+[
+    {
+        "id": "VIS001",
+        "name": "John Doe",
+        "phone": "08012345678",
+        "idType": "National ID",
+        "idNumber": "NIN123456789",
+        "purpose": "Meeting",
+        "meetPerson": "Principal",
+        "department": "Administration",
+        "vehicle": "LND 123 AB",
+        "entryTime": "2023-10-25T09:00",
+        "exitTime": "2023-10-25T10:30",
+        "status": "Left"
+    },
+    {
+        "id": "VIS002",
+        "name": "Jane Smith",
+        "phone": "08087654321",
+        "idType": "Drivers License",
+        "idNumber": "DL987654321",
+        "purpose": "Inquiry",
+        "meetPerson": "Registrar",
+        "department": "Admissions",
+        "vehicle": "",
+        "entryTime": "2023-10-25T11:15",
+        "exitTime": "",
+        "status": "Inside"
+    },
+    {
+        "id": "VIS003",
+        "name": "Mike Johnson",
+        "phone": "08122334455",
+        "idType": "Voters Card",
+        "idNumber": "VC11223344",
+        "purpose": "Delivery",
+        "meetPerson": "Store Keeper",
+        "department": "Stores",
+        "vehicle": "KJA 456 CD",
+        "entryTime": "2023-10-25T12:00",
+        "exitTime": "2023-10-25T12:20",
+        "status": "Left"
+    }
+]

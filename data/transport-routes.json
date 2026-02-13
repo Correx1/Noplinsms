@@ -1,0 +1,38 @@
+[
+    {
+        "id": "RT001",
+        "name": "Ikeja - School",
+        "number": "R-101",
+        "start": "Ikeja Bus Stop",
+        "end": "School Gate",
+        "stops": ["Allen Avenue", "Opebi", "Gra"],
+        "distance": "15km",
+        "vehicleId": "VH001",
+        "driverId": "DRV001",
+        "fare": 20000
+    },
+    {
+        "id": "RT002",
+        "name": "Lekki - School",
+        "number": "R-102",
+        "start": "Lekki Phase 1",
+        "end": "School Gate",
+        "stops": ["Ikoyi", "Victoria Island", "CMS"],
+        "distance": "25km",
+        "vehicleId": "VH003",
+        "driverId": "DRV002",
+        "fare": 35000
+    },
+    {
+        "id": "RT003",
+        "name": "Surulere - School",
+        "number": "R-103",
+        "start": "National Stadium",
+        "end": "School Gate",
+        "stops": ["Ojuelegba", "Yaba"],
+        "distance": "12km",
+        "vehicleId": "VH002",
+        "driverId": "DRV003",
+        "fare": 18000
+    }
+]

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Login - School Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/theme.css"> <!-- Theme CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-white h-screen overflow-hidden">
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 h-full w-full">
+        <!-- Left Side: Illustration -->
+        <div class="hidden md:flex items-center justify-center bg-gray-50 relative">
+             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/images/login-illustration.png');"></div>
+        </div>
+
+        <!-- Right Side: Login Form -->
+        <div class="flex flex-col justify-center px-8 md:px-16 lg:px-24 bg-white relative">
+            <!-- Top Right Menu Icon -->
+            <div class="absolute top-6 right-6">
+                <button class="text-black hover:text-primary-600 bg-primary-50 p-2 rounded-full h-10 w-10 flex items-center justify-center">
+                    <i class="fas fa-ellipsis-v"></i> <!-- static black -->
+                </button>
+            </div>
+
+            <div class="w-full max-w-md mx-auto space-y-8">
+                <!-- Header -->
+                <div class="text-left">
+                    <h1 class="text-4xl font-bold text-black mb-2">Staff Login</h1> <!-- static black -->
+                    <p class="text-gray-500 text-sm">Admin & Teacher Portal Access</p>
+                </div>
+
+                <form class="mt-8 space-y-6" id="loginForm">
+                    <!-- Username Input -->
+                    <div class="relative">
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" name="username" id="username" 
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400" 
+                            placeholder="Username" required>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-user text-black"></i> <!-- static black -->
+                        </div>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="relative">
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" name="password" id="password" 
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400" 
+                            placeholder="Password" required>
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+                            <i id="eyeIcon" class="fas fa-eye text-black"></i> <!-- static black -->
+                            <i id="eyeSlashIcon" class="fas fa-eye-slash text-black hidden"></i> <!-- static black -->
+                        </button>
+                    </div>
+
+                    <!-- Role Selection & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <div class="w-1/2">
+                            <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2" required>
+                                <option value="" disabled selected>Select Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Teacher">Teacher</option>
+                            </select>
+                        </div>
+                        <a href="password-recovery.html" class="text-sm font-medium text-primary-600 hover:text-primary-700">Forgot Password?</a>
+                    </div>
+                    
+                    <!-- Remember Me -->
+                    <div class="flex items-center">
+                        <input id="remember" type="checkbox" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                        <label for="remember" class="ml-2 block text-sm text-gray-500">Remember me</label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" 
+                        class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                        LOGIN 
+                     
+                    </button>
+
+                    <!-- Switch to Student/Parent Login -->
+                    <div class="text-center pt-4 border-t border-gray-200">
+                        <p class="text-sm text-gray-500">Not a staff member?</p>
+                        <a href="login-student-parent.html" class="text-sm font-medium text-primary-600 hover:text-primary-700">
+                            Student/Parent Login →
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/theme.js" type="module"></script>
+    <script type="module">
+        // Password toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            eyeIcon.classList.toggle('hidden');
+            eyeSlashIcon.classList.toggle('hidden');
+        });
+
+        // Login form submission - No validation, just redirect based on role
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            // Create a simple user object and store it
+            const user = {
+                email: username,
+                name: username,
+                role: role
+            };
+            
+            localStorage.setItem('sms_currentUser', JSON.stringify(user));
+            
+            // Store login state
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', role);
+            
+            // Redirect based on role
+            if (role === 'Admin') {
+                window.location.href = 'pages/admin/dashboard.html';
+            } else if (role === 'Teacher') {
+                window.location.href = 'pages/teacher/dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

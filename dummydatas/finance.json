@@ -1,0 +1,33 @@
+[
+  {
+    "id": "F001",
+    "type": "income",
+    "category": "Tuition Fee",
+    "amount": 5000,
+    "date": "2024-02-01",
+    "studentId": "S001",
+    "studentName": "John Doe",
+    "description": "Monthly tuition fee",
+    "paymentMethod": "Bank Transfer"
+  },
+  {
+    "id": "F002",
+    "type": "expense",
+    "category": "Salary",
+    "amount": 50000,
+    "date": "2024-02-01",
+    "description": "Teacher salaries for February",
+    "paymentMethod": "Bank Transfer"
+  },
+  {
+    "id": "F003",
+    "type": "income",
+    "category": "Tuition Fee",
+    "amount": 5000,
+    "date": "2024-02-01",
+    "studentId": "S002",
+    "studentName": "Jane Smith",
+    "description": "Monthly tuition fee",
+    "paymentMethod": "Cash"
+  }
+]

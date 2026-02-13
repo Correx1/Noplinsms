@@ -1,0 +1,198 @@
+<!-- Timetable Page -->
+<div class="p-6 bg-white block sm:flex items-center justify-between border-b dark:bg-gray-800 border-gray-200">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">My Timetable</h1>
+        <p class="text-gray-600 dark:text-gray-100">Your weekly class schedule</p>
+    </div>
+</div>
+
+<div class="p-4">
+    <!-- Header with Download Button -->
+    <div class="bg-gray-50 border dark:bg-gray-800 border-gray-200 rounded-lg shadow-sm p-4 mb-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Week of Feb 5 - Feb 11, 2026</h3>
+                <p class="text-sm text-gray-600 mt-1 dark:text-gray-100">Spring Semester 2025/2026</p>
+            </div>
+            <button onclick="downloadTimetable()" class="px-5 py-2.5 text-white bg-primary-600 hover:bg-primary-700 rounded-lg font-medium text-sm shadow-sm">
+                <i class="fas fa-download mr-2"></i>Download Timetable
+            </button>
+        </div>
+    </div>
+
+    <!-- Simple Timetable -->
+    <div class="bg-gray-50 border dark:bg-gray-800 border-gray-200 rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-300 dark:text-gray-100">
+                    <tr>
+                        <th class="px-4 py-4 text-left font-semibold text-gray-900 dark:text-gray-100 dark:bg-gray-800 w-32 border-r border-gray-200">
+                            <i class="fas fa-clock mr-2 text-gray-600"></i>Time
+                        </th>
+                        <th class="px-4 py-4 text-center font-semibold text-gray-900 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">Monday</th>
+                        <th class="px-4 py-4 text-center font-semibold text-gray-900 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">Tuesday</th>
+                        <th class="px-4 py-4 text-center font-semibold text-gray-900 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">Wednesday</th>
+                        <th class="px-4 py-4 text-center font-semibold text-gray-900 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">Thursday</th>
+                        <th class="px-4 py-4 text-center font-semibold text-gray-900 dark:text-gray-100 dark:bg-gray-800 ">Friday</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <!-- 08:00 - 09:00 -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-medium text-gray-700 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 whitespace-nowrap dark:text-gray-100">
+                            08:00<br><span class="text-xs text-gray-500 ">09:00</span>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-primary-50 rounded border-l-2 border-primary-500 dark:bg-gray-800">
+                                <div class="font-semibold text-gray-900  dark:text-gray-100">Mathematics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">JSS 2A • Room 101</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-green-50 dark:bg-gray-700 rounded border-l-2 border-green-500 dark:border-green-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Physics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1B • Room 204</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-primary-50 dark:bg-gray-700 rounded border-l-2 border-primary-500 dark:border-primary-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Mathematics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">JSS 2A • Room 101</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-purple-50 dark:bg-gray-700 rounded border-l-2 border-purple-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Chemistry</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 2A • Lab 1</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 09:00 - 10:00 -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-medium text-gray-700 dark:text-gray-100 dark:bg-gray-800 bg-gray-50 border-r border-gray-200 whitespace-nowrap">
+                            09:00<br><span class="text-xs text-gray-500">10:00</span>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-primary-50 dark:bg-gray-700 rounded border-l-2 border-primary-500 dark:border-primary-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Mathematics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1A • Room 201</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-green-50 dark:bg-gray-700 rounded border-l-2 border-green-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Physics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1B • Lab 2</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-center text-gray-300 dark:text-gray-100 dark:bg-gray-800">—</td>
+                    </tr>
+
+                    <!-- 10:00 - 11:00 -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-medium hover:bg-gray-800 text-gray-700 dark:text-gray-100 dark:bg-gray-800 bg-gray-50  border-r border-gray-200 whitespace-nowrap">
+                            10:00<br><span class="text-xs text-gray-500">11:00</span>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">
+                            <div class="text-center p-2 bg-green-50 dark:bg-gray-700 rounded border-l-2 border-green-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Physics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1B • Room 204</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-purple-50 dark:bg-gray-700 rounded border-l-2 border-purple-500">
+                                <div class="font-semibold text-gray-900 dark:bg-gray-700 dark:text-gray-100">Chemistry</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 2A • Lab 1</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 ">
+                            <div class="text-center p-2 bg-primary-50 dark:bg-gray-700 rounded border-l-2 border-primary-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Mathematics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">JSS 2A • Room 101</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-center text-gray-300 dark:text-gray-100 dark:bg-gray-800">—</td>
+                    </tr>
+
+                 <!-- BREAK -->
+<tr class="bg-amber-50 border-y-2 border-amber-200 dark:bg-amber-900/30 dark:border-amber-700">
+    <td colspan="6" class="px-4 py-3 text-center font-semibold text-gray-900 dark:text-white">
+        <i class="fas fa-coffee mr-2 text-amber-600 dark:text-amber-400"></i>BREAK (11:00 - 11:30)
+    </td>
+</tr>
+
+                    <!-- 11:30 - 12:30 -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-medium text-gray-700 dark:text-gray-100 dark:bg-gray-800 bg-gray-50 border-r border-gray-200 whitespace-nowrap">
+                            11:30<br><span class="text-xs text-gray-500">12:30</span>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">
+                            <div class="text-center p-2 bg-purple-50 dark:bg-gray-700 rounded border-l-2 border-purple-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Chemistry</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 2B • Lab 1</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">
+                            <div class="text-center p-2 bg-primary-50 rounded border-l-2 border-primary-500 dark:bg-gray-700 ">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100  ">Mathematics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1A • Room 201</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 13:00 - 14:00 -->
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4 font-medium text-gray-700 dark:text-gray-100 dark:bg-gray-800 bg-gray-50 border-r border-gray-200 whitespace-nowrap">
+                            13:00<br><span class="text-xs text-gray-500">14:00</span>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800">
+                            <div class="text-center p-2 bg-purple-50 dark:bg-gray-700 rounded border-l-2 border-purple-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Chemistry</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 2A • Lab 1</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">
+                            <div class="text-center p-2 bg-green-50 rounded border-l-2 dark:bg-gray-700 border-green-500">
+                                <div class="font-semibold text-gray-900 dark:text-gray-100">Physics</div>
+                                <div class="text-xs text-gray-600 mt-1 dark:text-gray-100">SSS 1A • Lab 2</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 border-r border-gray-200 dark:text-gray-100 dark:bg-gray-800 text-center text-gray-300">—</td>
+                        <td class="px-4 py-4 text-center text-gray-300 dark:text-gray-100 dark:bg-gray-800">—</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-3 gap-4 mt-6">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
+            <div class="text-3xl font-bold text-gray-900 dark:text-gray-100">17</div>
+            <p class="text-sm text-gray-600 mt-1 dark:text-gray-100">Total Classes</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
+            <div class="text-3xl font-bold text-gray-900 dark:text-gray-100">13</div>
+            <p class="text-sm text-gray-600 mt-1 dark:text-gray-100">Free Periods</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
+            <div class="text-3xl font-bold text-gray-900 dark:text-gray-100">17</div>
+            <p class="text-sm text-gray-600 mt-1 dark:text-gray-100">Hours/Week</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function downloadTimetable() {
+    alert('Timetable download feature coming soon!\n\nThis will generate a PDF of your weekly schedule.');
+    // Future: Generate PDF or print functionality
+}
+</script>
