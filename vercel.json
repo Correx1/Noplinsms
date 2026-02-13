@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login-staff", "destination": "/login-staff.html" },
+    { "source": "/login-student-parent", "destination": "/login-student-parent.html" },
+    { "source": "/password-recovery", "destination": "/password-recovery.html" },
+    { "source": "/template", "destination": "/template.html" },
+    { "source": "/pages/(.*)", "destination": "/pages/$1" }
+  ],
+  "cleanUrls": false
+}
