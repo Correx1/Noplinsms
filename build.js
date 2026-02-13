@@ -2,6 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -12,7 +13,7 @@ console.log('🧹 Cleaning dist directory...');
 fs.removeSync(distDir);
 fs.ensureDirSync(distDir);
 
-// Copy all necessary files and directories
+// Copy all necessary files and directories EXCEPT css (we'll build that separately)
 const itemsToCopy = [
   'index.html',
   'login-staff.html',
@@ -21,7 +22,6 @@ const itemsToCopy = [
   'template.html',
   'pages',
   'js',
-  'css',
   'assets',
   'data',
   'dummydatas',
@@ -42,6 +42,28 @@ itemsToCopy.forEach(item => {
     console.log(`  ⚠ Skipped ${item} (not found)`);
   }
 });
+
+// Build Tailwind CSS directly to dist/css
+console.log('\n🎨 Building Tailwind CSS...');
+fs.ensureDirSync(path.resolve(distDir, 'css'));
+
+try {
+  execSync('npx tailwindcss -i ./css/styles.css -o ./dist/css/styles.css --minify', { stdio: 'inherit' });
+  console.log('✓ Tailwind CSS built successfully');
+} catch (error) {
+  console.error('⚠ Tailwind CSS build failed, copying original CSS...');
+  fs.copySync(path.resolve(__dirname, 'css'), path.resolve(distDir, 'css'));
+}
+
+// Copy other CSS files if they exist
+const cssDir = path.resolve(__dirname, 'css');
+if (fs.existsSync(cssDir)) {
+  const cssFiles = fs.readdirSync(cssDir).filter(f => f !== 'styles.css');
+  cssFiles.forEach(file => {
+    fs.copySync(path.resolve(cssDir, file), path.resolve(distDir, 'css', file));
+    console.log(`  ✓ Copied css/${file}`);
+  });
+}
 
 console.log('\n✅ Build complete! All files copied to dist/');
 console.log(`📁 Output directory: ${distDir}`);
