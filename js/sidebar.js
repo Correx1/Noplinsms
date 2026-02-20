@@ -109,6 +109,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Students': loadStudentsList,
                 'Teachers': loadTeachersPage,
                 'Parents': loadParentsPage,
+                'Staff': loadStaffPage,
+                'Import Users': loadImportUsersPage,
     
                 // Academics Section
                 'Classes': loadClassesPage,
@@ -236,6 +238,13 @@ window.loadAddParentPage = (parentId = null) => {
     loadPage('manage/parents/add-parent.html', '../../js/parents.js', 'parents-script');
 };
 
+// Staff
+window.loadStaffPage = () => loadPage('manage/staff/staff-list.html', '../../js/staff.js', 'staff-script');
+window.loadAddStaffPage = (staffId = null) => {
+    window.editingStaffId = staffId;
+    loadPage('manage/staff/add-staff.html', '../../js/staff.js', 'staff-script');
+};
+
 
 // ============================================
 // ACADEMICS SECTION
@@ -327,6 +336,9 @@ window.loadHostelAllocationPage = () => loadPage('hostel/allocations.html', '../
 window.loadHostelAttendancePage = () => loadPage('hostel/attendance.html', '../../js/hostel.js', 'hostel-script');
 
 window.loadReportsPage = () => loadPage('reports.html', '../../js/reports.js', 'reports-script');
+
+// Import Users
+window.loadImportUsersPage = () => loadPage('import-users/import-users.html', '../../js/import-users.js', 'import-users-script');
 
 
 // ============================================

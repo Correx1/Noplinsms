@@ -3,40 +3,95 @@
         "id": "STF001",
         "name": "Sarah Wilson",
         "photo": "https://ui-avatars.com/api/?name=Sarah+Wilson&background=random&size=150",
-        "department": "Teaching Staff",
-        "designation": "Senior Teacher",
-        "shift": "Morning"
+        "dob": "1985-04-12",
+        "gender": "Female",
+        "phone": "08012345678",
+        "email": "sarah.wilson@school.com",
+        "address": "123, Maple Street, Lagos",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2018-09-01",
+            "department": "Teaching Staff",
+            "designation": "Senior Teacher",
+            "qualification": "M.Sc. Mathematics",
+            "salary": "150000",
+            "type": "Full-time"
+        }
     },
     {
         "id": "STF002",
         "name": "Michael Brown",
         "photo": "https://ui-avatars.com/api/?name=Michael+Brown&background=random&size=150",
-        "department": "Teaching Staff",
-        "designation": "Teacher",
-        "shift": "Morning"
+        "dob": "1990-06-25",
+        "gender": "Male",
+        "phone": "08087654321",
+        "email": "michael.brown@school.com",
+        "address": "456, Oak Avenue, Abuja",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2020-01-15",
+            "department": "Teaching Staff",
+            "designation": "Teacher",
+            "qualification": "B.A. English",
+            "salary": "120000",
+            "type": "Full-time"
+        }
     },
     {
         "id": "STF003",
         "name": "John Smith",
         "photo": "https://ui-avatars.com/api/?name=John+Smith&background=random&size=150",
-        "department": "Administrative",
-        "designation": "Accountant",
-        "shift": "Morning"
+        "dob": "1982-11-08",
+        "gender": "Male",
+        "phone": "08123456780",
+        "email": "john.smith@school.com",
+        "address": "789, Pine Road, Kano",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2017-05-10",
+            "department": "Administrative",
+            "designation": "Accountant",
+            "qualification": "B.Sc. Accounting",
+            "salary": "130000",
+            "type": "Full-time"
+        }
     },
     {
         "id": "STF004",
         "name": "Mary Johnson",
         "photo": "https://ui-avatars.com/api/?name=Mary+Johnson&background=random&size=150",
-        "department": "Non-Teaching Staff",
-        "designation": "Librarian",
-        "shift": "Morning"
+        "dob": "1988-03-15",
+        "gender": "Female",
+        "phone": "08099887766",
+        "email": "mary.johnson@school.com",
+        "address": "321, Cedar Lane, Portharcourt",
+        "status": "On Leave",
+        "employment": {
+            "joining_date": "2019-08-20",
+            "department": "Non-Teaching Staff",
+            "designation": "Librarian",
+            "qualification": "B.Sc. Library Science",
+            "salary": "100000",
+            "type": "Full-time"
+        }
     },
     {
         "id": "STF005",
         "name": "Robert Davis",
         "photo": "https://ui-avatars.com/api/?name=Robert+Davis&background=random&size=150",
-        "department": "Non-Teaching Staff",
-        "designation": "Security Guard",
-        "shift": "Night"
+        "dob": "1995-07-22",
+        "gender": "Male",
+        "phone": "08155443322",
+        "email": "robert.davis@school.com",
+        "address": "555, Birch Street, Enugu",
+        "status": "Active",
+        "employment": {
+            "joining_date": "2022-02-01",
+            "department": "Non-Teaching Staff",
+            "designation": "Security Guard",
+            "qualification": "SSCE",
+            "salary": "60000",
+            "type": "Full-time"
+        }
     }
 ]
