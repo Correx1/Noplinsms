@@ -1,0 +1,22 @@
+{
+    "academicYears": [
+        { "id": "AY001", "name": "2023/2024", "startDate": "2023-09-01", "endDate": "2024-07-20", "status": "Past" },
+        { "id": "AY002", "name": "2024/2025", "startDate": "2024-09-05", "endDate": "2025-07-15", "status": "Active" },
+        { "id": "AY003", "name": "2025/2026", "startDate": "2025-09-01", "endDate": "2026-07-20", "status": "Upcoming" }
+    ],
+    "terms": [
+        { "id": "TM001", "name": "First Term", "academicYear": "2024/2025", "startDate": "2024-09-05", "endDate": "2024-12-15", "status": "Past" },
+        { "id": "TM002", "name": "Second Term", "academicYear": "2024/2025", "startDate": "2025-01-10", "endDate": "2025-04-05", "status": "Active" },
+        { "id": "TM003", "name": "Third Term", "academicYear": "2024/2025", "startDate": "2025-04-25", "endDate": "2025-07-15", "status": "Upcoming" }
+    ],
+    "classGroups": [
+        { "id": "CG001", "name": "Junior Secondary", "description": "Grades JSS 1 to JSS 3", "classesCount": 3 },
+        { "id": "CG002", "name": "Senior Secondary", "description": "Grades SSS 1 to SSS 3", "classesCount": 3 }
+    ],
+    "subjectGroups": [
+        { "id": "SG001", "name": "Science", "description": "Physics, Chemistry, Biology", "subjectsCount": 3 },
+        { "id": "SG002", "name": "Arts and Humanities", "description": "Literature, Government, History", "subjectsCount": 5 },
+        { "id": "SG003", "name": "Commercial", "description": "Accounting, Commerce, Economics", "subjectsCount": 4 },
+        { "id": "SG004", "name": "General Studies", "description": "Mathematics, English, Civic Education", "subjectsCount": 3 }
+    ]
+}

@@ -113,11 +113,11 @@ window.displayLibraryBooks = function (filter = 'all') {
         }
     
         container.innerHTML = filtered.map(book => `
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+        <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 dark:bg-gray-800 dark:border-gray-700">
             <div class="flex items-start justify-between mb-3">
                 <div class="flex-1">
-                    <h4 class="font-semibold text-gray-900 mb-1">${book.title}</h4>
-                    <p class="text-sm text-gray-600">by ${book.author}</p>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">${book.title}</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">by ${book.author}</p>
                 </div>
                 <span class="px-2 py-1 text-xs font-medium rounded ${book.category === 'Science' ? 'bg-primary-100 text-primary-800' : book.category === 'Mathematics' ? 'bg-green-100 text-green-800' : book.category === 'Literature' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}">${book.category}</span>
             </div>

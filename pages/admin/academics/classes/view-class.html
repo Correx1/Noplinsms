@@ -83,7 +83,12 @@
                 <div class="p-4" id="class-tab-content">
                     <!-- Overview -->
                     <div id="content-overview" class="block">
-                         <h4 class="text-lg font-bold mb-2 dark:text-white">Section Details</h4>
+                         <div class="flex items-center justify-between mb-4">
+                             <h4 class="text-lg font-bold dark:text-white">Section Details</h4>
+                             <button type="button" onclick="openAddSectionModal()" class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                 <i class="fas fa-plus mr-2"></i> Add Section
+                             </button>
+                         </div>
                          <div id="overview-sections-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
 
@@ -123,5 +128,42 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Modal: Add Section -->
+<div id="add-section-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-lg max-h-full">
+        <form class="relative bg-white rounded-lg shadow dark:bg-gray-700" id="form-add-section">
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Add New Section</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" onclick="closeAddSectionModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label for="newSectionName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section Name</label>
+                    <input type="text" id="newSectionName" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="e.g. A, B, Ruby, Sapphire" required>
+                </div>
+                <div>
+                    <label for="newSectionTeacher" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section Teacher</label>
+                    <select id="newSectionTeacher" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select Teacher</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="newSectionCapacity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Max Capacity</label>
+                    <input type="number" id="newSectionCapacity" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value="30" required>
+                </div>
+                <div>
+                    <label for="newSectionRoom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Room</label>
+                    <input type="text" id="newSectionRoom" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="e.g. Room 101" required>
+                </div>
+            </div>
+            <div class="flex items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Add Section</button>
+            </div>
+        </form>
     </div>
 </div>

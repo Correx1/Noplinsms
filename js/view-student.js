@@ -168,7 +168,7 @@
             tr.className = "bg-white border-b";
             let statusColor = item.status === 'Paid' ? 'text-green-600' : 'text-red-500';
             tr.innerHTML = `
-                <td class="px-4 py-3 font-medium text-gray-900">${item.type}</td>
+                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${item.type}</td>
                 <td class="px-4 py-3 text-right">₦${item.amount.toLocaleString()}</td>
                 <td class="px-4 py-3 ${statusColor}">${item.status}</td>
             `;

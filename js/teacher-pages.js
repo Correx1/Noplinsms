@@ -47,9 +47,9 @@ window.initAttendancePage = function() {
             
             students.forEach(student => {
                 const row = `
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <td class="px-6 py-4 font-medium text-gray-900">${student.rollNo}</td>
-                        <td class="px-6 py-4">${student.name}</td>
+                    <tr class="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${student.rollNo}</td>
+                        <td class="px-6 py-4 text-gray-900 dark:text-white">${student.name}</td>
                         <td class="px-6 py-4">
                             <div class="flex space-x-4">
                                 <div class="flex items-center">
@@ -159,9 +159,9 @@ window.initGradeBookPage = function() {
             
             students.forEach(student => {
                 const row = `
-                    <tr class="bg-white border-b hover:bg-gray-50">
-                        <td class="px-4 py-4 font-medium text-gray-900">${student.rollNo}</td>
-                        <td class="px-4 py-4">${student.name}</td>
+                    <tr class="bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <td class="px-4 py-4 font-medium text-gray-900 dark:text-white">${student.rollNo}</td>
+                        <td class="px-4 py-4 text-gray-900 dark:text-white">${student.name}</td>
                         <td class="px-4 py-4">
                             <input type="number" min="0" max="70" id="theory_${student.rollNo}" onchange="calculateTotal('${student.rollNo}')" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500" placeholder="0">
                         </td>
@@ -174,7 +174,7 @@ window.initGradeBookPage = function() {
                         <td class="px-4 py-4">
                             <input type="number" min="0" max="10" id="assess3_${student.rollNo}" onchange="calculateTotal('${student.rollNo}')" class="w-20 px-2 py-1 border border-gray-300 rounded focus:ring-primary-500 focus:border-primary-500" placeholder="0">
                         </td>
-                        <td class="px-4 py-4 font-semibold text-gray-900">
+                        <td class="px-4 py-4 font-semibold text-gray-900 dark:text-white">
                             <span id="total_${student.rollNo}">0</span>
                         </td>
                         <td class="px-4 py-4">
@@ -386,9 +386,9 @@ window.loadExamQuestions = function() {
         container.innerHTML = '<p class="text-gray-600 text-center py-8">No questions added yet. Click "Add Question" to create questions for this exam.</p>';
     } else {
         container.innerHTML = questions.map((q, index) => `
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                 <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-semibold text-gray-900">Question ${q.number} (${q.marks} marks)</h4>
+                    <h4 class="font-semibold text-gray-900 dark:text-white">Question ${q.number} (${q.marks} marks)</h4>
                     <button onclick="deleteQuestion('${examId}', ${index})" class="text-red-600 hover:text-red-800">
                         <i class="fas fa-trash"></i>
                     </button>

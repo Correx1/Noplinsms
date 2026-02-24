@@ -1,0 +1,86 @@
+[
+    {
+        "id": "SUB001",
+        "name": "Mathematics",
+        "code": "MTH101",
+        "type": "Core",
+        "classes": ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB002",
+        "name": "English Language",
+        "code": "ENG101",
+        "type": "Core",
+        "classes": ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB003",
+        "name": "Basic Science",
+        "code": "BSC101",
+        "type": "Core",
+        "classes": ["JSS 1", "JSS 2", "JSS 3"]
+    },
+    {
+        "id": "SUB004",
+        "name": "Physics",
+        "code": "PHY201",
+        "type": "Core",
+        "classes": ["SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB005",
+        "name": "Chemistry",
+        "code": "CHM201",
+        "type": "Core",
+        "classes": ["SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB006",
+        "name": "Biology",
+        "code": "BIO201",
+        "type": "Core",
+        "classes": ["SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB007",
+        "name": "Agricultural Science",
+        "code": "AGR101",
+        "type": "Elective",
+        "classes": ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB008",
+        "name": "Further Mathematics",
+        "code": "FMT201",
+        "type": "Elective",
+        "classes": ["SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB009",
+        "name": "Computer Science",
+        "code": "CSC101",
+        "type": "Core",
+        "classes": ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB010",
+        "name": "Economics",
+        "code": "ECO201",
+        "type": "Core",
+        "classes": ["SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB011",
+        "name": "Civic Education",
+        "code": "CVE101",
+        "type": "Core",
+        "classes": ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"]
+    },
+    {
+        "id": "SUB012",
+        "name": "Fine Arts",
+        "code": "ART101",
+        "type": "Elective",
+        "classes": ["JSS 1", "JSS 2", "JSS 3"]
+    }
+]

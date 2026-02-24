@@ -170,23 +170,25 @@
         document.getElementById('view-class-teacher').innerHTML = teacher ? 
             `<img src="${teacher.photo}" class="w-8 h-8 rounded-full mr-2"> ${teacher.name}` : 'Unassigned';
 
-        document.getElementById('view-sections-list').textContent = cls.sections.map(s => s.name).join(', ');
-
-        // Populate Sections Grid (Overview)
-        const overviewGrid = document.getElementById('overview-sections-grid');
-        overviewGrid.innerHTML = cls.sections.map(s => {
-             const sTeacher = tData.find(t => t.id === s.teacherId);
-             return `
-                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-lg font-bold text-gray-900 dark:text-white">Section ${s.name}</span>
-                        <span class="text-xs text-gray-500 bg-white border border-gray-200 rounded px-2 py-1">${s.room}</span>
+        function renderOverview() {
+            document.getElementById('view-sections-list').textContent = cls.sections.map(s => s.name).join(', ');
+            const overviewGrid = document.getElementById('overview-sections-grid');
+            overviewGrid.innerHTML = cls.sections.map(s => {
+                 const sTeacher = tData.find(t => t.id === s.teacherId);
+                 return `
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg font-bold text-gray-900 dark:text-white">Section ${s.name}</span>
+                            <span class="text-xs text-gray-500 bg-white border border-gray-200 rounded px-2 py-1">${s.room}</span>
+                        </div>
+                        <div class="text-sm text-gray-500 mb-1">Students: <span class="font-semibold text-gray-900 dark:text-white">${s.studentCount}/${s.capacity}</span></div>
+                        <div class="text-sm text-gray-500">Teacher: <span class="font-medium text-primary-600">${sTeacher ? sTeacher.name : 'None'}</span></div>
                     </div>
-                    <div class="text-sm text-gray-500 mb-1">Students: <span class="font-semibold text-gray-900 dark:text-white">${s.studentCount}/${s.capacity}</span></div>
-                    <div class="text-sm text-gray-500">Teacher: <span class="font-medium text-primary-600">${sTeacher ? sTeacher.name : 'None'}</span></div>
-                </div>
-             `;
-        }).join('');
+                 `;
+            }).join('');
+        }
+
+        renderOverview();
 
         // Populate Students Table (Mock for now)
         const studentsBody = document.getElementById('class-students-body');
@@ -198,7 +200,67 @@
         if(cls.subjects) {
             subjectList.innerHTML = cls.subjects.map(sub => `<li>${sub}</li>`).join('');
         }
+
+        // Form Logic
+        const formAddSection = document.getElementById('form-add-section');
+        if(formAddSection) {
+            // Clone to avoid duplicate event listeners
+            const clonedForm = formAddSection.cloneNode(true);
+            formAddSection.parentNode.replaceChild(clonedForm, formAddSection);
+            
+            // Populate Dropdown Options
+            const select = clonedForm.querySelector('#newSectionTeacher');
+            if(select && select.options.length <= 1) {
+                tData.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.id;
+                    opt.textContent = t.name;
+                    select.appendChild(opt);
+                });
+            }
+
+            clonedForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const nameSelect = document.getElementById('newSectionName').value;
+                const teacherSelect = document.getElementById('newSectionTeacher').value;
+                const capacitySelect = document.getElementById('newSectionCapacity').value;
+                const roomSelect = document.getElementById('newSectionRoom').value;
+                
+                cls.sections.push({
+                    name: nameSelect,
+                    capacity: parseInt(capacitySelect),
+                    room: roomSelect,
+                    teacherId: teacherSelect,
+                    studentCount: 0
+                });
+                
+                alert('Success: New Section added to Class ' + cls.name);
+                window.closeAddSectionModal();
+                
+                // Immediately refresh view elements with the local updated cls object
+                renderOverview();
+            });
+        }
     }
+
+    // Modal Helpers
+    window.openAddSectionModal = function() {
+        const modal = document.getElementById('add-section-modal');
+        if(modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    };
+
+    window.closeAddSectionModal = function() {
+        const modal = document.getElementById('add-section-modal');
+        if(modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            const form = document.getElementById('form-add-section');
+            if(form) form.reset();
+        }
+    };
 
     // Shared: Fetch Data
     async function fetchData() {

@@ -121,7 +121,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Marks Register': loadMarksEntryPage,
                 'Results': loadResultsPage,
                 'Timetable': loadTimetablePage,
+                'Subjects': loadSubjectsPage,
     
+                // Academic Configuration
+                'Academic Config': loadAcademicConfigPage,
+
                 // Attendance Section
                 'Staff Attendance': loadStaffAttendancePage,
                 'Student Attendance': loadAttendancePage,
@@ -256,6 +260,12 @@ window.loadViewClassPage = (classId) => {
     window.viewingClassId = classId;
     loadPage('academics/classes/view-class.html', '../../js/classes.js', 'classes-script');
 };
+
+window.loadSubjectsPage = () => loadPage('academics/subjects/subjects-list.html', '../../js/subjects.js', 'subjects-script');
+window.loadAddSubjectPage = () => loadPage('academics/subjects/add-subject.html', '../../js/subjects.js', 'subjects-script');
+
+// Academic Configuration
+window.loadAcademicConfigPage = () => loadPage('academics/config/academic-config.html', '../../js/academic-config.js', 'acad-config-script');
 
 window.loadPromoteStudentsPage = () => loadPage('academics/promote-students.html', '../../js/promote-students.js', 'promote-script');
 
