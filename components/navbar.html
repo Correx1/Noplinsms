@@ -1,32 +1,20 @@
 <nav class="fixed top-0 z-50 w-full bg-gradient-to-r from-primary-600 to-primary-700 backdrop-blur-md bg-opacity-95 border-primary-500/20 shadow-lg dark:from-primary-800 dark:to-primary-900 dark:border-primary-700/20">
-    <div class="px-3 sm:px-4 py-2.5 sm:py-3 lg:px-6">
+    <div class="px-2 sm:px-4 py-2 sm:py-3 lg:px-6">
       <div class="flex items-center justify-between">
-        <div class="flex items-center justify-start rtl:justify-end gap-3">
+        <div class="flex items-center justify-start rtl:justify-end gap-2 sm:gap-3">
           <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" 
           aria-controls="logo-sidebar" 
-          type="button" class="inline-flex items-center p-2.5 
-          text-sm backdrop:blur rounded-xl sm:hidden 
-          relative 
-         dark:text-white backdrop-blur
-         hover:bg-primary-50/60 dark:bg-white/10
-          bg-primary-50/60 dark:hover:bg-white/20">
+          type="button" class="inline-flex items-center p-2 
+          text-sm sm:hidden relative text-white/90 
+          hover:text-white hover:bg-white/10 rounded-lg 
+          transition-colors focus:ring-0 focus:outline-none">
               <span class="sr-only">Open sidebar</span>
               <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                  <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
               </svg>
            </button>
-          <a href="dashboard.html" class="flex items-center gap-4 group ml-2">
-            
-            <!-- Text Content -->
-            <div class="flex flex-col">
-              <h1 class="text-3xl font-bold leading-none" style="font-family: 'Brush Script MT', 'Lucida Handwriting', 'Segoe Script', cursive; background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 50%, #bae6fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
-                NOPLIN
-              </h1>
-              <div class="flex items-center gap-2 -mt-0.5">
-                <div class="h-px w-8 bg-gradient-to-r from-white/60 to-transparent"></div>
-                <span class="text-[10px] font-bold text-primary-100 tracking-[0.25em] uppercase">School System</span>
-              </div>
-            </div>
+          <a href="dashboard.html" class="flex items-center gap-2 group ml-4 sm:ml-8">
+             <img src="../../assets/images/logo.png" alt="Noplin Logo" class="h-11 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-sm">
           </a>
         </div>
         <div class="flex items-center gap-2">
@@ -54,7 +42,7 @@
 <button
   id="theme-toggle"
   type="button"
-  class="p-2.5 rounded-xl
+  class="p-2 sm:p-2.5 rounded-xl
     dark:text-white backdrop-blur
          hover:bg-primary-50/60 dark:bg-white/10
           sm:bg-primary-50/60 dark:hover:bg-white/20
@@ -72,11 +60,11 @@
 <!-- Notifications -->
 
 <!-- Profile -->
-<div class="flex items-center ms-1">
+<div class="flex items-center ms-1 sm:ms-2">
   <div>
     <button
       type="button"
-      class="flex items-center gap-2 px-3 py-2 text-sm font-medium
+      class="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-sm font-medium
             backdrop:blur dark:text-white
              bg-primary-50/60 dark:bg-white/5
              hover:bg-primary-100/60 dark:hover:bg-white/10
@@ -87,7 +75,7 @@
       data-dropdown-toggle="dropdown-user">
 
       <img
-        class="w-8 h-8 rounded-lg ring-2 ring-white/30"
+        class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg ring-2 ring-white/30"
         src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
         alt="user photo">
 

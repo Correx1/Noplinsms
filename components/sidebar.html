@@ -100,12 +100,7 @@
       <li class="border-t border-white/10">
          <a href="#" onclick="loadAssessmentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Assessments</a>
       </li>
-      <li class="border-t border-white/10">
-         <a href="#" onclick="loadExaminationsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Examinations</a>
-      </li>
-      <li class="border-t border-white/10">
-         <a href="#" onclick="loadScoreSheetsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Score Sheets</a>
-      </li>
+
       <li class="border-t border-white/10">
          <a href="#" onclick="loadMarksEntryPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Marks Register</a>
       </li>
@@ -119,6 +114,22 @@
          <a href="#" onclick="loadAcademicConfigPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Academic Config</a>
       </li>
    </ul>
+</li>
+
+<!-- Examinations -->
+<li onclick="loadExaminationsPage(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+   <a href="#" class="flex items-center w-full">
+      <i class="fas fa-file-alt w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+      <span class="ms-3">Examinations</span>
+   </a>
+</li>
+
+<!-- Score Sheets -->
+<li onclick="loadScoreSheetsPage(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+   <a href="#" class="flex items-center w-full">
+      <i class="fas fa-clipboard-check w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+      <span class="ms-3">Score Sheets</span>
+   </a>
 </li>
 
 

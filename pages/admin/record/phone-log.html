@@ -1,4 +1,4 @@
-<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <nav class="flex mb-5" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
@@ -21,11 +21,11 @@
 </div>
 
 <div class="p-4">
-    <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
         <button type="button" onclick="document.getElementById('add-call-section').classList.toggle('hidden')" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 mb-2 md:mb-0">
             <i class="fas fa-phone mr-2"></i> Log New Call
         </button>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2">
              <input type="text" id="phone-search" placeholder="Search logs..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         </div>
     </div>

@@ -1,4 +1,4 @@
-<div class="p-6">
+<div class="p-4 sm:p-6">
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
@@ -177,10 +177,10 @@
     function generateReport() {
         const area = document.getElementById('report-result-area');
         area.innerHTML = `
-            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-bold">Report Generated: ${new Date().toLocaleDateString()}</h3>
-                    <div class="flex space-x-2">
+                    <div class="flex flex-wrap gap-2">
                          <button class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Download Excel</button>
                          <button class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">Download PDF</button>
                     </div>

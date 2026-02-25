@@ -1,4 +1,4 @@
-<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <nav class="flex mb-5" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
@@ -24,7 +24,7 @@
     <!-- Financial Summary Cards (Identical Layout for Context) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="p-4 bg-green-50 rounded-lg border border-green-200 dark:bg-green-900 dark:border-green-800">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
                     <p class="text-sm text-green-600 dark:text-green-300 font-medium">Total Income</p>
                     <h3 class="text-2xl font-bold text-green-700 dark:text-green-200" id="dash-total-income">$0.00</h3>
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="p-4 bg-red-50 rounded-lg border border-red-200 dark:bg-red-900 dark:border-red-800">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
                     <p class="text-sm text-red-600 dark:text-red-300 font-medium">Total Expenses</p>
                     <h3 class="text-2xl font-bold text-red-700 dark:text-red-200" id="dash-total-expenses">$0.00</h3>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="p-4 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-sm">
-             <div class="flex items-center justify-between">
+             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
                 <div>
                     <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Net Profit/Loss</p>
                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white" id="dash-net-profit">$0.00</h3>
@@ -125,9 +125,9 @@
 
     <!-- Expense Records Table -->
     <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2 md:mb-0">Expenses Records</h2>
-            <div class="flex space-x-2">
+            <div class="flex flex-wrap gap-2">
                 <input type="date" id="filter-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <input type="text" id="filter-search" placeholder="Search..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <button onclick="exportExpenses()" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-4 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">

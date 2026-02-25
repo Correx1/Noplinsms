@@ -23,7 +23,7 @@
 <!-- Import Options -->
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
     <!-- Import Students -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 dark:bg-gray-800 dark:border-gray-700">
         <div class="flex items-center mb-4">
             <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center mr-3">
                 <i class="fas fa-user-graduate text-blue-600 dark:text-blue-300"></i>
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Import Teachers -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 dark:bg-gray-800 dark:border-gray-700">
         <div class="flex items-center mb-4">
             <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-3">
                 <i class="fas fa-chalkboard-teacher text-green-600 dark:text-green-300"></i>
@@ -53,7 +53,7 @@
     </div>
 
     <!-- Import Staff -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 dark:bg-gray-800 dark:border-gray-700">
         <div class="flex items-center mb-4">
             <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center mr-3">
                 <i class="fas fa-user-tie text-purple-600 dark:text-purple-300"></i>
@@ -68,7 +68,7 @@
     </div>
 
     <!-- Import Parents -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 dark:bg-gray-800 dark:border-gray-700">
         <div class="flex items-center mb-4">
             <div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center mr-3">
                 <i class="fas fa-users text-orange-600 dark:text-orange-300"></i>
@@ -84,7 +84,7 @@
 </div>
 
 <!-- Download Templates Section -->
-<div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6 dark:bg-gray-800 dark:border-gray-700">
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 mb-6 dark:bg-gray-800 dark:border-gray-700">
     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4"><i class="fas fa-download mr-2"></i> Download Templates</h3>
     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Download CSV templates with the correct format for each user type before importing.</p>
     <div class="flex flex-wrap gap-3">
@@ -105,13 +105,13 @@
 
 <!-- File Preview Area -->
 <div id="import-preview-section" class="hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
+    <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
             <div>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="preview-title">File Preview</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400" id="preview-info"></p>
             </div>
-            <div class="flex space-x-2">
+            <div class="flex flex-wrap gap-2">
                 <button type="button" onclick="cancelImport()" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700">
                     Cancel
                 </button>
@@ -134,7 +134,7 @@
 </div>
 
 <!-- Import History -->
-<div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700">
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4 sm:p-6 dark:bg-gray-800 dark:border-gray-700">
     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4"><i class="fas fa-history mr-2"></i> Recent Imports</h3>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">

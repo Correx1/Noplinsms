@@ -1,4 +1,4 @@
-<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <div class="mb-4">
             <nav class="flex mb-5" aria-label="Breadcrumb">
@@ -25,7 +25,7 @@
             </nav>
             <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Classes Management</h1>
         </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
+        <div class="flex flex-wrap items-center gap-2">
              <button type="button" onclick="loadAddClassPage()" class="inline-flex items-center justify-center w-full px-5 py-2.5 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 <i class="fas fa-plus mr-2"></i> Add New Class
             </button>
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div class="p-6">
+<div class="p-4 sm:p-6">
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="classes-grid">
         <!-- Dynamic Class Cards will be rendered here -->
     </div>

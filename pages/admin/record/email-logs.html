@@ -1,4 +1,4 @@
-<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <nav class="flex mb-5" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
@@ -22,11 +22,11 @@
 
 <div class="p-4">
     <!-- Filter Bar -->
-    <div class="flex flex-col md:flex-row items-center justify-between mb-4">
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
         <div>
             <!-- No Add Button, it's read only logs mainly -->
         </div>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2">
              <input type="text" id="email-search" placeholder="Search subject or sender..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         </div>
     </div>
@@ -53,7 +53,7 @@
     <div id="email-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50 flex">
         <div class="relative p-4 w-full max-w-2xl max-h-full">
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="modal-subject">
                         Subject
                     </h3>
