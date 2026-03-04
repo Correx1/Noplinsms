@@ -46,9 +46,12 @@
             card.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white">${cls.name}</h3>
-                    <span class="bg-primary-100 text-primary-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
-                        Level ${cls.level}
-                    </span>
+                    <div class="flex items-center gap-2">
+                         ${cls.department && cls.department !== 'General' ? `<span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">${cls.department}</span>` : ''}
+                         <span class="bg-primary-100 text-primary-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-primary-200 dark:text-primary-800">
+                             Level ${cls.level}
+                         </span>
+                    </div>
                 </div>
                 <div class="mb-4 space-y-2">
                     <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -91,6 +94,21 @@
             alert('Class saved successfully! (Mock)');
             loadClassesPage(); // Go back
         });
+
+        // Toggle Department visibility if class level >= 10 (SSS 1 = 10, SSS 2 = 11, SSS 3 = 12)
+        const levelInput = document.getElementById('class-level');
+        const deptContainer = document.getElementById('department-container');
+        if (levelInput && deptContainer) {
+            levelInput.addEventListener('input', (e) => {
+                const lvl = parseInt(e.target.value);
+                if (lvl >= 10 && lvl <= 12) {
+                    deptContainer.classList.remove('hidden');
+                } else {
+                    deptContainer.classList.add('hidden');
+                    document.getElementById('class-department').value = 'General';
+                }
+            });
+        }
     }
 
     function populateTeacherDropdown(elementId) {

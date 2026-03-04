@@ -75,6 +75,7 @@
   {
     "id": "C004",
     "name": "SS1",
+    "department": "Science",
     "level": 10,
     "totalStudents": 35,
     "classTeacherId": "T005",
@@ -102,6 +103,7 @@
   {
     "id": "C005",
     "name": "SS2",
+    "department": "Science",
     "level": 11,
     "totalStudents": 32,
     "classTeacherId": "T006",
@@ -129,6 +131,7 @@
   {
     "id": "C006",
     "name": "SS3",
+    "department": "Science",
     "level": 12,
     "totalStudents": 38,
     "classTeacherId": "T001",

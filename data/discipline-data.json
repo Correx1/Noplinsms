@@ -1,0 +1,32 @@
+[
+    {
+        "id": "INC001",
+        "student_id": "STU001",
+        "student_name": "Adebayo Ogunlesi",
+        "date": "2024-02-10",
+        "category": "Lateness",
+        "description": "Arrived 1 hour late for the third time this week.",
+        "action_taken": "Issued verbal warning and notified parents.",
+        "status": "Resolved"
+    },
+    {
+        "id": "INC002",
+        "student_id": "STU015",
+        "student_name": "Ngozi Eze",
+        "date": "2024-02-12",
+        "category": "Disruption",
+        "description": "Constantly disrupting the class during Mathematics period.",
+        "action_taken": "Sent to the principal's office and given a short detention.",
+        "status": "Resolved"
+    },
+    {
+        "id": "INC003",
+        "student_id": "STU042",
+        "student_name": "Chukwudi Okafor",
+        "date": "2024-02-14",
+        "category": "Property Damage",
+        "description": "Broke a window in the laboratory.",
+        "action_taken": "Parents summoned to pay for damages.",
+        "status": "Pending"
+    }
+]

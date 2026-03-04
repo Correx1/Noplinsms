@@ -142,7 +142,7 @@
 
 </div>
 
-<!-- Inline Logic for Quick Prototype -->
+<!-- Logic handled by js/reports.js (loaded externally by sidebar.js) -->
 <script>
     function selectReportCategory(cat) {
         // Highlight logic
@@ -175,38 +175,103 @@
     }
 
     function generateReport() {
+        const cat = document.querySelector('.report-card.active-report')?.dataset?.cat || 'student';
+        const type = document.getElementById('report-type-select').value;
         const area = document.getElementById('report-result-area');
+
+        // Build mock data rows from localStorage
+        let headers = [];
+        let rows = [];
+
+        if (cat === 'student') {
+            const students = JSON.parse(localStorage.getItem('studentsData') || '[]');
+            headers = ['ID', 'Name', 'Class', 'Gender', 'Status', 'Date Added'];
+            rows = students.length > 0
+                ? students.map(s => [s.id || '', s.name || '', s.class || '', s.gender || '', 'Active', s.dob || ''])
+                : [['STD001','Amaka Okonkwo','SSS2A','Female','Active','2008-04-15'],['STD002','Chukwu Emeka','JSS3B','Male','Active','2009-01-20'],['STD003','Fatima Bello','SSS1A','Female','Active','2007-09-03']];
+        } else if (cat === 'finance') {
+            headers = ['Ref No', 'Student / Staff', 'Description', 'Amount (₦)', 'Date', 'Status'];
+            rows = [['INV001','Amaka Okonkwo','Tuition Fee – First Term','50000','2024-09-15','Paid'],['INV002','Emeka Chukwu','Tuition Fee – First Term','50000','2024-09-18','Paid'],['INV003','Fatima Bello','Development Levy','5000','2024-09-20','Outstanding']];
+        } else if (cat === 'teacher' || cat === 'parent') {
+            headers = ['ID', 'Name', 'Phone', 'Email', 'Assigned Class', 'Status'];
+            rows = [['TCH001','Mr. Adebayo','08012345678','adebayo@school.com','SSS2A','Active'],['TCH002','Mrs. Ngozi','08098765432','ngozi@school.com','JSS3B','Active']];
+        } else if (cat === 'attendance') {
+            headers = ['Date', 'Class', 'Present', 'Absent', 'Total', '% Present'];
+            rows = [['2024-10-01','SSS2A','40','5','45','88.9%'],['2024-10-02','SSS2A','42','3','45','93.3%'],['2024-10-03','JSS1A','35','5','40','87.5%']];
+        } else if (cat === 'academic') {
+            headers = ['Student ID', 'Name', 'Class', 'Average Score', 'Position', 'Status'];
+            rows = [['STD001','Amaka Okonkwo','SSS2A','87.4%','1st','Promoted'],['STD002','Emeka Chukwu','SSS2A','79.2%','2nd','Promoted'],['STD003','Fatima Bello','SSS2A','52.1%','15th','Promoted']];
+        } else {
+            headers = ['ID', 'Name', 'Details', 'Date', 'Status'];
+            rows = [['001','Sample Record','Details here','2024-10-01','Active'],['002','Sample Record 2','Details here','2024-10-02','Active']];
+        }
+
         area.innerHTML = `
             <div class="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-bold">Report Generated: ${new Date().toLocaleDateString()}</h3>
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <div>
+                        <h3 class="font-bold text-gray-900 dark:text-white">${type || 'Report'}</h3>
+                        <p class="text-sm text-gray-500">Generated: ${new Date().toLocaleString()}</p>
+                    </div>
                     <div class="flex flex-wrap gap-2">
-                         <button class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Download Excel</button>
-                         <button class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700">Download PDF</button>
+                        <button onclick="_downloadCSV()" class="flex items-center gap-1.5 px-3 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 font-medium">
+                            <i class="fas fa-file-excel"></i> Download Excel (CSV)
+                        </button>
+                        <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 font-medium">
+                            <i class="fas fa-print"></i> Print
+                        </button>
                     </div>
                 </div>
-                <div class="h-64 bg-gray-50 flex items-center justify-center rounded border border-dashed border-gray-300">
-                    <div class="text-center">
-                        <i class="fas fa-chart-bar text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500">Chart Visualization Placeholder</p>
-                    </div>
-                </div>
-                 <div class="mt-4 relative overflow-x-auto">
-                    <table class="w-full text-sm text-left text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr><th>ID</th><th>Details</th><th>Status</th><th>Date</th><th class="text-right">Amount / Count</th></tr>
+                <div class="relative overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                            <tr>${headers.map(h=>`<th class="px-4 py-3">${h}</th>`).join('')}</tr>
                         </thead>
                         <tbody>
-                             <tr class="bg-white border-b"><td class="px-6 py-4">001</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-25</td><td class="px-6 py-4 text-right">500</td></tr>
-                             <tr class="bg-white border-b"><td class="px-6 py-4">002</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-26</td><td class="px-6 py-4 text-right">750</td></tr>
-                             <tr class="bg-white border-b"><td class="px-6 py-4">003</td><td class="px-6 py-4">Sample Data Row</td><td class="px-6 py-4 text-green-600">Active</td><td class="px-6 py-4">2023-10-27</td><td class="px-6 py-4 text-right">240</td></tr>
+                            ${rows.map((r,i)=>`<tr class="${i%2?'bg-gray-50 dark:bg-gray-700/30':'bg-white dark:bg-gray-800'} border-b dark:border-gray-700">${r.map(c=>`<td class="px-4 py-3">${c}</td>`).join('')}</tr>`).join('')}
                         </tbody>
                     </table>
                 </div>
-            </div>
-        `;
+                <p class="text-xs text-gray-400 mt-3">Showing ${rows.length} record(s) — CorrexSMS Report Engine</p>
+            </div>`;
+
+        // Store for CSV export
+        window._reportHeaders = headers;
+        window._reportRows = rows;
+        window._reportTitle = type || 'Report';
     }
+
+    window._downloadCSV = function() {
+        if (!window._reportHeaders) return;
+        const csvContent = [window._reportHeaders, ...window._reportRows]
+            .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (window._reportTitle || 'report').replace(/\s+/g, '_') + '_' + new Date().toISOString().slice(0,10) + '.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    // Add data-cat attribute to every card so generateReport can read it
+    document.querySelectorAll('.report-card').forEach(card => {
+        const oc = card.getAttribute('onclick') || '';
+        const m = oc.match(/selectReportCategory\('(\w+)'\)/);
+        if (m) card.dataset.cat = m[1];
+    });
 
     // Init with first selection
     selectReportCategory('student');
+
+    // Also wire the generate button robustly
+    document.getElementById('btn-generate-results') && 
+        document.getElementById('btn-generate-results').addEventListener('click', generateReport);
+    const genBtn = document.querySelector('[onclick="generateReport()"]');
+    if (!genBtn) {
+        // button uses onclick attr — already works. Nothing to do.
+    }
 </script>

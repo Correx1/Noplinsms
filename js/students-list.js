@@ -21,6 +21,7 @@
         const searchInput = document.getElementById('student-search');
         const filterClass = document.getElementById('filter-class');
         const filterSection = document.getElementById('filter-section');
+        const filterDepartment = document.getElementById('filter-department');
         const filterStatus = document.getElementById('filter-status');
         const resetBtn = document.getElementById('reset-filters');
         const perPageSelect = document.getElementById('items-per-page');
@@ -30,7 +31,11 @@
         if(searchInput) searchInput.addEventListener('input', () => { currentPage = 1; renderTable(); });
         if(filterClass) filterClass.addEventListener('change', () => { currentPage = 1; renderTable(); });
         if(filterSection) filterSection.addEventListener('change', () => { currentPage = 1; renderTable(); });
+        if(filterDepartment) filterDepartment.addEventListener('change', () => { currentPage = 1; renderTable(); });
         if(filterStatus) filterStatus.addEventListener('change', () => { currentPage = 1; renderTable(); });
+        
+        const groupByField = document.getElementById('group-by-field');
+        if(groupByField) groupByField.addEventListener('change', () => { currentPage = 1; renderTable(); });
         
         if(resetBtn) resetBtn.addEventListener('click', () => {
              document.querySelector('form').reset();
@@ -94,6 +99,7 @@
             const search = document.getElementById('student-search').value.toLowerCase();
             const fClass = document.getElementById('filter-class').value;
             const fSection = document.getElementById('filter-section').value;
+            const fDepartment = document.getElementById('filter-department').value;
             const fStatus = document.getElementById('filter-status').value;
 
             const matchesSearch = student.name.toLowerCase().includes(search) || 
@@ -101,15 +107,27 @@
                                   student.phone.includes(search);
             const matchesClass = fClass ? student.class === fClass : true;
             const matchesSection = fSection ? student.section === fSection : true;
+            const matchesDepartment = fDepartment ? student.department === fDepartment : true;
             const matchesStatus = fStatus ? student.status === fStatus : true;
 
-            return matchesSearch && matchesClass && matchesSection && matchesStatus;
+            return matchesSearch && matchesClass && matchesSection && matchesDepartment && matchesStatus;
         });
 
-        // Sort
+        // Sort Setup
+        const groupBy = document.getElementById('group-by-field') ? document.getElementById('group-by-field').value : '';
+
         filteredData.sort((a, b) => {
-            const valA = a[sortColumn].toLowerCase();
-            const valB = b[sortColumn].toLowerCase();
+            // If grouping is active, sort by group field first
+            if (groupBy) {
+                const groupA = (a[groupBy] || '').toLowerCase();
+                const groupB = (b[groupBy] || '').toLowerCase();
+                if (groupA < groupB) return -1;
+                if (groupA > groupB) return 1;
+            }
+            
+            // Secondary sort
+            const valA = (a[sortColumn] || '').toLowerCase();
+            const valB = (b[sortColumn] || '').toLowerCase();
             if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
             if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
             return 0;
@@ -117,7 +135,7 @@
 
         // Pagination
         const totalItems = filteredData.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const pageData = filteredData.slice(start, end);
@@ -127,47 +145,79 @@
         document.getElementById('showing-end').innerText = Math.min(end, totalItems);
         document.getElementById('total-records').innerText = totalItems;
 
-        // Populate Table
-        tbody.innerHTML = pageData.map(student => `
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="w-4 p-4">
-                    <div class="flex items-center">
-                        <input type="checkbox" class="student-checkbox w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label class="sr-only">checkbox</label>
-                    </div>
-                </td>
-                <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    <img class="w-8 h-8 rounded-full mr-2" src="${student.photo}" alt="${student.name}">
-                    <div class="pl-3">
-                        <div class="text-base font-semibold">${student.name}</div>
-                        <div class="font-normal text-gray-500">${student.gender}</div>
-                    </div>  
-                </td>
-                <td class="px-6 py-4">${student.id}</td>
-                <td class="px-6 py-4">${student.class}</td>
-                <td class="px-6 py-4">${student.section}</td>
-                <td class="px-6 py-4">${student.roll}</td>
-                <td class="px-6 py-4">${student.phone}</td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center">
-                        <div class="h-2.5 w-2.5 rounded-full ${student.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} mr-2"></div> ${student.status}
-                    </div>
-                </td>
-                <td class="px-6 py-4">
-                    <div class="flex items-center space-x-2">
-                        <button onclick="window.loadViewStudentPage('${student.id}')" class="font-medium text-gray-600 dark:text-gray-200 hover:underline" title="View Student">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button onclick="window.loadAddStudentPage('${student.id}')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" title="Edit Student">
-                            <i class="fas fa-pen"></i>
-                        </button>
-                        <button onclick="window.prepareDelete('${student.id}')" data-modal-target="deleteModal" data-modal-toggle="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline" title="Delete Student">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
+        // Populate Table with Grouping Logic
+        let currentGroupValue = null;
+        let html = '';
+
+        if (pageData.length === 0) {
+            html = '<tr><td colspan="9" class="text-center py-8 text-gray-500">No students found.</td></tr>';
+        } else {
+            pageData.forEach(student => {
+                // Check if we need a group header
+                if (groupBy) {
+                    const studentGroupValue = student[groupBy] || 'None';
+                    if (studentGroupValue !== currentGroupValue) {
+                        currentGroupValue = studentGroupValue;
+                        const groupLabel = groupBy.charAt(0).toUpperCase() + groupBy.slice(1);
+                        html += `
+                        <tr class="bg-gray-100 dark:bg-gray-700">
+                            <td colspan="9" class="px-6 py-3 font-bold text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider border-y border-gray-200 dark:border-gray-600">
+                                ${groupLabel}: ${currentGroupValue}
+                            </td>
+                        </tr>`;
+                    }
+                }
+
+                // Row HTML
+                html += `
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <td class="w-4 p-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="student-checkbox w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label class="sr-only">checkbox</label>
+                        </div>
+                    </td>
+                    <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                        <img class="w-8 h-8 rounded-full mr-2" src="${student.photo}" alt="${student.name}">
+                        <div class="pl-3">
+                            <div class="text-base font-semibold">${student.name}</div>
+                            <div class="font-normal text-gray-500">${student.gender}</div>
+                        </div>  
+                    </td>
+                    <td class="px-6 py-4">${student.id}</td>
+                    <td class="px-6 py-4">${student.class}</td>
+                    <td class="px-6 py-4">
+                        ${student.department === 'Science' ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded dark:bg-blue-900 dark:text-blue-300">Science</span>' : ''}
+                        ${student.department === 'Art' ? '<span class="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded dark:bg-purple-900 dark:text-purple-300">Art</span>' : ''}
+                        ${student.department === 'Commercial' ? '<span class="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded dark:bg-orange-900 dark:text-orange-300">Commercial</span>' : ''}
+                        ${student.department === 'General' ? '<span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded dark:bg-gray-700 dark:text-gray-300">General</span>' : ''}
+                    </td>
+                    <td class="px-6 py-4">${student.section}</td>
+                    <td class="px-6 py-4">${student.roll}</td>
+                    <td class="px-6 py-4">${student.phone}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center">
+                            <div class="h-2.5 w-2.5 rounded-full ${student.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} mr-2"></div> ${student.status}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center space-x-2">
+                            <button onclick="window.loadViewStudentPage('${student.id}')" class="font-medium text-gray-600 dark:text-gray-200 hover:underline" title="View Student">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="window.loadAddStudentPage('${student.id}')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" title="Edit Student">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                            <button onclick="window.prepareDelete('${student.id}')" data-modal-target="deleteModal" data-modal-toggle="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline" title="Delete Student">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+        }
+        
+        tbody.innerHTML = html;
 
         // Render Pagination
         renderPagination(totalPages);

@@ -46,12 +46,23 @@
                 <div class="col-span-6 sm:col-span-3">
                     <label for="subjectType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject Type *</label>
                     <select id="subjectType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
-                        <option value="Elective" selected>Elective</option>
+                        <option value="Compulsory" selected>Compulsory</option>
+                        <option value="Elective">Elective</option>
                         <option value="Optional">Optional</option>
                     </select>
                 </div>
-                
+
                 <div class="col-span-6 sm:col-span-3">
+                    <label for="subjectDepartment" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department (For SSS) *</label>
+                    <select id="subjectDepartment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                        <option value="General" selected>General (All Classes)</option>
+                        <option value="Science">Science Only</option>
+                        <option value="Art">Art Only</option>
+                        <option value="Commercial">Commercial Only</option>
+                    </select>
+                </div>
+                
+                <div class="col-span-6">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assigned Classes *</label>
                     <div class="grid grid-cols-2 lg:grid-cols-3 gap-2" id="assignedClassesGroup">
                         <div class="flex items-center">

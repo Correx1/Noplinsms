@@ -1,0 +1,123 @@
+<!-- Page Header -->
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Discipline Records</h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Manage student behavioral incidents and disciplinary actions.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <button onclick="window.loadAddIncidentPage()" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 transition-colors w-full sm:w-auto">
+            <i class="fas fa-plus"></i> Record Incident
+        </button>
+    </div>
+</div>
+
+<!-- Main Card -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border hover:border-primary-500 transition-colors dark:border-gray-700">
+    <!-- Header with Search/Filters -->
+    <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
+        <div class="relative w-full sm:max-w-xs">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <i class="fas fa-search text-gray-500 dark:text-gray-400"></i>
+            </div>
+            <input type="text" id="discipline-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition-all" placeholder="Search incidents...">
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto">
+            <select id="discipline-filter-category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition-colors">
+                <option value="">All Categories</option>
+                <option value="Lateness">Lateness</option>
+                <option value="Disruption">Disruption</option>
+                <option value="Property Damage">Property Damage</option>
+                <option value="Other">Other</option>
+            </select>
+            <select id="discipline-filter-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition-colors">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Resolved">Resolved</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-collapse">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                <tr>
+                    <th scope="col" class="px-6 py-3 cursor-pointer group" data-sort="date">
+                        <div class="flex items-center justify-between">
+                            <span>Date</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer group" data-sort="student_name">
+                        <div class="flex items-center justify-between">
+                            <span>Student</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer group" data-sort="category">
+                        <div class="flex items-center justify-between">
+                            <span>Category</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3">Action Taken</th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer group" data-sort="status">
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="discipline-table-body">
+                <!-- Skeleton rows while loading -->
+                <tr class="animate-pulse">
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-24"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-32"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-24"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-48"></div></td>
+                    <td class="px-6 py-4"><div class="h-6 bg-gray-200 rounded dark:bg-gray-700 w-20"></div></td>
+                    <td class="px-6 py-4 text-right"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-12 ml-auto"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-200 dark:border-gray-700 gap-4">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            Showing <span id="showing-start" class="font-semibold text-gray-900 dark:text-white">...</span> to <span id="showing-end" class="font-semibold text-gray-900 dark:text-white">...</span> of <span id="total-records" class="font-semibold text-gray-900 dark:text-white">...</span> Entries
+        </span>
+        <ul id="pagination-controls" class="inline-flex -space-x-px text-sm">
+            <!-- Pagination handled by JS -->
+        </ul>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Delete Incident</h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+                <p class="text-sm text-gray-500 dark:text-gray-400">Are you sure you want to delete this incident record? This action cannot be undone.</p>
+                <div class="flex justify-end gap-3 mt-6">
+                    <button data-modal-toggle="deleteModal" type="button" class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+                    <button id="confirm-delete-btn" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Confirm Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

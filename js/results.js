@@ -163,7 +163,7 @@
         subjects.forEach(sub => {
             thHTML += `<th class="px-4 py-3">${sub.substring(0,3)}</th>`;
         });
-        thHTML += `<th class="px-4 py-3">Total</th><th class="px-4 py-3">Avg</th><th class="px-4 py-3">Status</th>`;
+        thHTML += `<th class="px-4 py-3">Total</th><th class="px-4 py-3">Avg</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Report</th>`;
         tableHead.innerHTML = thHTML;
 
         // Rows
@@ -194,6 +194,11 @@
                     ${r.isPass 
                         ? '<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded">PASS</span>'
                         : '<span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-0.5 rounded">FAIL</span>'}
+                </td>
+                <td class="px-4 py-3">
+                    <button onclick="generateStudentResult('${r.id}')" class="text-xs text-white bg-primary-600 hover:bg-primary-700 font-medium rounded px-2.5 py-1.5 whitespace-nowrap">
+                        <i class="fas fa-id-card mr-1"></i>Result
+                    </button>
                 </td>
             `;
 
@@ -241,6 +246,65 @@
         document.body.appendChild(link);
         link.click();
     };
+
+    window.generateStudentResult = function(studentId) {
+        const student = processedResults.find(r => r.id === studentId);
+        if (!student) return;
+
+        const examLabel = examSelect.options[examSelect.selectedIndex]?.text || 'Examination';
+        const yearVal = document.getElementById('res-year-select')?.value || '';
+
+        // Populate header fields
+        document.getElementById('rp-exam-title').textContent = examLabel;
+        document.getElementById('rp-student-name').textContent = student.name;
+        document.getElementById('rp-student-id').textContent = 'ID: ' + student.id;
+        document.getElementById('rp-class').textContent = classSelect.value;
+        document.getElementById('rp-term').textContent = examLabel;
+        document.getElementById('rp-total').textContent = student.totalMarks;
+        document.getElementById('rp-average').textContent = student.avg + '%';
+        document.getElementById('rp-position').textContent = student.rank + getOrdinalSuffix(student.rank) + ' / ' + processedResults.length;
+        document.getElementById('rp-status').textContent = student.isPass ? 'PROMOTED' : 'REFERRED';
+        document.getElementById('rp-status').className = 'font-bold ' + (student.isPass ? 'text-green-600' : 'text-red-600');
+        document.getElementById('rp-subject-count').textContent = SUBJECTS.length;
+        document.getElementById('rp-class-size').textContent = processedResults.length;
+        document.getElementById('rp-year').textContent = yearVal;
+        document.getElementById('rp-date').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'long', year:'numeric'});
+
+        // Populate scores table
+        const tbody = document.getElementById('rp-scores-body');
+        tbody.innerHTML = '';
+        SUBJECTS.forEach(sub => {
+            const score = student.subjectMarks[sub];
+            if (score === '-' || score === undefined) return;
+            const ca = Math.round(score * 0.4);
+            const exam = Math.round(score * 0.6);
+            const grade = getGrade(score);
+            const remark = score >= 50 ? 'CREDIT' : score >= 40 ? 'PASS' : 'FAIL';
+            const rowColor = score < 40 ? 'bg-red-50' : '';
+            tbody.innerHTML += `
+                <tr class="border-b ${rowColor}">
+                    <td class="px-4 py-2 font-medium text-gray-800">${sub}</td>
+                    <td class="px-4 py-2 text-center">${ca}</td>
+                    <td class="px-4 py-2 text-center">${exam}</td>
+                    <td class="px-4 py-2 text-center font-bold">${score}</td>
+                    <td class="px-4 py-2 text-center font-bold text-primary-700">${grade}</td>
+                    <td class="px-4 py-2 text-center text-sm ${score < 40 ? 'text-red-600 font-bold' : 'text-green-700'}">${remark}</td>
+                </tr>
+            `;
+        });
+
+        // Show modal
+        const modal = document.getElementById('studentResultModal');
+        modal.classList.remove('hidden');
+        modal.scrollTop = 0;
+    };
+
+    function getOrdinalSuffix(n) {
+        if (n === 1) return 'st';
+        if (n === 2) return 'nd';
+        if (n === 3) return 'rd';
+        return 'th';
+    }
 
     function getRankBadge(rank) {
         if(rank === 1) return '🥇 1st';

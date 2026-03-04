@@ -1,0 +1,184 @@
+<div class="p-4 sm:p-6 pb-20">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add New Staff</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-700 hover:text-primary-600 md:ml-2 dark:text-gray-400 dark:hover:text-white">Human Resources</span>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-500">Add Staff</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="mt-4 md:mt-0 flex gap-2">
+            <button type="button" onclick="window.loadHRStaffDirectoryPage()" class="py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Cancel</button>
+            <button type="button" onclick="document.getElementById('add-staff-form').requestSubmit()" class="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 transition-colors shadow-sm">
+                <i class="fas fa-save"></i> Save Staff Record
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Form Container -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border dark:border-gray-700 relative">
+        <form id="add-staff-form" class="p-6 space-y-8" onsubmit="event.preventDefault(); window.hrApp.addStaff();">
+            
+            <!-- SECTION: Personal Information -->
+            <div>
+                <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b pb-2 dark:border-gray-700">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 text-primary-600 mr-3 dark:bg-primary-900/30 dark:text-primary-400"><i class="fas fa-user"></i></div>
+                    Personal Information
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="staff-firstname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="staff-firstname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div>
+                        <label for="staff-lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name <span class="text-red-500">*</span></label>
+                        <input type="text" id="staff-lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div>
+                        <label for="staff-gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender <span class="text-red-500">*</span></label>
+                        <select id="staff-gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="staff-dob" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Birth</label>
+                        <input type="date" id="staff-dob" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="staff-phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number <span class="text-red-500">*</span></label>
+                        <input type="tel" id="staff-phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="+234..." required>
+                    </div>
+                    <div>
+                        <label for="staff-email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Address <span class="text-red-500">*</span></label>
+                        <input type="email" id="staff-email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="name@school.edu" required>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label for="staff-address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Home Address</label>
+                        <textarea id="staff-address" rows="2" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"></textarea>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff Photo</label>
+                        <div class="flex items-center justify-center w-full">
+                            <label for="staff-photo" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-2xl text-gray-500 dark:text-gray-400 mb-2"></i>
+                                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or JPEG (MAX. 2MB)</p>
+                                </div>
+                                <input id="staff-photo" type="file" class="hidden" accept="image/*" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Employment Information -->
+            <div>
+                <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b pb-2 dark:border-gray-700">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-600 mr-3 dark:bg-blue-900/30 dark:text-blue-400"><i class="fas fa-briefcase"></i></div>
+                    Employment Information
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="staff-dept" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department <span class="text-red-500">*</span></label>
+                        <select id="staff-dept" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                            <!-- JS loaded -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="staff-designation" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Designation <span class="text-red-500">*</span></label>
+                        <select id="staff-designation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                             <!-- JS loaded based on dept -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="staff-join-date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Joining <span class="text-red-500">*</span></label>
+                        <input type="date" id="staff-join-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                    </div>
+                    <div>
+                        <label for="staff-contract" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contract Type</label>
+                        <select id="staff-contract" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Intern">Intern</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="staff-basic-salary" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Basic Salary (₦)</label>
+                        <input type="number" id="staff-basic-salary" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label for="staff-qualifications" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Highest Qualification</label>
+                        <input type="text" id="staff-qualifications" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="e.g. B.Sc Education">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Payroll / Bank Details -->
+            <div>
+                <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b pb-2 dark:border-gray-700">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-600 mr-3 dark:bg-green-900/30 dark:text-green-400"><i class="fas fa-university"></i></div>
+                    Bank & Payroll Details
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="staff-bank-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bank Name</label>
+                        <input type="text" id="staff-bank-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="e.g. First Bank">
+                    </div>
+                    <div>
+                        <label for="staff-bank-acc-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Name</label>
+                        <input type="text" id="staff-bank-acc-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Identical to staff name">
+                    </div>
+                    <div>
+                        <label for="staff-bank-acc-num" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Number</label>
+                        <input type="text" id="staff-bank-acc-num" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="10 Digit Number">
+                    </div>
+                </div>
+            </div>
+
+             <!-- SECTION: Emergency Contact -->
+            <div>
+                <h3 class="flex items-center text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b pb-2 dark:border-gray-700">
+                    <div class="flex items-center justify-center w-8 h-8 rounded-full bg-red-100 text-red-600 mr-3 dark:bg-red-900/30 dark:text-red-400"><i class="fas fa-heartbeat"></i></div>
+                    Emergency Contact
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="staff-emerg-name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Name</label>
+                        <input type="text" id="staff-emerg-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                    <div>
+                        <label for="staff-emerg-rel" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Relationship</label>
+                        <input type="text" id="staff-emerg-rel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="e.g. Spouse, Sibling">
+                    </div>
+                    <div>
+                        <label for="staff-emerg-phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Phone</label>
+                        <input type="tel" id="staff-emerg-phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

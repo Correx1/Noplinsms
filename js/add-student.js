@@ -130,6 +130,8 @@
     // Section Dropdown Logic
     const classSelect = document.getElementById('class_select');
     const sectionSelect = document.getElementById('section_select');
+    const deptContainer = document.getElementById('student-department-container');
+    const deptSelect = document.getElementById('department_select');
 
     if (classSelect && sectionSelect) {
         const sections = {
@@ -160,6 +162,18 @@
                     option.textContent = sec;
                     sectionSelect.appendChild(option);
                 });
+            }
+
+            // Department toggle
+            if (deptContainer && deptSelect) {
+                if (selectedClass && selectedClass.startsWith('SS')) {
+                    deptContainer.classList.remove('hidden');
+                    deptSelect.setAttribute('required', 'true');
+                } else {
+                    deptContainer.classList.add('hidden');
+                    deptSelect.removeAttribute('required');
+                    deptSelect.value = 'General';
+                }
             }
         });
     }
@@ -263,12 +277,17 @@
         setVal('admission_date', data.academic.admission_date);
         setVal('class_select', data.academic.class);
         
-        // Trigger class change to populate sections, then set section
-        const classSelect = document.getElementById('class_select');
-        if(classSelect) {
+        // Trigger class change to populate sections and show/hide department
+        const classSelector = document.getElementById('class_select');
+        if(classSelector) {
              const event = new Event('change');
-             classSelect.dispatchEvent(event);
-             setTimeout(() => setVal('section_select', data.academic.section), 50);
+             classSelector.dispatchEvent(event);
+             setTimeout(() => {
+                 setVal('section_select', data.academic.section);
+                 if (data.academic.class.startsWith('SS')) {
+                     setVal('department_select', data.academic.department || 'General');
+                 }
+             }, 50);
         }
         
         setVal('roll_no', data.academic.roll_no);

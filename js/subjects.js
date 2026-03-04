@@ -54,8 +54,7 @@
                     </div>
                     <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Code: ${sub.code}</p>
                     
-                    <div class="mb-4">
-                        <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Assigned Classes</p>
+                    <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Assigned Classes</p>
                         <div class="flex flex-wrap gap-y-2 items-center">
                             ${classLabels} ${extraCount}
                         </div>
@@ -104,6 +103,8 @@
                 document.getElementById('subjectName').value = subject.name;
                 document.getElementById('subjectCode').value = subject.code;
                 document.getElementById('subjectType').value = subject.type;
+                const deptSelect = document.getElementById('subjectDepartment');
+                if (deptSelect && subject.department) deptSelect.value = subject.department;
                 
                 const descEl = document.getElementById('subjectDescription');
                 if(descEl && subject.description) descEl.value = subject.description;

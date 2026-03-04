@@ -65,6 +65,17 @@
             </select>
         </div>
 
+        <!-- Department (For SSS) -->
+        <div>
+            <select id="filter-department" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <option value="">All Departments</option>
+                <option value="General">General (JSS etc.)</option>
+                <option value="Science">Science</option>
+                <option value="Art">Art</option>
+                <option value="Commercial">Commercial</option>
+            </select>
+        </div>
+
         <!-- Status -->
         <div>
             <select id="filter-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -98,6 +109,16 @@
                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Send Email</a></li>
              </ul>
          </div>
+
+         <!-- Grouping Tool -->
+         <select id="group-by-field" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white ml-2">
+            <option value="">No Grouping</option>
+            <option value="class">Group by Class</option>
+            <option value="department">Group by Department</option>
+            <option value="section">Group by Section</option>
+            <option value="gender">Group by Gender</option>
+            <option value="status">Group by Status</option>
+         </select>
     </div>
     
     <div class="flex flex-wrap items-center gap-2">
@@ -131,6 +152,7 @@
                     ID <i class="fas fa-sort ml-1"></i>
                 </th>
                 <th scope="col" class="px-6 py-3">Class</th>
+                <th scope="col" class="px-6 py-3">Department</th>
                 <th scope="col" class="px-6 py-3">Section</th>
                 <th scope="col" class="px-6 py-3">Roll No</th>
                 <th scope="col" class="px-6 py-3">Phone</th>

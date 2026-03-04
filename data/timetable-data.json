@@ -1,0 +1,46 @@
+{
+  "default_timings": [
+    { "id": "p1", "name": "P1", "start": "08:00", "end": "08:45", "type": "Class" },
+    { "id": "p2", "name": "P2", "start": "08:45", "end": "09:30", "type": "Class" },
+    { "id": "b1", "name": "Break", "start": "09:30", "end": "10:00", "type": "Break" },
+    { "id": "p3", "name": "P3", "start": "10:00", "end": "10:45", "type": "Class" },
+    { "id": "p4", "name": "P4", "start": "10:45", "end": "11:30", "type": "Class" },
+    { "id": "p5", "name": "P5", "start": "11:30", "end": "12:15", "type": "Class" },
+    { "id": "p6", "name": "P6", "start": "12:15", "end": "13:00", "type": "Class" }
+  ],
+  "classes": {
+    "2024-2025_JSS1_A": {
+      "timings": [
+        { "id": "p1", "name": "P1", "start": "08:00", "end": "08:45", "type": "Class" },
+        { "id": "p2", "name": "P2", "start": "08:45", "end": "09:30", "type": "Class" },
+        { "id": "b1", "name": "Break", "start": "09:30", "end": "10:00", "type": "Break" },
+        { "id": "p3", "name": "P3", "start": "10:00", "end": "10:45", "type": "Class" },
+        { "id": "p4", "name": "P4", "start": "10:45", "end": "11:30", "type": "Class" },
+        { "id": "p5", "name": "P5", "start": "11:30", "end": "12:15", "type": "Class" },
+        { "id": "p6", "name": "P6", "start": "12:15", "end": "13:00", "type": "Class" }
+      ],
+      "schedule": {
+        "Monday-p1": { "subject": "Mathematics", "teacher": "Mr. Adebayo", "room": "101" },
+        "Monday-p2": { "subject": "English", "teacher": "Mrs. Okonkwo", "room": "101" },
+        "Tuesday-p3": { "subject": "Chemistry", "teacher": "Dr. Ibrahim", "room": "Lab 1" }
+      }
+    },
+    "2024-2025_SSS1_A": {
+      "timings": [
+        { "id": "asm", "name": "Assembly", "start": "07:30", "end": "08:00", "type": "Break" },
+        { "id": "p1", "name": "P1", "start": "08:00", "end": "08:45", "type": "Class" },
+        { "id": "p2", "name": "P2", "start": "08:45", "end": "09:30", "type": "Class" },
+        { "id": "b1", "name": "Short Break", "start": "09:30", "end": "09:45", "type": "Break" },
+        { "id": "p3", "name": "P3", "start": "09:45", "end": "10:30", "type": "Class" },
+        { "id": "p4", "name": "P4", "start": "10:30", "end": "11:15", "type": "Class" },
+        { "id": "b2", "name": "Lunch", "start": "11:15", "end": "12:00", "type": "Break" },
+        { "id": "p5", "name": "P5", "start": "12:00", "end": "12:45", "type": "Class" },
+        { "id": "p6", "name": "P6", "start": "12:45", "end": "13:30", "type": "Class" }
+      ],
+      "schedule": {
+         "Monday-p1": { "subject": "Physics", "teacher": "Mr. Samuel", "room": "Lab 2" },
+         "Tuesday-p4": { "subject": "Biology", "teacher": "Ms. Grace", "room": "Lab 3" }
+      }
+    }
+  }
+}

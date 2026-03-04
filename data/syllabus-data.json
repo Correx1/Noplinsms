@@ -1,0 +1,29 @@
+[
+    {
+        "id": "SYL001",
+        "title": "JSS1 Mathematics Curriculum",
+        "subject": "Mathematics",
+        "class": "JSS1",
+        "department": "General",
+        "description": "Comprehensive guide covering algebra, geometry and basic statistics.",
+        "file": "jss1_maths_syllabus.pdf"
+    },
+    {
+        "id": "SYL002",
+        "title": "SSS2 Biology Syllabus",
+        "subject": "Biology",
+        "class": "SSS2",
+        "department": "Science",
+        "description": "Detailed breakdown of the reproductive and nervous systems.",
+        "file": "sss2_biology_syllabus.pdf"
+    },
+    {
+        "id": "SYL003",
+        "title": "Basic Science JSS3",
+        "subject": "Basic Science",
+        "class": "JSS3",
+        "department": "General",
+        "description": "Preparation syllabus for JSCE examination.",
+        "file": "jss3_basic_science.pdf"
+    }
+]

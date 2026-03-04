@@ -1,0 +1,288 @@
+<!-- CBT Examination page -->
+<div class="p-4 sm:p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <nav class="flex mb-2" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                    <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+                    <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadExaminationsPage()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Examinations</a></li>
+                    <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">CBT Exams</span></li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">CBT Examination Centre</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Computer-Based Tests — Mock practice and real examination sessions.</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="window.cbtApp.openModal('mock')" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-lg bg-yellow-500 hover:bg-yellow-600 transition-colors">
+                <i class="fas fa-pencil-alt"></i> New Mock CBT
+            </button>
+            <button onclick="window.cbtApp.openModal('real')" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 transition-colors">
+                <i class="fas fa-desktop"></i> New Real CBT
+            </button>
+        </div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="flex gap-2 mb-6 border-b dark:border-gray-700">
+        <button onclick="window.cbtApp.setTab('all')" data-tab="all" class="cbt-tab px-5 py-2.5 text-sm font-medium border-b-2 border-primary-600 text-primary-600 dark:text-primary-400">All Sessions</button>
+        <button onclick="window.cbtApp.setTab('mock')" data-tab="mock" class="cbt-tab px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-white">Mock / Practice</button>
+        <button onclick="window.cbtApp.setTab('real')" data-tab="real" class="cbt-tab px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-white">Real Exams</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4">
+            <div class="text-xs text-gray-500 uppercase">Total Sessions</div>
+            <div class="text-2xl font-bold text-primary-600" id="cbt-total">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4">
+            <div class="text-xs text-gray-500 uppercase">Mock Sessions</div>
+            <div class="text-2xl font-bold text-yellow-500" id="cbt-mock">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4">
+            <div class="text-xs text-gray-500 uppercase">Real Exams</div>
+            <div class="text-2xl font-bold text-red-500" id="cbt-real">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4">
+            <div class="text-xs text-gray-500 uppercase">Students Attempted</div>
+            <div class="text-2xl font-bold text-green-600" id="cbt-attempted">0</div>
+        </div>
+    </div>
+
+    <!-- CBT Sessions Table -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
+        <div class="p-4 border-b dark:border-gray-700">
+            <h2 class="font-semibold text-gray-900 dark:text-white" id="cbt-table-title">All CBT Sessions</h2>
+        </div>
+        <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
+            <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                <tr>
+                    <th class="px-4 py-3">Title</th>
+                    <th class="px-4 py-3">Type</th>
+                    <th class="px-4 py-3">Class</th>
+                    <th class="px-4 py-3">Subject</th>
+                    <th class="px-4 py-3">Questions</th>
+                    <th class="px-4 py-3">Duration</th>
+                    <th class="px-4 py-3">Attempt Date</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="cbt-table-body">
+                <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CBT Create Modal -->
+<div id="cbtModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-xl my-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="cbt-modal-title">New CBT Session</h3>
+            <button onclick="window.cbtApp.closeModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="cbt-form" onsubmit="event.preventDefault(); window.cbtApp.save();" class="p-6 space-y-4">
+            <input type="hidden" id="cbt-id">
+            <input type="hidden" id="cbt-type-input" value="mock">
+
+            <!-- Type Badge -->
+            <div class="flex items-center gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700">
+                <i class="fas fa-info-circle text-yellow-500"></i>
+                <span class="text-sm text-yellow-800 dark:text-yellow-300" id="cbt-type-label">Creating a <strong>Mock / Practice</strong> session. Students can retake multiple times.</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Session Title <span class="text-red-500">*</span></label>
+                    <input type="text" id="cbt-title" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. WAEC Mock – Mathematics" required>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Class <span class="text-red-500">*</span></label>
+                    <select id="cbt-class" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" required>
+                        <option value="">Select Class</option>
+                        <option>JSS1</option><option>JSS2</option><option>JSS3</option>
+                        <option>SSS1</option><option>SSS2</option><option>SSS3</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></label>
+                    <select id="cbt-subject" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" required>
+                        <option value="">Select Subject</option>
+                        <option>Mathematics</option><option>English Language</option><option>Physics</option>
+                        <option>Chemistry</option><option>Biology</option><option>Economics</option>
+                        <option>Government</option><option>Literature</option><option>Computer Science</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">No. of Questions</label>
+                    <input type="number" id="cbt-questions" min="5" value="40" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes)</label>
+                    <input type="number" id="cbt-duration" min="5" value="60" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Attempt Date</label>
+                    <input type="datetime-local" id="cbt-date" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Pass Mark (%)</label>
+                    <input type="number" id="cbt-passmark" min="1" max="100" value="50" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div class="md:col-span-2 flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="cbt-shuffle" checked class="rounded"> Shuffle Questions
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="cbt-show-ans" class="rounded"> Show Answers After
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="cbt-negative" class="rounded"> Negative Marking
+                    </label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2 border-t dark:border-gray-700">
+                <button type="button" onclick="window.cbtApp.closeModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600">Cancel</button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">Save Session</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function() {
+    const KEY = 'sms_cbt_sessions';
+    let sessions = JSON.parse(localStorage.getItem(KEY) || '[]');
+    let currentTab = 'all';
+
+    const SEED = [
+        { id:'CBT001', title:'WAEC Mock – Mathematics', type:'mock', className:'SSS3', subject:'Mathematics', questions:50, duration:90, date:'2024-11-10T09:00', passmark:50, shuffle:true, showAns:true, negativeMarking:false, status:'Completed', attempted:42 },
+        { id:'CBT002', title:'First Term Real CBT – Physics', type:'real', className:'SSS2', subject:'Physics', questions:40, duration:60, date:'2024-11-20T08:00', passmark:50, shuffle:true, showAns:false, negativeMarking:false, status:'Upcoming', attempted:0 },
+        { id:'CBT003', title:'JAMB Practice – Economics', type:'mock', className:'SSS3', subject:'Economics', questions:40, duration:45, date:'2024-11-15T14:00', passmark:45, shuffle:true, showAns:true, negativeMarking:false, status:'Active', attempted:20 },
+    ];
+
+    if (sessions.length === 0) { sessions = SEED; save(); }
+
+    function save() { localStorage.setItem(KEY, JSON.stringify(sessions)); }
+
+    function statusBadge(s) {
+        const m = { Active:'bg-green-100 text-green-800', Upcoming:'bg-yellow-100 text-yellow-800', Completed:'bg-gray-100 text-gray-700', Draft:'bg-blue-100 text-blue-800' };
+        return `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${m[s]||m.Draft}">${s}</span>`;
+    }
+
+    function typeBadge(t) {
+        return t === 'mock'
+            ? `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-800">Mock</span>`
+            : `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800">Real</span>`;
+    }
+
+    function render() {
+        const visible = currentTab === 'all' ? sessions : sessions.filter(s => s.type === currentTab);
+        document.getElementById('cbt-total').textContent = sessions.length;
+        document.getElementById('cbt-mock').textContent = sessions.filter(s => s.type === 'mock').length;
+        document.getElementById('cbt-real').textContent = sessions.filter(s => s.type === 'real').length;
+        document.getElementById('cbt-attempted').textContent = sessions.reduce((a, s) => a + (s.attempted || 0), 0);
+        document.getElementById('cbt-table-title').textContent = currentTab === 'all' ? 'All CBT Sessions' : currentTab === 'mock' ? 'Mock / Practice Sessions' : 'Real Exam Sessions';
+
+        const tbody = document.getElementById('cbt-table-body');
+        if (!tbody) return;
+        if (visible.length === 0) { tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-8 text-center text-gray-400">No sessions found.</td></tr>'; return; }
+        tbody.innerHTML = visible.map(s => `
+            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${s.title}</td>
+                <td class="px-4 py-3">${typeBadge(s.type)}</td>
+                <td class="px-4 py-3">${s.className}</td>
+                <td class="px-4 py-3">${s.subject}</td>
+                <td class="px-4 py-3">${s.questions}</td>
+                <td class="px-4 py-3">${s.duration} min</td>
+                <td class="px-4 py-3">${new Date(s.date).toLocaleString()}</td>
+                <td class="px-4 py-3">${statusBadge(s.status)}</td>
+                <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                        <button onclick="window.cbtApp.edit('${s.id}')" class="text-xs px-2.5 py-1 rounded bg-primary-50 text-primary-700 hover:bg-primary-100"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.cbtApp.toggleStatus('${s.id}')" class="text-xs px-2.5 py-1 rounded bg-yellow-50 text-yellow-700 hover:bg-yellow-100"><i class="fas fa-power-off"></i></button>
+                        <button onclick="window.cbtApp.del('${s.id}')" class="text-xs px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`).join('');
+    }
+
+    window.cbtApp = {
+        setTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.cbt-tab').forEach(b => {
+                b.classList.toggle('border-primary-600', b.dataset.tab === tab);
+                b.classList.toggle('text-primary-600', b.dataset.tab === tab);
+                b.classList.toggle('border-transparent', b.dataset.tab !== tab);
+                b.classList.toggle('text-gray-500', b.dataset.tab !== tab);
+            });
+            render();
+        },
+        openModal(type) {
+            document.getElementById('cbt-form').reset();
+            document.getElementById('cbt-id').value = '';
+            document.getElementById('cbt-type-input').value = type;
+            const isReal = type === 'real';
+            const lbl = document.getElementById('cbt-type-label');
+            lbl.innerHTML = isReal
+                ? 'Creating a <strong>Real Exam</strong> session. Results are official and final.'
+                : 'Creating a <strong>Mock / Practice</strong> session. Students can retake multiple times.';
+            lbl.parentElement.className = `flex items-center gap-2 p-3 rounded-lg border ${isReal ? 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-700' : 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-700'}`;
+            document.getElementById('cbt-modal-title').textContent = isReal ? 'New Real CBT Exam' : 'New Mock CBT Session';
+            document.getElementById('cbtModal').classList.remove('hidden');
+        },
+        closeModal() { document.getElementById('cbtModal').classList.add('hidden'); },
+        save() {
+            const id = document.getElementById('cbt-id').value;
+            const obj = {
+                id: id || 'CBT' + Date.now(),
+                title: document.getElementById('cbt-title').value,
+                type: document.getElementById('cbt-type-input').value,
+                className: document.getElementById('cbt-class').value,
+                subject: document.getElementById('cbt-subject').value,
+                questions: +document.getElementById('cbt-questions').value,
+                duration: +document.getElementById('cbt-duration').value,
+                date: document.getElementById('cbt-date').value,
+                passmark: +document.getElementById('cbt-passmark').value,
+                shuffle: document.getElementById('cbt-shuffle').checked,
+                showAns: document.getElementById('cbt-show-ans').checked,
+                negativeMarking: document.getElementById('cbt-negative').checked,
+                status: 'Upcoming',
+                attempted: 0
+            };
+            if (id) { const i = sessions.findIndex(s => s.id === id); sessions[i] = {...sessions[i], ...obj}; }
+            else sessions.push(obj);
+            save(); this.closeModal(); render();
+            if (typeof window.showToast === 'function') window.showToast('success', 'CBT session saved.');
+        },
+        edit(id) {
+            const s = sessions.find(x => x.id === id); if (!s) return;
+            document.getElementById('cbt-id').value = s.id;
+            document.getElementById('cbt-type-input').value = s.type;
+            document.getElementById('cbt-title').value = s.title;
+            document.getElementById('cbt-class').value = s.className;
+            document.getElementById('cbt-subject').value = s.subject;
+            document.getElementById('cbt-questions').value = s.questions;
+            document.getElementById('cbt-duration').value = s.duration;
+            document.getElementById('cbt-date').value = s.date;
+            document.getElementById('cbt-passmark').value = s.passmark;
+            document.getElementById('cbt-shuffle').checked = !!s.shuffle;
+            document.getElementById('cbt-show-ans').checked = !!s.showAns;
+            document.getElementById('cbt-negative').checked = !!s.negativeMarking;
+            document.getElementById('cbt-modal-title').textContent = 'Edit CBT Session';
+            document.getElementById('cbtModal').classList.remove('hidden');
+        },
+        toggleStatus(id) {
+            const s = sessions.find(x => x.id === id); if (!s) return;
+            const cycle = { Upcoming:'Active', Active:'Completed', Completed:'Upcoming', Draft:'Upcoming' };
+            s.status = cycle[s.status] || 'Upcoming';
+            save(); render();
+        },
+        del(id) { if (!confirm('Delete this session?')) return; sessions = sessions.filter(s => s.id !== id); save(); render(); }
+    };
+
+    render();
+})();
+</script>

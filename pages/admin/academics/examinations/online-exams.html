@@ -1,0 +1,243 @@
+<!-- Online Exams page -->
+<div class="p-4 sm:p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <nav class="flex mb-2" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                    <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+                    <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadExaminationsPage()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Examinations</a></li>
+                    <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">Online Exams</span></li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Online Examinations</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Manage, assign and monitor online assessments for students.</p>
+        </div>
+        <button onclick="window.onlineExamApp.openCreateModal()" class="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 transition-colors">
+            <i class="fas fa-plus"></i> Create Online Exam
+        </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
+            <div class="text-xs text-gray-500 uppercase mb-1">Total Online Exams</div>
+            <div class="text-2xl font-bold text-primary-600" id="oe-stat-total">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
+            <div class="text-xs text-gray-500 uppercase mb-1">Active Now</div>
+            <div class="text-2xl font-bold text-green-600" id="oe-stat-active">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
+            <div class="text-xs text-gray-500 uppercase mb-1">Upcoming</div>
+            <div class="text-2xl font-bold text-yellow-500" id="oe-stat-upcoming">0</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
+            <div class="text-xs text-gray-500 uppercase mb-1">Completed</div>
+            <div class="text-2xl font-bold text-gray-500" id="oe-stat-completed">0</div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
+        <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
+            <h2 class="font-semibold text-gray-900 dark:text-white">All Online Exams</h2>
+            <input id="oe-search" type="text" placeholder="Search exams…" oninput="window.onlineExamApp.filter(this.value)"
+                class="text-sm border border-gray-300 rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-primary-500 focus:border-primary-500 w-52">
+        </div>
+        <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
+            <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                <tr>
+                    <th class="px-4 py-3">Exam Title</th>
+                    <th class="px-4 py-3">Class</th>
+                    <th class="px-4 py-3">Subject</th>
+                    <th class="px-4 py-3">Duration</th>
+                    <th class="px-4 py-3">Start Date/Time</th>
+                    <th class="px-4 py-3">Questions</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="oe-table-body">
+                <tr><td colspan="8" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div id="oeCreateModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl my-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="oe-modal-title">Create Online Exam</h3>
+            <button onclick="window.onlineExamApp.closeCreateModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="oe-form" onsubmit="event.preventDefault(); window.onlineExamApp.save();" class="p-6 space-y-4">
+            <input type="hidden" id="oe-id">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Exam Title <span class="text-red-500">*</span></label>
+                    <input type="text" id="oe-title" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" placeholder="e.g. First Term Mathematics Exam" required>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Class <span class="text-red-500">*</span></label>
+                    <select id="oe-class" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
+                        <option value="">Select Class</option>
+                        <option>JSS1</option><option>JSS2</option><option>JSS3</option>
+                        <option>SSS1</option><option>SSS2</option><option>SSS3</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></label>
+                    <select id="oe-subject" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
+                        <option value="">Select Subject</option>
+                        <option>Mathematics</option><option>English Language</option><option>Physics</option>
+                        <option>Chemistry</option><option>Biology</option><option>Economics</option>
+                        <option>Government</option><option>Literature</option><option>Computer Science</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Start Date & Time <span class="text-red-500">*</span></label>
+                    <input type="datetime-local" id="oe-start" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes) <span class="text-red-500">*</span></label>
+                    <input type="number" id="oe-duration" min="5" max="360" value="60" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Total Questions</label>
+                    <input type="number" id="oe-questions" min="1" value="40" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Pass Mark (%)</label>
+                    <input type="number" id="oe-passmark" min="1" max="100" value="50" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Instructions</label>
+                    <textarea id="oe-instructions" rows="3" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" placeholder="Enter exam instructions for students…"></textarea>
+                </div>
+                <div class="md:col-span-2 flex items-center gap-6">
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="oe-shuffle" class="rounded"> Shuffle Questions
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <input type="checkbox" id="oe-show-result" checked class="rounded"> Show Result After Submission
+                    </label>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2 border-t dark:border-gray-700">
+                <button type="button" onclick="window.onlineExamApp.closeCreateModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600">Cancel</button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">Save Exam</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+(function() {
+    const KEY = 'sms_online_exams';
+    let exams = JSON.parse(localStorage.getItem(KEY) || '[]');
+    let filtered = [...exams];
+
+    const SEED = [
+        { id:'OE001', title:'First Term Mathematics', className:'SSS2', subject:'Mathematics', start:'2024-11-18T09:00', duration:60, questions:40, passmark:50, status:'Upcoming', instructions:'Answer all questions. No negative marking.', shuffle:true, showResult:true },
+        { id:'OE002', title:'English Language Mid-Term', className:'JSS3', subject:'English Language', start:'2024-11-19T10:00', duration:45, questions:30, passmark:45, status:'Active', instructions:'Read each question carefully.', shuffle:false, showResult:true },
+        { id:'OE003', title:'Physics Practical Theory', className:'SSS3', subject:'Physics', start:'2024-10-10T08:00', duration:90, questions:50, passmark:50, status:'Completed', instructions:'Show workings where applicable.', shuffle:true, showResult:false },
+    ];
+
+    if (exams.length === 0) { exams = SEED.map(e => ({...e, createdAt: new Date().toISOString()})); save(); }
+
+    function save() { localStorage.setItem(KEY, JSON.stringify(exams)); }
+
+    function statusBadge(s) {
+        const m = { Active:'bg-green-100 text-green-800', Upcoming:'bg-yellow-100 text-yellow-800', Completed:'bg-gray-100 text-gray-700', Draft:'bg-blue-100 text-blue-800' };
+        return `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${m[s]||m.Draft}">${s}</span>`;
+    }
+
+    function render() {
+        const active = exams.filter(e => e.status === 'Active').length;
+        const upcoming = exams.filter(e => e.status === 'Upcoming').length;
+        const completed = exams.filter(e => e.status === 'Completed').length;
+        document.getElementById('oe-stat-total').textContent = exams.length;
+        document.getElementById('oe-stat-active').textContent = active;
+        document.getElementById('oe-stat-upcoming').textContent = upcoming;
+        document.getElementById('oe-stat-completed').textContent = completed;
+
+        const tbody = document.getElementById('oe-table-body');
+        if (!tbody) return;
+        if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-gray-400">No exams found.</td></tr>'; return; }
+        tbody.innerHTML = filtered.map(e => `
+            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${e.title}</td>
+                <td class="px-4 py-3">${e.className}</td>
+                <td class="px-4 py-3">${e.subject}</td>
+                <td class="px-4 py-3">${e.duration} min</td>
+                <td class="px-4 py-3">${new Date(e.start).toLocaleString()}</td>
+                <td class="px-4 py-3">${e.questions}</td>
+                <td class="px-4 py-3">${statusBadge(e.status)}</td>
+                <td class="px-4 py-3">
+                    <div class="flex gap-2">
+                        <button onclick="window.onlineExamApp.edit('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-primary-50 text-primary-700 hover:bg-primary-100"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.onlineExamApp.toggleStatus('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-yellow-50 text-yellow-700 hover:bg-yellow-100"><i class="fas fa-power-off"></i></button>
+                        <button onclick="window.onlineExamApp.del('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`).join('');
+    }
+
+    window.onlineExamApp = {
+        filter(q) { filtered = exams.filter(e => (e.title+e.className+e.subject).toLowerCase().includes(q.toLowerCase())); render(); },
+        openCreateModal() { document.getElementById('oe-form').reset(); document.getElementById('oe-id').value = ''; document.getElementById('oe-modal-title').textContent = 'Create Online Exam'; document.getElementById('oeCreateModal').classList.remove('hidden'); },
+        closeCreateModal() { document.getElementById('oeCreateModal').classList.add('hidden'); },
+        save() {
+            const id = document.getElementById('oe-id').value;
+            const obj = {
+                id: id || 'OE' + Date.now(),
+                title: document.getElementById('oe-title').value,
+                className: document.getElementById('oe-class').value,
+                subject: document.getElementById('oe-subject').value,
+                start: document.getElementById('oe-start').value,
+                duration: +document.getElementById('oe-duration').value,
+                questions: +document.getElementById('oe-questions').value,
+                passmark: +document.getElementById('oe-passmark').value,
+                instructions: document.getElementById('oe-instructions').value,
+                shuffle: document.getElementById('oe-shuffle').checked,
+                showResult: document.getElementById('oe-show-result').checked,
+                status: 'Upcoming',
+                createdAt: new Date().toISOString()
+            };
+            if (id) { const i = exams.findIndex(e => e.id === id); exams[i] = {...exams[i], ...obj}; }
+            else exams.push(obj);
+            filtered = [...exams];
+            save(); this.closeCreateModal(); render();
+            if (typeof window.showToast === 'function') window.showToast('success', 'Exam saved.');
+        },
+        edit(id) {
+            const e = exams.find(x => x.id === id); if (!e) return;
+            document.getElementById('oe-id').value = e.id;
+            document.getElementById('oe-title').value = e.title;
+            document.getElementById('oe-class').value = e.className;
+            document.getElementById('oe-subject').value = e.subject;
+            document.getElementById('oe-start').value = e.start;
+            document.getElementById('oe-duration').value = e.duration;
+            document.getElementById('oe-questions').value = e.questions;
+            document.getElementById('oe-passmark').value = e.passmark;
+            document.getElementById('oe-instructions').value = e.instructions || '';
+            document.getElementById('oe-shuffle').checked = !!e.shuffle;
+            document.getElementById('oe-show-result').checked = !!e.showResult;
+            document.getElementById('oe-modal-title').textContent = 'Edit Online Exam';
+            document.getElementById('oeCreateModal').classList.remove('hidden');
+        },
+        toggleStatus(id) {
+            const e = exams.find(x => x.id === id); if (!e) return;
+            const cycle = { Upcoming:'Active', Active:'Completed', Completed:'Upcoming', Draft:'Upcoming' };
+            e.status = cycle[e.status] || 'Upcoming';
+            filtered = [...exams]; save(); render();
+        },
+        del(id) { if (!confirm('Delete this exam?')) return; exams = exams.filter(e => e.id !== id); filtered = [...exams]; save(); render(); }
+    };
+
+    filtered = [...exams];
+    render();
+})();
+</script>

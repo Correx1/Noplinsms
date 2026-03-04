@@ -110,18 +110,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Teachers': loadTeachersPage,
                 'Parents': loadParentsPage,
                 'Staff': loadStaffPage,
+                'Alumni': loadAlumniPage,
                 'Import Users': loadImportUsersPage,
     
                 // Academics Section
                 'Classes': loadClassesPage,
                 'Promote Students': loadPromoteStudentsPage,
+                'Subjects': loadSubjectsPage,
+                'Syllabus': loadSyllabusPage,
                 'Assessments': loadAssessmentsPage,
-                'Examinations': loadExaminationsPage,
                 'Score Sheets': loadScoreSheetsPage,
                 'Marks Register': loadMarksEntryPage,
                 'Results': loadResultsPage,
                 'Timetable': loadTimetablePage,
-                'Subjects': loadSubjectsPage,
     
                 // Academic Configuration
                 'Academic Config': loadAcademicConfigPage,
@@ -139,6 +140,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Phone Log': loadPhoneLogPage,
                 'Email Logs': loadEmailLogsPage,
                 'SMS Logs': loadSMSLogsPage,
+    
+                // Discipline
+                'Discipline': loadDisciplinePage,
+                
+                // Human Resources
+                'Staff Directory': loadHRStaffDirectoryPage,
+                'Add Staff': loadHRAddStaffPage,
+                'Departments': loadHRDepartmentsPage,
+                'Designations': loadHRDesignationsPage,
+                'Leave Management': loadHRLeavePage,
+                'Payroll': loadHRPayrollPage,
     
                 // Standalone Pages
                 'Events': loadEventsPage,
@@ -249,6 +261,9 @@ window.loadAddStaffPage = (staffId = null) => {
     loadPage('manage/staff/add-staff.html', '../../js/staff.js', 'staff-script');
 };
 
+// Alumni
+window.loadAlumniPage = () => loadPage('manage/alumni/alumni-list.html', '../../js/alumni.js', 'alumni-script');
+
 
 // ============================================
 // ACADEMICS SECTION
@@ -264,6 +279,12 @@ window.loadViewClassPage = (classId) => {
 window.loadSubjectsPage = () => loadPage('academics/subjects/subjects-list.html', '../../js/subjects.js', 'subjects-script');
 window.loadAddSubjectPage = () => loadPage('academics/subjects/add-subject.html', '../../js/subjects.js', 'subjects-script');
 
+window.loadSyllabusPage = () => loadPage('academics/syllabus/syllabus-list.html', '../../js/syllabus.js', 'syllabus-script');
+window.loadAddSyllabusPage = (syllabusId = null) => {
+    window.editingSyllabusId = syllabusId;
+    loadPage('academics/syllabus/add-syllabus.html', '../../js/syllabus.js', 'syllabus-script');
+};
+
 // Academic Configuration
 window.loadAcademicConfigPage = () => loadPage('academics/config/academic-config.html', '../../js/academic-config.js', 'acad-config-script');
 
@@ -278,6 +299,9 @@ window.loadCreateExamPage = () => loadPage('academics/examinations/create-examin
 window.loadExamSchedulePage = () => loadPage('academics/examinations/exam-schedule.html', '../../js/examinations.js', 'examinations-script');
 window.loadViewExamPage = () => loadPage('academics/examinations/view-examination.html', '../../js/examinations.js', 'examinations-script');
 window.loadAdmitCardsPage = () => loadPage('academics/examinations/admit-cards.html', '../../js/examinations.js', 'examinations-script');
+window.loadOnlineExamPage = () => loadPage('academics/examinations/online-exams.html', '../../js/online-exams.js', 'online-exams-script');
+window.loadCBTExamPage = () => loadPage('academics/examinations/cbt-exams.html', '../../js/cbt-exams.js', 'cbt-exams-script');
+window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 
 window.loadScoreSheetsPage = () => loadPage('academics/score-sheets.html', '../../js/score-sheets.js', 'scores-script');
 window.loadMarksEntryPage = () => loadPage('academics/marks/marks.html', '../../js/marks.js', 'marks-script');
@@ -306,8 +330,28 @@ window.loadFeeCollectionPage = () => loadPage('finance/fee-collection.html', '..
 // ============================================
 window.loadVisitorsLogPage = () => loadPage('record/visitors-log.html', '../../js/visitors-log.js', 'visitors-script');
 window.loadPhoneLogPage = () => loadPage('record/phone-log.html', '../../js/phone-log.js', 'phone-script');
-window.loadEmailLogsPage = () => loadPage('record/email-logs.html', null, null);
 window.loadSMSLogsPage = () => loadPage('record/sms-logs.html', null, null);
+
+
+// ============================================
+// DISCIPLINE SECTION
+// ============================================
+window.loadDisciplinePage = () => loadPage('discipline/discipline-list.html', '../../js/discipline.js', 'discipline-script');
+window.loadAddIncidentPage = (incidentId = null) => { 
+    window.editingIncidentId = incidentId; 
+    loadPage('discipline/add-incident.html', '../../js/discipline.js', 'discipline-script'); 
+};
+
+
+// ============================================
+// HUMAN RESOURCES SECTION
+// ============================================
+window.loadHRStaffDirectoryPage = () => loadPage('hr/staff-directory.html', '../../js/hr.js', 'hr-script');
+window.loadHRAddStaffPage = () => loadPage('hr/add-staff.html', '../../js/hr.js', 'hr-script');
+window.loadHRDepartmentsPage = () => loadPage('hr/departments.html', '../../js/hr.js', 'hr-script');
+window.loadHRDesignationsPage = () => loadPage('hr/designations.html', '../../js/hr.js', 'hr-script');
+window.loadHRLeavePage = () => loadPage('hr/leave.html', '../../js/hr.js', 'hr-script');
+window.loadHRPayrollPage = () => loadPage('hr/payroll.html', '../../js/hr.js', 'hr-script');
 
 
 // ============================================
@@ -358,4 +402,5 @@ window.loadSettingsPage = () => loadPage('settings/profile.html', '../../js/sett
 window.loadSettingsProfilePage = () => loadPage('settings/profile.html', '../../js/settings.js', 'settings-script');
 window.loadSettingsUsersPage = () => loadPage('settings/users.html', '../../js/users.js', 'users-script');
 window.loadThemeSettingsPage = () => loadPage('settings/theme.html', '../../js/theme-settings.js', 'theme-settings-script');
+window.loadTemplatesPage = () => loadPage('settings/templates.html', '../../js/templates.js', 'templates-script');
 

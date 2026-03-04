@@ -106,7 +106,7 @@
                      <i class="fas fa-print mr-2"></i>Print
                  </button>
                  <button class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2">
-                     <i class="fas fa-id-card mr-2"></i>Report Cards
+                     <i class="fas fa-id-card mr-2"></i>All Report Cards
                  </button>
             </div>
         </div>
@@ -124,6 +124,7 @@
                         <th class="px-4 py-3">Avg</th>
                         <th class="px-4 py-3">Grade</th>
                         <th class="px-4 py-3">Status</th>
+                        <th class="px-4 py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody id="results-table-body">
@@ -133,6 +134,144 @@
         </div>
     </div>
 </div>
+
+<!-- Individual Student Result Modal (Printable) -->
+<div id="studentResultModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/60 flex items-start justify-center pt-8 pb-8">
+    <div class="relative w-full max-w-3xl mx-4">
+        <!-- Print Controls (hidden when printing) -->
+        <div class="no-print flex justify-between items-center mb-4">
+            <h2 class="text-white font-semibold text-lg">Student Result Sheet</h2>
+            <div class="flex gap-2">
+                <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-lg font-medium text-sm hover:bg-gray-100">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button onclick="document.getElementById('studentResultModal').classList.add('hidden')" class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium text-sm hover:bg-red-600">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Sheet (Printable Area) -->
+        <div id="result-sheet-print" class="bg-white p-8 rounded-lg shadow-xl">
+            <!-- School Header -->
+            <div class="text-center border-b-4 border-double border-primary-700 pb-4 mb-6">
+                <div class="flex justify-center mb-2">
+                    <div class="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center text-white text-2xl font-bold">S</div>
+                </div>
+                <h1 class="text-2xl font-extrabold text-primary-800 uppercase tracking-wide">Greenfield Academy</h1>
+                <p class="text-sm text-gray-500">123 School Road, Education City • Tel: 08000000000</p>
+                <p class="text-base font-bold text-gray-700 mt-2" id="rp-exam-title">First Term Examination 2024</p>
+            </div>
+
+            <!-- Student Bio -->
+            <div class="flex justify-between items-start mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <div class="space-y-1">
+                    <p class="text-sm text-gray-500">Student Name</p>
+                    <p class="text-xl font-bold text-gray-900" id="rp-student-name">—</p>
+                    <p class="text-sm text-gray-600" id="rp-student-id">ID: —</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-24 border-2 border-gray-300 rounded bg-gray-100 flex items-center justify-center text-gray-400">
+                        <i class="fas fa-user text-3xl"></i>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Passport</p>
+                </div>
+                <div class="text-right space-y-1">
+                    <p class="text-sm text-gray-500">Class</p>
+                    <p class="text-base font-bold text-gray-900" id="rp-class">—</p>
+                    <p class="text-sm text-gray-500 mt-1">Term</p>
+                    <p class="text-sm font-semibold text-primary-700" id="rp-term">—</p>
+                </div>
+            </div>
+
+            <!-- Scores Table -->
+            <table class="w-full text-sm border-collapse mb-6">
+                <thead>
+                    <tr class="bg-primary-700 text-white">
+                        <th class="text-left px-4 py-2">Subject</th>
+                        <th class="text-center px-4 py-2">CA (40)</th>
+                        <th class="text-center px-4 py-2">Exam (60)</th>
+                        <th class="text-center px-4 py-2">Total (100)</th>
+                        <th class="text-center px-4 py-2">Grade</th>
+                        <th class="text-center px-4 py-2">Remark</th>
+                    </tr>
+                </thead>
+                <tbody id="rp-scores-body">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+
+            <!-- Summary Footer -->
+            <div class="grid grid-cols-2 gap-4 border-t pt-4">
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="font-medium text-gray-600">Total Score:</span>
+                        <span class="font-bold text-gray-900" id="rp-total">—</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="font-medium text-gray-600">Average:</span>
+                        <span class="font-bold text-gray-900" id="rp-average">—</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="font-medium text-gray-600">Class Position:</span>
+                        <span class="font-bold text-primary-700" id="rp-position">—</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-600">Status:</span>
+                        <span class="font-bold" id="rp-status">—</span>
+                    </div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="font-medium text-gray-600">No. of Subjects:</span>
+                        <span class="font-bold text-gray-900" id="rp-subject-count">—</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-1">
+                        <span class="font-medium text-gray-600">Class Size:</span>
+                        <span class="font-bold text-gray-900" id="rp-class-size">—</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-600">Academic Year:</span>
+                        <span class="font-bold text-gray-900" id="rp-year">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grading Key & Signatures -->
+            <div class="mt-6 pt-4 border-t grid grid-cols-2 gap-6">
+                <div>
+                    <p class="text-xs font-bold text-gray-600 uppercase mb-2">Grading Key</p>
+                    <div class="grid grid-cols-3 gap-1 text-xs text-gray-600">
+                        <span>A1: 75–100</span><span>B2: 70–74</span><span>B3: 65–69</span>
+                        <span>C4: 60–64</span><span>C5: 55–59</span><span>C6: 50–54</span>
+                        <span>D7: 45–49</span><span>E8: 40–44</span><span>F9: 0–39</span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-xs text-gray-500">Class Teacher's Remark:</p>
+                        <div class="border-b border-gray-400 h-6 mt-1"></div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Principal's Signature:</p>
+                        <div class="border-b border-gray-400 h-6 mt-1"></div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-gray-400 mt-6">Generated by CorrexSMS • <span id="rp-date"></span></p>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    body * { visibility: hidden !important; }
+    #result-sheet-print, #result-sheet-print * { visibility: visible !important; }
+    #result-sheet-print { position: fixed; top: 0; left: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
+</style>
 
 <script src="../../../js/add-dummy-scores.js"></script>
 <script src="../../../js/init-dummy-data.js"></script>

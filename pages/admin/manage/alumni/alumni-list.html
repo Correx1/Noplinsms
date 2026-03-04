@@ -1,0 +1,101 @@
+<!-- Page Header -->
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Alumni</h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400">View and manage alumni records.</p>
+    </div>
+</div>
+
+<!-- Main Card Container -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border hover:border-primary-500 transition-colors dark:border-gray-700">
+    <!-- Header with Search & Filters -->
+    <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            
+            <!-- Search & Filters Container -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-64">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-search text-gray-500 dark:text-gray-400"></i>
+                    </div>
+                    <input type="text" id="alumni-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-all" placeholder="Search alumni...">
+                </div>
+
+                <!-- Department Filter -->
+                <select id="filter-department" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:w-40 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 max-h-48 overflow-y-auto">
+                    <option value="">All Departments</option>
+                    <option value="Science">Science</option>
+                    <option value="Art">Art</option>
+                    <option value="Commercial">Commercial</option>
+                </select>
+
+                <!-- Session Filter -->
+                <select id="filter-session" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full sm:w-40 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <option value="">All Sessions</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2022-2023">2022-2023</option>
+                    <option value="2021-2022">2021-2022</option>
+                    <option value="2020-2021">2020-2021</option>
+                    <option value="2019-2020">2019-2020</option>
+                </select>
+                
+                <!-- Reset Filters Button -->
+                <button type="button" id="reset-filters" class="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-sm font-medium focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-gray-700 transition-colors w-full sm:w-auto h-10" title="Reset Filters">
+                    <i class="fas fa-undo"></i>
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Table Container (Responsive Scroll) -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                <tr>
+                    <th scope="col" class="px-6 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 group" data-sort="name">
+                        <div class="flex items-center justify-between">
+                            <span>Name</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 group" data-sort="department">
+                        <div class="flex items-center justify-between">
+                            <span>Department</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                    <th scope="col" class="px-6 py-3">Contact</th>
+                    <th scope="col" class="px-6 py-3">Email</th>
+                    <th scope="col" class="px-6 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 group" data-sort="session">
+                        <div class="flex items-center justify-between">
+                            <span>Session</span>
+                            <i class="fas fa-sort text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"></i>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="alumni-table-body">
+                <!-- Skeleton rows while loading -->
+                <tr class="animate-pulse">
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-32"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-24"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-28"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-36"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-gray-200 rounded dark:bg-gray-700 w-20"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-200 dark:border-gray-700 gap-4">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            Showing <span id="showing-start" class="font-semibold text-gray-900 dark:text-white">...</span> to <span id="showing-end" class="font-semibold text-gray-900 dark:text-white">...</span> of <span id="total-records" class="font-semibold text-gray-900 dark:text-white">...</span> Entries
+        </span>
+        <ul id="pagination-controls" class="inline-flex -space-x-px text-sm">
+            <!-- Pagination items generated via JS -->
+        </ul>
+    </div>
+</div>

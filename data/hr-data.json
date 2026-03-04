@@ -1,0 +1,180 @@
+{
+  "departments": [
+    { "id": "DEPT001", "name": "Academic", "head": "Mr. Adebayo", "description": "Teaching and academic staff", "status": "Active" },
+    { "id": "DEPT002", "name": "Administration", "head": "Mrs. Okonkwo", "description": "School management and office staff", "status": "Active" },
+    { "id": "DEPT003", "name": "Maintenance", "head": "Mr. John", "description": "Facility management and janitorial", "status": "Active" },
+    { "id": "DEPT004", "name": "Transportation", "head": "Mr. David", "description": "Drivers and bus coordinators", "status": "Active" }
+  ],
+  "designations": [
+    { "id": "DES001", "name": "Principal", "department": "Administration", "level": "Senior Management", "status": "Active" },
+    { "id": "DES002", "name": "Senior Teacher", "department": "Academic", "level": "Mid Management", "status": "Active" },
+    { "id": "DES003", "name": "Class Teacher", "department": "Academic", "level": "Staff", "status": "Active" },
+    { "id": "DES004", "name": "Janitor", "department": "Maintenance", "level": "Support Staff", "status": "Active" }
+  ],
+  "staff": [
+    {
+      "id": "STF001",
+      "first_name": "Adebayo",
+      "last_name": "Ogunleye",
+      "gender": "Male",
+      "phone": "+234 801 234 5678",
+      "email": "a.ogunleye@school.edu",
+      "department": "Academic",
+      "designation": "Senior Teacher",
+      "joining_date": "2018-09-01",
+      "status": "Active",
+      "avatar": "https://ui-avatars.com/api/?name=Adebayo+Ogunleye&background=0D8ABC&color=fff",
+      "bank_name": "GTBank",
+      "account_number": "0123456789",
+      "emergency_contact": "Mrs. Ogunleye (08011112222)"
+    },
+    {
+      "id": "STF002",
+      "first_name": "Ngozi",
+      "last_name": "Okonkwo",
+      "gender": "Female",
+      "phone": "+234 802 345 6789",
+      "email": "n.okonkwo@school.edu",
+      "department": "Administration",
+      "designation": "Principal",
+      "joining_date": "2015-01-15",
+      "status": "Active",
+      "avatar": "https://ui-avatars.com/api/?name=Ngozi+Okonkwo&background=22C55E&color=fff",
+      "bank_name": "Access Bank",
+      "account_number": "0987654321",
+      "emergency_contact": "Mr. Okonkwo (08022223333)"
+    },
+    {
+      "id": "STF003",
+      "first_name": "Grace",
+      "last_name": "Emmanuel",
+      "gender": "Female",
+      "phone": "+234 803 456 7890",
+      "email": "g.emmanuel@school.edu",
+      "department": "Academic",
+      "designation": "Class Teacher",
+      "joining_date": "2021-11-10",
+      "status": "On Leave",
+      "avatar": "https://ui-avatars.com/api/?name=Grace+Emmanuel&background=EAB308&color=fff",
+      "bank_name": "Zenith Bank",
+      "account_number": "1122334455",
+      "emergency_contact": "John Emmanuel (08033334444)"
+    },
+    {
+      "id": "STF004",
+      "first_name": "David",
+      "last_name": "Mark",
+      "gender": "Male",
+      "phone": "+234 804 567 8901",
+      "email": "d.mark@school.edu",
+      "department": "Maintenance",
+      "designation": "Janitor",
+      "joining_date": "2022-03-01",
+      "status": "Active",
+      "avatar": "https://ui-avatars.com/api/?name=David+Mark&background=64748B&color=fff",
+      "bank_name": "UBA",
+      "account_number": "5544332211",
+      "emergency_contact": "Sarah Mark (08044445555)"
+    }
+  ],
+  "leave_applications": [
+    {
+      "id": "LV001",
+      "staff_name": "Ms. Grace",
+      "staff_id": "TCH004",
+      "leave_type": "Sick Leave",
+      "start_date": "2024-03-01",
+      "end_date": "2024-03-03",
+      "days": 3,
+      "reason": "Severe flu and fever.",
+      "status": "Pending",
+      "applied_on": "2024-02-28"
+    },
+    {
+      "id": "LV002",
+      "staff_name": "Mr. Adebayo",
+      "staff_id": "TCH001",
+      "leave_type": "Casual Leave",
+      "start_date": "2024-03-10",
+      "end_date": "2024-03-10",
+      "days": 1,
+      "reason": "Attending a family wedding out of town.",
+      "status": "Approved",
+      "applied_on": "2024-02-15"
+    },
+    {
+      "id": "LV003",
+      "staff_name": "Dr. Ibrahim",
+      "staff_id": "TCH005",
+      "leave_type": "Maternity Leave",
+      "start_date": "2024-04-01",
+      "end_date": "2024-06-30",
+      "days": 90,
+      "reason": "Maternity leave",
+      "status": "Approved",
+      "applied_on": "2024-01-20"
+    }
+  ],
+  "payroll": [
+    {
+      "id": "PR001",
+      "staff_name": "Adebayo Ogunleye",
+      "staff_id": "STF001",
+      "designation": "Senior Teacher",
+      "month": "February 2024",
+      "basic_salary": 150000,
+      "allowances": 20000,
+      "deductions": 5000,
+      "net_salary": 165000,
+      "status": "Paid",
+      "bank_name": "GTBank",
+      "account_name": "Adebayo Ogunleye",
+      "account_number": "0123456789"
+    },
+    {
+      "id": "PR002",
+      "staff_name": "Ngozi Okonkwo",
+      "staff_id": "STF002",
+      "designation": "Principal",
+      "month": "February 2024",
+      "basic_salary": 250000,
+      "allowances": 50000,
+      "deductions": 15000,
+      "net_salary": 285000,
+      "status": "Pending",
+      "bank_name": "Access Bank",
+      "account_name": "Ngozi Okonkwo",
+      "account_number": "0987654321"
+    },
+    {
+      "id": "PR003",
+      "staff_name": "Grace Emmanuel",
+      "staff_id": "STF003",
+      "designation": "Class Teacher",
+      "month": "February 2024",
+      "basic_salary": 100000,
+      "allowances": 10000,
+      "deductions": 2000,
+      "net_salary": 108000,
+      "status": "Pending",
+      "bank_name": "Zenith Bank",
+      "account_name": "Grace Emmanuel",
+      "account_number": "1122334455"
+    },
+    {
+      "id": "PR004",
+      "staff_name": "David Mark",
+      "staff_id": "STF004",
+      "designation": "Janitor",
+      "month": "February 2024",
+      "basic_salary": 60000,
+      "allowances": 5000,
+      "deductions": 1000,
+      "net_salary": 64000,
+      "status": "Pending",
+      "bank_name": "UBA",
+      "account_name": "David Mark",
+      "account_number": "5544332211"
+    }
+  ]
+}

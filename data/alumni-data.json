@@ -1,0 +1,47 @@
+[
+    {
+        "id": "ALU001",
+        "name": "David Olayinka",
+        "department": "Science",
+        "contact": "+234 812 345 6789",
+        "email": "david.o@example.com",
+        "session": "2021-2022",
+        "avatar": "../../assets/images/boy1.png"
+    },
+    {
+        "id": "ALU002",
+        "name": "Sarah Mensah",
+        "department": "Commercial",
+        "contact": "+234 908 765 4321",
+        "email": "sarah.m@example.com",
+        "session": "2019-2020",
+        "avatar": "../../assets/images/girl1.png"
+    },
+    {
+        "id": "ALU003",
+        "name": "Emmanuel Eze",
+        "department": "Art",
+        "contact": "+234 701 234 5678",
+        "email": "emmanuel.e@example.com",
+        "session": "2023-2024",
+        "avatar": "../../assets/images/boy2.png"
+    },
+    {
+        "id": "ALU004",
+        "name": "Grace Adeleke",
+        "department": "Science",
+        "contact": "+234 803 456 7890",
+        "email": "grace.a@example.com",
+        "session": "2020-2021",
+        "avatar": "../../assets/images/girl2.png"
+    },
+    {
+        "id": "ALU005",
+        "name": "Michael Okafor",
+        "department": "Commercial",
+        "contact": "+234 905 678 9012",
+        "email": "michael.o@example.com",
+        "session": "2022-2023",
+        "avatar": "../../assets/images/boy3.png"
+    }
+]
