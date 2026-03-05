@@ -54,7 +54,26 @@
         <!-- General Tab -->
         <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="general" role="tabpanel" aria-labelledby="general-tab">
             <form id="general-settings-form" class="space-y-6">
-                <!-- Same content as before -->
+                <!-- Logo Upload -->
+                <div class="flex items-center gap-6 p-4 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                    <div class="relative">
+                        <div id="logo-preview" class="w-20 h-20 rounded-xl border-2 border-primary-200 dark:border-primary-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                            <i class="fas fa-school text-3xl text-gray-300 dark:text-gray-600" id="logo-placeholder-icon"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block mb-1 text-sm font-semibold text-gray-900 dark:text-white">School Logo</label>
+                        <p class="text-xs text-gray-500 mb-2">This logo appears in the top navigation bar and on ID cards. Recommended: square PNG/SVG.</p>
+                        <div class="flex items-center gap-2">
+                            <label for="school-logo-upload" class="cursor-pointer text-xs px-3 py-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-1">
+                                <i class="fas fa-upload"></i> Upload Logo
+                            </label>
+                            <input type="file" id="school-logo-upload" accept="image/*" class="hidden" onchange="window.handleLogoUpload(this)">
+                            <button type="button" onclick="window.clearLogo()" class="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Other fields -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">School Name</label>
@@ -95,6 +114,41 @@
                     <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Save General Settings</button>
                 </div>
             </form>
+
+            <script>
+            // Logo upload handler
+            window.handleLogoUpload = function(input) {
+                const file = input.files[0]; if(!file) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const b64 = e.target.result;
+                    const preview = document.getElementById('logo-preview');
+                    preview.innerHTML = `<img src="${b64}" style="width:100%;height:100%;object-fit:contain;" alt="logo">`;
+                    // Persist
+                    const profile = JSON.parse(localStorage.getItem('sms_school_profile')||'{}');
+                    profile.logo = b64;
+                    localStorage.setItem('sms_school_profile', JSON.stringify(profile));
+                    // Update navbar live
+                    if(typeof window.applySchoolBranding === 'function') window.applySchoolBranding();
+                };
+                reader.readAsDataURL(file);
+            };
+            window.clearLogo = function() {
+                document.getElementById('logo-preview').innerHTML = '<i class="fas fa-school text-3xl text-gray-300 dark:text-gray-600"></i>';
+                const profile = JSON.parse(localStorage.getItem('sms_school_profile')||'{}');
+                delete profile.logo;
+                localStorage.setItem('sms_school_profile', JSON.stringify(profile));
+                document.getElementById('school-logo-upload').value = '';
+                if(typeof window.applySchoolBranding === 'function') window.applySchoolBranding();
+            };
+            // On load: restore logo preview
+            (function(){
+                const p = JSON.parse(localStorage.getItem('sms_school_profile')||'{}');
+                if(p.logo) {
+                    document.getElementById('logo-preview').innerHTML = `<img src="${p.logo}" style="width:100%;height:100%;object-fit:contain;">`;
+                }
+            })();
+            </script>
         </div>
 
         <!-- Email Tab -->

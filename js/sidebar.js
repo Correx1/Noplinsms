@@ -301,6 +301,8 @@ window.loadViewExamPage = () => loadPage('academics/examinations/view-examinatio
 window.loadAdmitCardsPage = () => loadPage('academics/examinations/admit-cards.html', '../../js/examinations.js', 'examinations-script');
 window.loadOnlineExamPage = () => loadPage('academics/examinations/online-exams.html', '../../js/online-exams.js', 'online-exams-script');
 window.loadCBTExamPage = () => loadPage('academics/examinations/cbt-exams.html', '../../js/cbt-exams.js', 'cbt-exams-script');
+window.loadPhysicalExamPage = () => loadPage('academics/examinations/physical-exams.html', '../../js/physical-exams.js', 'physical-exams-script');
+window.loadCumulativeMasterSheetPage = () => loadPage('academics/examinations/cumulative-master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
 window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 
 window.loadScoreSheetsPage = () => loadPage('academics/score-sheets.html', '../../js/score-sheets.js', 'scores-script');
@@ -308,6 +310,8 @@ window.loadMarksEntryPage = () => loadPage('academics/marks/marks.html', '../../
 window.loadResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 
 window.loadTimetablePage = () => loadPage('academics/timetable/create-timetable.html', '../../js/timetable.js', 'timetable-script');
+window.loadIDCardsPage = () => loadPage('academics/id-cards.html', '../../js/id-cards.js', 'id-cards-script');
+window.loadAIPage = () => loadPage('ai-automations.html', '../../js/ai-automations.js', 'ai-script');
 
 
 // ============================================

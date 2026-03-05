@@ -14,8 +14,22 @@
               </svg>
            </button>
           <a href="dashboard.html" class="flex items-center gap-2 group ml-4 sm:ml-8">
-             <img src="../../assets/images/logo.png" alt="Noplin Logo" class="h-11 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-sm">
+             <img id="navbar-school-logo" src="../../assets/images/logo.png" alt="School Logo" class="h-11 sm:h-14 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-sm">
           </a>
+          <script>
+          // Apply school branding (logo) from settings — called on load and on settings save
+          window.applySchoolBranding = function() {
+              const p = JSON.parse(localStorage.getItem('sms_school_profile')||'{}');
+              const logo = document.getElementById('navbar-school-logo');
+              if (logo) {
+                  if (p.logo) { logo.src = p.logo; logo.alt = p.name||'School Logo'; }
+                  else { logo.src = '../../assets/images/logo.png'; logo.alt = 'School Logo'; }
+              }
+          };
+          document.addEventListener('DOMContentLoaded', window.applySchoolBranding);
+          // Also run immediately in case DOMContentLoaded already fired
+          if(document.readyState !== 'loading') window.applySchoolBranding();
+          </script>
         </div>
         <div class="flex items-center gap-2">
              <!-- Search -->

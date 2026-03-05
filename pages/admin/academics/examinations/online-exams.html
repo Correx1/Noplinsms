@@ -1,58 +1,55 @@
-<!-- Online Exams page -->
-<div class="p-4 sm:p-6">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+<!-- Online Exams Management Page -->
+<div class="p-4 sm:p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-            <nav class="flex mb-2" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
-                    <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
-                    <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadExaminationsPage()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Examinations</a></li>
-                    <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">Online Exams</span></li>
-                </ol>
-            </nav>
+            <nav class="flex mb-2"><ol class="inline-flex items-center space-x-1 text-sm font-medium">
+                <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+                <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">Online Exams</span></li>
+            </ol></nav>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Online Examinations</h1>
-            <p class="text-sm text-gray-500 mt-0.5">Manage, assign and monitor online assessments for students.</p>
+            <p class="text-sm text-gray-500 mt-0.5">Create and manage online MCQ exams. Add questions directly in the creation form.</p>
         </div>
-        <button onclick="window.onlineExamApp.openCreateModal()" class="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 transition-colors">
+        <button onclick="window.onlineExamApp.openCreateModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg whitespace-nowrap">
             <i class="fas fa-plus"></i> Create Online Exam
         </button>
     </div>
+</div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
-            <div class="text-xs text-gray-500 uppercase mb-1">Total Online Exams</div>
-            <div class="text-2xl font-bold text-primary-600" id="oe-stat-total">0</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
-            <div class="text-xs text-gray-500 uppercase mb-1">Active Now</div>
-            <div class="text-2xl font-bold text-green-600" id="oe-stat-active">0</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
-            <div class="text-xs text-gray-500 uppercase mb-1">Upcoming</div>
-            <div class="text-2xl font-bold text-yellow-500" id="oe-stat-upcoming">0</div>
-        </div>
-        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm">
-            <div class="text-xs text-gray-500 uppercase mb-1">Completed</div>
-            <div class="text-2xl font-bold text-gray-500" id="oe-stat-completed">0</div>
-        </div>
+<!-- Stats -->
+<div class="p-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Total</div>
+        <div class="text-2xl font-bold text-gray-800 dark:text-white" id="oe-stat-total">0</div>
     </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Active</div>
+        <div class="text-2xl font-bold text-green-600" id="oe-stat-active">0</div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Upcoming</div>
+        <div class="text-2xl font-bold text-yellow-500" id="oe-stat-upcoming">0</div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Completed</div>
+        <div class="text-2xl font-bold text-gray-500" id="oe-stat-completed">0</div>
+    </div>
+</div>
 
-    <!-- Table -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
-        <div class="flex justify-between items-center p-4 border-b dark:border-gray-700">
-            <h2 class="font-semibold text-gray-900 dark:text-white">All Online Exams</h2>
-            <input id="oe-search" type="text" placeholder="Search exams…" oninput="window.onlineExamApp.filter(this.value)"
-                class="text-sm border border-gray-300 rounded-lg p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-primary-500 focus:border-primary-500 w-52">
+<!-- Table -->
+<div class="px-4 sm:px-6 pb-6">
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
+        <div class="p-4 border-b dark:border-gray-700 flex items-center gap-3">
+            <input type="search" placeholder="Search exams…" oninput="window.onlineExamApp.filter(this.value)"
+                class="flex-1 max-w-xs text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white px-3 py-2">
         </div>
         <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
             <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                 <tr>
-                    <th class="px-4 py-3">Exam Title</th>
+                    <th class="px-4 py-3">Title</th>
                     <th class="px-4 py-3">Class</th>
                     <th class="px-4 py-3">Subject</th>
                     <th class="px-4 py-3">Duration</th>
-                    <th class="px-4 py-3">Start Date/Time</th>
+                    <th class="px-4 py-3">Date / Time</th>
                     <th class="px-4 py-3">Questions</th>
                     <th class="px-4 py-3">Status</th>
                     <th class="px-4 py-3">Actions</th>
@@ -65,179 +62,124 @@
     </div>
 </div>
 
-<!-- Create/Edit Modal -->
-<div id="oeCreateModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl my-4">
-        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
+<!-- ========================= CREATE / EDIT MODAL ========================= -->
+<div id="oeCreateModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-start justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-3xl my-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10 rounded-t-xl">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="oe-modal-title">Create Online Exam</h3>
-            <button onclick="window.onlineExamApp.closeCreateModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><i class="fas fa-times"></i></button>
+            <button onclick="window.onlineExamApp.closeCreateModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button>
         </div>
-        <form id="oe-form" onsubmit="event.preventDefault(); window.onlineExamApp.save();" class="p-6 space-y-4">
+        <form id="oe-form" onsubmit="event.preventDefault();" class="p-6 space-y-4">
             <input type="hidden" id="oe-id">
+
+            <!-- Details Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="md:col-span-2">
                     <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Exam Title <span class="text-red-500">*</span></label>
-                    <input type="text" id="oe-title" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" placeholder="e.g. First Term Mathematics Exam" required>
+                    <input type="text" id="oe-title" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. First Term Mathematics Online Exam" required>
                 </div>
-                <div>
-                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Class <span class="text-red-500">*</span></label>
-                    <select id="oe-class" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
-                        <option value="">Select Class</option>
-                        <option>JSS1</option><option>JSS2</option><option>JSS3</option>
-                        <option>SSS1</option><option>SSS2</option><option>SSS3</option>
-                    </select>
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Assigned Classes <span class="text-red-500">*</span> <span class="text-xs text-gray-400 font-normal">(select all that apply)</span></label>
+                    <div class="flex flex-wrap gap-1.5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS1A" class="rounded w-3 h-3"> JSS1A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS1B" class="rounded w-3 h-3"> JSS1B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS2A" class="rounded w-3 h-3"> JSS2A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS2B" class="rounded w-3 h-3"> JSS2B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS3A" class="rounded w-3 h-3"> JSS3A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="JSS3B" class="rounded w-3 h-3"> JSS3B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS1A" class="rounded w-3 h-3"> SSS1A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS1B" class="rounded w-3 h-3"> SSS1B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS2A" class="rounded w-3 h-3"> SSS2A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS2B" class="rounded w-3 h-3"> SSS2B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS3A" class="rounded w-3 h-3"> SSS3A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-primary-50 select-none"><input type="checkbox" name="oe-classes" value="SSS3B" class="rounded w-3 h-3"> SSS3B</label>
+                    </div>
                 </div>
                 <div>
                     <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></label>
-                    <select id="oe-subject" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
-                        <option value="">Select Subject</option>
+                    <select id="oe-subject" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
                         <option>Mathematics</option><option>English Language</option><option>Physics</option>
                         <option>Chemistry</option><option>Biology</option><option>Economics</option>
-                        <option>Government</option><option>Literature</option><option>Computer Science</option>
+                        <option>Government</option><option>Literature in English</option><option>Geography</option>
+                        <option>Computer Science</option><option>Agricultural Science</option><option>Civic Education</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Start Date & Time <span class="text-red-500">*</span></label>
-                    <input type="datetime-local" id="oe-start" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Start Date &amp; Time</label>
+                    <input type="datetime-local" id="oe-start" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
                 </div>
                 <div>
-                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes) <span class="text-red-500">*</span></label>
-                    <input type="number" id="oe-duration" min="5" max="360" value="60" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" required>
-                </div>
-                <div>
-                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Total Questions</label>
-                    <input type="number" id="oe-questions" min="1" value="40" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes)</label>
+                    <input type="number" id="oe-duration" value="60" min="10" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
                 </div>
                 <div>
                     <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Pass Mark (%)</label>
-                    <input type="number" id="oe-passmark" min="1" max="100" value="50" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                    <input type="number" id="oe-passmark" value="50" min="1" max="100" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Instructions</label>
-                    <textarea id="oe-instructions" rows="3" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" placeholder="Enter exam instructions for students…"></textarea>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Instructions to Students</label>
+                    <textarea id="oe-instructions" rows="2" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. Answer all questions. No negative marking."></textarea>
                 </div>
-                <div class="md:col-span-2 flex items-center gap-6">
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                        <input type="checkbox" id="oe-shuffle" class="rounded"> Shuffle Questions
+                <div class="flex items-center gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+                        <input type="checkbox" id="oe-shuffle" class="rounded w-4 h-4 text-primary-600"> Shuffle Questions
                     </label>
-                    <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                        <input type="checkbox" id="oe-show-result" checked class="rounded"> Show Result After Submission
+                    <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300">
+                        <input type="checkbox" id="oe-show-result" class="rounded w-4 h-4 text-primary-600" checked> Show Results
                     </label>
                 </div>
             </div>
+
+            <hr class="dark:border-gray-700">
+
+            <!-- Inline Question Builder -->
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <h4 class="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <i class="fas fa-question-circle text-primary-500"></i>
+                        Objective Questions (MCQ)
+                        <span class="text-xs text-gray-500 font-normal" id="oe-modal-q-count">(0 questions)</span>
+                    </h4>
+                    <button type="button" onclick="window.onlineExamApp.addModalQ()" class="text-xs px-3 py-1.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-1 self-end sm:self-auto">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+                <!-- AI Assist Bar -->
+                <div class="flex flex-wrap items-center gap-2 mb-3 p-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl">
+                    <i class="fas fa-robot text-yellow-600 dark:text-yellow-400 text-sm"></i>
+                    <span class="text-xs font-semibold text-yellow-800 dark:text-yellow-300">AI Generate:</span>
+                    <select id="oe-ai-syllabus" class="flex-1 min-w-0 text-xs rounded-lg border border-yellow-300 dark:border-yellow-600 bg-white dark:bg-gray-700 dark:text-white p-1.5">
+                        <option value="">— select from syllabus —</option>
+                    </select>
+                    <input type="number" id="oe-ai-count" value="5" min="1" max="30" class="w-14 text-xs rounded-lg border border-yellow-300 dark:border-yellow-600 bg-white dark:bg-gray-700 dark:text-white p-1.5" title="Number of questions">
+                    <button type="button" onclick="window.onlineExamApp.aiGenerate()" class="text-xs px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold flex items-center gap-1 whitespace-nowrap">
+                        <i class="fas fa-magic"></i> Generate
+                    </button>
+                </div>
+                <div id="oe-modal-qlist" class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    <div class="text-sm text-gray-400 italic text-center py-4">No questions yet. Click "+ Add Question" or use AI Generate above.</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
             <div class="flex justify-end gap-3 pt-2 border-t dark:border-gray-700">
-                <button type="button" onclick="window.onlineExamApp.closeCreateModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600">Cancel</button>
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">Save Exam</button>
+                <button type="button" onclick="window.onlineExamApp.closeCreateModal()" class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50">Cancel</button>
+                <button type="button" onclick="window.onlineExamApp.save()" class="px-6 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                    <i class="fas fa-save mr-2"></i>Save Exam
+                </button>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-(function() {
-    const KEY = 'sms_online_exams';
-    let exams = JSON.parse(localStorage.getItem(KEY) || '[]');
-    let filtered = [...exams];
-
-    const SEED = [
-        { id:'OE001', title:'First Term Mathematics', className:'SSS2', subject:'Mathematics', start:'2024-11-18T09:00', duration:60, questions:40, passmark:50, status:'Upcoming', instructions:'Answer all questions. No negative marking.', shuffle:true, showResult:true },
-        { id:'OE002', title:'English Language Mid-Term', className:'JSS3', subject:'English Language', start:'2024-11-19T10:00', duration:45, questions:30, passmark:45, status:'Active', instructions:'Read each question carefully.', shuffle:false, showResult:true },
-        { id:'OE003', title:'Physics Practical Theory', className:'SSS3', subject:'Physics', start:'2024-10-10T08:00', duration:90, questions:50, passmark:50, status:'Completed', instructions:'Show workings where applicable.', shuffle:true, showResult:false },
-    ];
-
-    if (exams.length === 0) { exams = SEED.map(e => ({...e, createdAt: new Date().toISOString()})); save(); }
-
-    function save() { localStorage.setItem(KEY, JSON.stringify(exams)); }
-
-    function statusBadge(s) {
-        const m = { Active:'bg-green-100 text-green-800', Upcoming:'bg-yellow-100 text-yellow-800', Completed:'bg-gray-100 text-gray-700', Draft:'bg-blue-100 text-blue-800' };
-        return `<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${m[s]||m.Draft}">${s}</span>`;
-    }
-
-    function render() {
-        const active = exams.filter(e => e.status === 'Active').length;
-        const upcoming = exams.filter(e => e.status === 'Upcoming').length;
-        const completed = exams.filter(e => e.status === 'Completed').length;
-        document.getElementById('oe-stat-total').textContent = exams.length;
-        document.getElementById('oe-stat-active').textContent = active;
-        document.getElementById('oe-stat-upcoming').textContent = upcoming;
-        document.getElementById('oe-stat-completed').textContent = completed;
-
-        const tbody = document.getElementById('oe-table-body');
-        if (!tbody) return;
-        if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-gray-400">No exams found.</td></tr>'; return; }
-        tbody.innerHTML = filtered.map(e => `
-            <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${e.title}</td>
-                <td class="px-4 py-3">${e.className}</td>
-                <td class="px-4 py-3">${e.subject}</td>
-                <td class="px-4 py-3">${e.duration} min</td>
-                <td class="px-4 py-3">${new Date(e.start).toLocaleString()}</td>
-                <td class="px-4 py-3">${e.questions}</td>
-                <td class="px-4 py-3">${statusBadge(e.status)}</td>
-                <td class="px-4 py-3">
-                    <div class="flex gap-2">
-                        <button onclick="window.onlineExamApp.edit('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-primary-50 text-primary-700 hover:bg-primary-100"><i class="fas fa-edit"></i></button>
-                        <button onclick="window.onlineExamApp.toggleStatus('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-yellow-50 text-yellow-700 hover:bg-yellow-100"><i class="fas fa-power-off"></i></button>
-                        <button onclick="window.onlineExamApp.del('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>
-            </tr>`).join('');
-    }
-
-    window.onlineExamApp = {
-        filter(q) { filtered = exams.filter(e => (e.title+e.className+e.subject).toLowerCase().includes(q.toLowerCase())); render(); },
-        openCreateModal() { document.getElementById('oe-form').reset(); document.getElementById('oe-id').value = ''; document.getElementById('oe-modal-title').textContent = 'Create Online Exam'; document.getElementById('oeCreateModal').classList.remove('hidden'); },
-        closeCreateModal() { document.getElementById('oeCreateModal').classList.add('hidden'); },
-        save() {
-            const id = document.getElementById('oe-id').value;
-            const obj = {
-                id: id || 'OE' + Date.now(),
-                title: document.getElementById('oe-title').value,
-                className: document.getElementById('oe-class').value,
-                subject: document.getElementById('oe-subject').value,
-                start: document.getElementById('oe-start').value,
-                duration: +document.getElementById('oe-duration').value,
-                questions: +document.getElementById('oe-questions').value,
-                passmark: +document.getElementById('oe-passmark').value,
-                instructions: document.getElementById('oe-instructions').value,
-                shuffle: document.getElementById('oe-shuffle').checked,
-                showResult: document.getElementById('oe-show-result').checked,
-                status: 'Upcoming',
-                createdAt: new Date().toISOString()
-            };
-            if (id) { const i = exams.findIndex(e => e.id === id); exams[i] = {...exams[i], ...obj}; }
-            else exams.push(obj);
-            filtered = [...exams];
-            save(); this.closeCreateModal(); render();
-            if (typeof window.showToast === 'function') window.showToast('success', 'Exam saved.');
-        },
-        edit(id) {
-            const e = exams.find(x => x.id === id); if (!e) return;
-            document.getElementById('oe-id').value = e.id;
-            document.getElementById('oe-title').value = e.title;
-            document.getElementById('oe-class').value = e.className;
-            document.getElementById('oe-subject').value = e.subject;
-            document.getElementById('oe-start').value = e.start;
-            document.getElementById('oe-duration').value = e.duration;
-            document.getElementById('oe-questions').value = e.questions;
-            document.getElementById('oe-passmark').value = e.passmark;
-            document.getElementById('oe-instructions').value = e.instructions || '';
-            document.getElementById('oe-shuffle').checked = !!e.shuffle;
-            document.getElementById('oe-show-result').checked = !!e.showResult;
-            document.getElementById('oe-modal-title').textContent = 'Edit Online Exam';
-            document.getElementById('oeCreateModal').classList.remove('hidden');
-        },
-        toggleStatus(id) {
-            const e = exams.find(x => x.id === id); if (!e) return;
-            const cycle = { Upcoming:'Active', Active:'Completed', Completed:'Upcoming', Draft:'Upcoming' };
-            e.status = cycle[e.status] || 'Upcoming';
-            filtered = [...exams]; save(); render();
-        },
-        del(id) { if (!confirm('Delete this exam?')) return; exams = exams.filter(e => e.id !== id); filtered = [...exams]; save(); render(); }
-    };
-
-    filtered = [...exams];
-    render();
-})();
-</script>
+<!-- View Questions Modal -->
+<div id="oeViewModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-start justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl my-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 rounded-t-xl">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="oe-view-title">Questions</h3>
+            <button onclick="document.getElementById('oeViewModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-700"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div class="p-6" id="oe-view-content"></div>
+    </div>
+</div>

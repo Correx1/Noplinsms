@@ -1,0 +1,218 @@
+<!-- Physical Exams Management Page -->
+<div class="p-4 sm:p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <nav class="flex mb-2">
+                <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                    <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+                    <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">Physical Exams</span></li>
+                </ol>
+            </nav>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Physical Examination Papers</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Create and manage paper-based exam questions — both Objective (MCQ) and Theory.</p>
+        </div>
+        <button onclick="window.physApp.openModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors whitespace-nowrap">
+            <i class="fas fa-plus"></i> Create Exam Paper
+        </button>
+    </div>
+</div>
+
+<!-- Stats -->
+<div class="p-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Total Papers</div>
+        <div class="text-2xl font-bold text-primary-600" id="ph-total">0</div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">With Questions</div>
+        <div class="text-2xl font-bold text-green-600" id="ph-withq">0</div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Pending</div>
+        <div class="text-2xl font-bold text-yellow-500" id="ph-pending">0</div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
+        <div class="text-xs text-gray-500 uppercase">Ready to Print</div>
+        <div class="text-2xl font-bold text-gray-600" id="ph-ready">0</div>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="px-4 sm:px-6 pb-6">
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
+        <div class="p-4 border-b dark:border-gray-700">
+            <h2 class="font-semibold text-gray-900 dark:text-white">Exam Papers</h2>
+        </div>
+        <table class="w-full text-sm text-left text-gray-600 dark:text-gray-400">
+            <thead class="text-xs uppercase bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                <tr>
+                    <th class="px-4 py-3">Subject</th>
+                    <th class="px-4 py-3">Exam / Session</th>
+                    <th class="px-4 py-3">Class</th>
+                    <th class="px-4 py-3">Date</th>
+                    <th class="px-4 py-3">Duration</th>
+                    <th class="px-4 py-3">Obj. Qs</th>
+                    <th class="px-4 py-3">Theory Qs</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ph-table-body">
+                <tr><td colspan="9" class="px-4 py-8 text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Loading…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ===================== CREATE / EDIT MODAL ===================== -->
+<div id="phModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-start justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-3xl my-4">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10 rounded-t-xl">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="ph-modal-title">Create Exam Paper</h3>
+            <button onclick="window.physApp.closeModal()" class="text-gray-400 hover:text-gray-700 dark:hover:text-white"><i class="fas fa-times text-xl"></i></button>
+        </div>
+
+        <div class="p-6 space-y-5">
+            <input type="hidden" id="ph-id">
+
+            <!-- Basic Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Subject <span class="text-red-500">*</span></label>
+                    <select id="ph-subject" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" required>
+                        <option value="">Select Subject</option>
+                        <option>Mathematics</option><option>English Language</option><option>Physics</option>
+                        <option>Chemistry</option><option>Biology</option><option>Economics</option>
+                        <option>Government</option><option>Literature in English</option><option>Geography</option>
+                        <option>History</option><option>Computer Science</option><option>Agricultural Science</option>
+                        <option>Civic Education</option><option>CRS / IRS</option><option>Fine Arts</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Assigned Classes <span class="text-xs text-gray-400 font-normal">(select all that apply)</span></label>
+                    <div class="flex flex-wrap gap-1.5 p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS1A" class="rounded w-3 h-3"> JSS1A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS1B" class="rounded w-3 h-3"> JSS1B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS2A" class="rounded w-3 h-3"> JSS2A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS2B" class="rounded w-3 h-3"> JSS2B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS3A" class="rounded w-3 h-3"> JSS3A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="JSS3B" class="rounded w-3 h-3"> JSS3B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS1A" class="rounded w-3 h-3"> SSS1A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS1B" class="rounded w-3 h-3"> SSS1B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS2A" class="rounded w-3 h-3"> SSS2A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS2B" class="rounded w-3 h-3"> SSS2B</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS3A" class="rounded w-3 h-3"> SSS3A</label>
+                        <label class="inline-flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded cursor-pointer bg-white dark:bg-gray-700 hover:bg-blue-50 select-none"><input type="checkbox" name="ph-classes" value="SSS3B" class="rounded w-3 h-3"> SSS3B</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Exam / Session</label>
+                    <input type="text" id="ph-exam" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. First Term 2024/2025">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Exam Date & Time</label>
+                    <input type="datetime-local" id="ph-date" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Duration (minutes)</label>
+                    <input type="number" id="ph-duration" value="90" min="15" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Total Marks</label>
+                    <input type="number" id="ph-marks" value="100" min="1" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">General Instructions</label>
+                    <textarea id="ph-instructions" rows="2" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. Answer ALL questions in Section A and THREE from Section B…"></textarea>
+                </div>
+            </div>
+
+            <hr class="dark:border-gray-700">
+
+            <!-- SECTION A: Objective Questions -->
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <h4 class="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <span class="w-6 h-6 flex items-center justify-center bg-blue-600 text-white text-xs rounded-full font-bold">A</span>
+                        Section A — Objective / MCQ
+                        <span class="text-xs text-gray-500 font-normal ml-1" id="ph-obj-count">(0 questions)</span>
+                    </h4>
+                    <button type="button" onclick="window.physApp.addObjQ()" class="text-xs px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-1 self-end sm:self-auto">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+                <!-- AI Assist Bar -->
+                <div class="flex flex-wrap items-center gap-2 mb-3 p-2.5 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl">
+                    <i class="fas fa-robot text-yellow-600 dark:text-yellow-400 text-sm"></i>
+                    <span class="text-xs font-semibold text-yellow-800 dark:text-yellow-300">AI Generate MCQ:</span>
+                    <select id="ph-ai-syllabus-obj" class="flex-1 min-w-0 text-xs rounded-lg border border-yellow-300 dark:border-yellow-600 bg-white dark:bg-gray-700 dark:text-white p-1.5">
+                        <option value="">— select from syllabus —</option>
+                    </select>
+                    <input type="number" id="ph-ai-count-obj" value="5" min="1" max="30" class="w-14 text-xs rounded-lg border border-yellow-300 dark:border-yellow-600 bg-white dark:bg-gray-700 dark:text-white p-1.5" title="Number of questions">
+                    <button type="button" onclick="window.physApp.aiGenerateObj()" class="text-xs px-3 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold flex items-center gap-1 whitespace-nowrap">
+                        <i class="fas fa-magic"></i> Generate
+                    </button>
+                </div>
+                <div id="ph-obj-list" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                    <div class="text-sm text-gray-400 italic text-center py-3">No objective questions yet.</div>
+                </div>
+            </div>
+
+            <hr class="dark:border-gray-700">
+
+            <!-- SECTION B: Theory Questions -->
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <h4 class="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                        <span class="w-6 h-6 flex items-center justify-center bg-purple-600 text-white text-xs rounded-full font-bold">B</span>
+                        Section B — Theory / Essay
+                        <span class="text-xs text-gray-500 font-normal ml-1" id="ph-theory-count">(0 questions)</span>
+                    </h4>
+                    <button type="button" onclick="window.physApp.addTheoryQ()" class="text-xs px-3 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-1 self-end sm:self-auto">
+                        <i class="fas fa-plus"></i> Add Question
+                    </button>
+                </div>
+                <!-- AI Assist Bar -->
+                <div class="flex flex-wrap items-center gap-2 mb-3 p-2.5 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 rounded-xl">
+                    <i class="fas fa-robot text-purple-600 dark:text-purple-400 text-sm"></i>
+                    <span class="text-xs font-semibold text-purple-800 dark:text-purple-300">AI Generate Theory:</span>
+                    <select id="ph-ai-syllabus-theory" class="flex-1 min-w-0 text-xs rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-700 dark:text-white p-1.5">
+                        <option value="">— select from syllabus —</option>
+                    </select>
+                    <input type="number" id="ph-ai-count-theory" value="3" min="1" max="10" class="w-14 text-xs rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-700 dark:text-white p-1.5" title="Number of questions">
+                    <button type="button" onclick="window.physApp.aiGenerateTheory()" class="text-xs px-3 py-1.5 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold flex items-center gap-1 whitespace-nowrap">
+                        <i class="fas fa-magic"></i> Generate
+                    </button>
+                </div>
+                <div id="ph-theory-list" class="space-y-3 max-h-64 overflow-y-auto pr-1">
+                    <div class="text-sm text-gray-400 italic text-center py-3">No theory questions yet.</div>
+                </div>
+            </div>
+
+            <!-- Save -->
+            <div class="flex justify-end gap-3 pt-2 border-t dark:border-gray-700">
+                <button type="button" onclick="window.physApp.closeModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50">Cancel</button>
+                <button type="button" onclick="window.physApp.save()" class="px-6 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+                    <i class="fas fa-save mr-2"></i>Save Exam Paper
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Questions Modal -->
+<div id="phViewModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-start justify-center p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl my-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10 rounded-t-xl">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="ph-view-title">View Questions</h3>
+            <div class="flex gap-2">
+                <button onclick="window.physApp.printPaper()" class="px-3 py-1.5 text-xs font-medium text-white bg-gray-700 hover:bg-gray-800 rounded-lg flex items-center gap-1">
+                    <i class="fas fa-print"></i> Print Paper
+                </button>
+                <button onclick="document.getElementById('phViewModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-700 dark:hover:text-white ml-2"><i class="fas fa-times text-xl"></i></button>
+            </div>
+        </div>
+        <div class="p-6" id="ph-view-content"></div>
+    </div>
+</div>
