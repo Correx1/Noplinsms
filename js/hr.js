@@ -25,6 +25,15 @@ window.hrApp = window.hrApp || (function() {
         if (document.getElementById('form-type')) currentModule = 'leave';
         if (document.getElementById('payroll-month-filter')) currentModule = 'payroll';
 
+        const userRole = localStorage.getItem('userRole') || 'Admin';
+        const isStaffView = userRole === 'Teacher' || userRole === 'Staff';
+        
+        // Hide "Generate Payroll" for non-admins
+        if (currentModule === 'payroll' && isStaffView) {
+            const genBtn = document.getElementById('generate-payroll-btn');
+            if (genBtn) genBtn.style.display = 'none';
+        }
+
         if (!hrData) {
             try {
                 const response = await fetch(API_URL);
@@ -147,6 +156,9 @@ window.hrApp = window.hrApp || (function() {
         const endIndex = startIndex + itemsPerPage;
         const paginatedItems = filteredData.slice(startIndex, endIndex);
 
+        const userRole = localStorage.getItem('userRole') || 'Admin';
+        const isStaffView = userRole === 'Teacher' || userRole === 'Staff';
+
         let html = '';
         paginatedItems.forEach(item => {
             html += `<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">`;
@@ -209,7 +221,7 @@ window.hrApp = window.hrApp || (function() {
                     <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">₦${item.net_salary.toLocaleString()}</td>
                     <td class="px-6 py-4">${renderStatusBadge(item.status)}</td>
                     <td class="px-6 py-4 text-right">
-                        ${item.status === 'Pending' ? `<button onclick="window.hrApp.openPaymentModal('${item.id}')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3"><i class="fas fa-money-check-alt"></i> Pay</button>` : ''}
+                        ${(item.status === 'Pending' && !isStaffView) ? `<button onclick="window.hrApp.openPaymentModal('${item.id}')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3"><i class="fas fa-money-check-alt"></i> Pay</button>` : ''}
                         <button class="font-medium text-primary-600 dark:text-primary-500 hover:underline"><i class="fas fa-file-invoice"></i> PDF</button>
                     </td>
                 `;

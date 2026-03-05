@@ -1,35 +1,39 @@
 // Student Dashboard Navigation Logic
 
-// Basic Navigation Loading
-async function loadStudentContent(file) {
+// Advanced Navigation Loading with Script Injection
+async function loadStudentContent(file, scriptPath = null, scriptId = null) {
     const contentDiv = document.getElementById('main-content');
     contentDiv.innerHTML = '<div class="flex justify-center p-10"><i class="fas fa-spinner fa-spin text-4xl text-primary-500"></i></div>';
     
     try {
         const response = await fetch(file);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const html = await response.text();
         contentDiv.innerHTML = html;
         
-        // Initialize page-specific functionality
-        setTimeout(() => {
-            if(file.includes('library')) {
-                if(typeof window.initLibraryPage === 'function') {
-                    window.initLibraryPage();
-                }
-            }
+        // Handle Script Injection for Admin Modules
+        if (scriptPath && scriptId) {
+            const existingScript = document.getElementById(scriptId);
+            if (existingScript) existingScript.remove();
             
-            // Re-init flowbite if needed
+            const script = document.createElement('script');
+            script.src = scriptPath;
+            script.id = scriptId;
+            document.body.appendChild(script);
+        }
+
+        // Re-init flowbite if needed
+        setTimeout(() => {
             if(typeof initFlowbite === 'function') initFlowbite();
         }, 100);
-    } catch(e) { 
-        console.error(e);
-        contentDiv.innerHTML = '<div class="p-10 text-center text-red-600">Error loading page: ' + file + '</div>';
-    }
-}
 
-function setActive(element) {
-    document.querySelectorAll('#logo-sidebar a').forEach(el => el.classList.remove('bg-gray-100'));
-    if(element) element.classList.add('bg-gray-100');
+    } catch(e) { 
+        console.error('Error loading content:', e);
+        contentDiv.innerHTML = `<div class="p-10 text-center text-red-600 bg-red-50 rounded-lg">
+            <i class="fas fa-exclamation-circle text-2xl mb-2"></i><br>
+            Error loading page: ${file}
+        </div>`;
+    }
 }
 
 // Navigation Functions
@@ -39,45 +43,24 @@ window.loadStudentHome = function() {
 
 window.loadMyProfile = function() {
     loadStudentContent('my-profile.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
 
 window.loadStudentAttendance = function() {
     loadStudentContent('attendance.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
 
 window.loadStudentMarks = function() {
     loadStudentContent('marks.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
 
 window.loadStudentAssignments = function() {
     loadStudentContent('assignments.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
 
 window.loadStudentFees = function() {
     loadStudentContent('fees.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
 
 window.loadStudentLibrary = function() {
     loadStudentContent('library.html');
-    if(event && event.currentTarget) setActive(event.currentTarget);
 };
-
-// Logout
-document.addEventListener('DOMContentLoaded', function() {
-    const logoutBtn = document.getElementById('logout-btn');
-    if(logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if(confirm('Log out?')) {
-                localStorage.removeItem('isLoggedIn');
-                localStorage.removeItem('userRole');
-                window.location.href = '../../index.html';
-            }
-        });
-    }
-});

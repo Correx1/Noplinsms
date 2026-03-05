@@ -21,84 +21,12 @@
     <!-- Navbar Container -->
     <div id="navbar-container"></div>
 
-    <!-- Sidebar -->
-    <aside id="logo-sidebar"   aria-label="Sidebar"
-     class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-primary-600 border-r border-primary-700 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900">
-        <div class="h-full px pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
-            <ul class="space-y-2 font-medium">
-                <li onclick="loadTeacherHome() ; setActiveLink(this); return false;"  class="border-b  border-white/20  flex items-center p-4 text-white  hover:bg-primary-700 dark:hover:bg-primary-900 group  active-nav-link">
-                    <a href="#" >
-                        <i class="fas fa-home w-5 h-5 text-white"></i>
-                        <span class="ml-3">Dashboard</span>
-                    </a>
-                </li>
-                <li onclick="loadMyClasses(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit  hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-chalkboard w-5 h-5 text-white"></i>
-                        <span class="ml-3">My Classes</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherTimetable(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#"     >
-                        <i class="fas fa-calendar-alt w-5 h-5 text-white"></i>
-                        <span class="ml-3">Timetable</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherStudents(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-user-graduate w-5 h-5 text-white"></i>
-                        <span class="ml-3">Students</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherAttendance(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-calendar-check w-5 h-5 text-white"></i>
-                        <span class="ml-3">Attendance</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherAssignments(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-file-alt w-5 h-5 text-white"></i>
-                        <span class="ml-3">Assignments</span>
-                    </a>
-                </li>
-                <li onclick="loadGradeBook(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-book w-5 h-5 text-white"></i>
-                        <span class="ml-3">Grade Book</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherExams(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-clipboard-list w-5 h-5 text-white"></i>
-                        <span class="ml-3">Exams</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherMessages(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-envelope w-5 h-5 text-white"></i>
-                        <span class="ml-3">Messages</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherReports(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-chart-bar w-5 h-5 text-white"></i>
-                        <span class="ml-3">Reports</span>
-                    </a>
-                </li>
-                <li onclick="loadTeacherProfile(); setActiveLink(this)" class="border-b border-white/20 text-white  flex items-center p-4 bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900">
-                    <a href="#" >
-                        <i class="fas fa-user w-5 h-5 text-white"></i>
-                        <span class="ml-3">Profile</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </aside>
+    <!-- Sidebar Container -->
+    <div id="sidebar-container" class="h-full overflow-y-auto"></div>
 
     <!-- Main Content -->
     <div class="p-4 sm:ml-64 mt-14">
-        <div id="main-content" class="p-4">
+        <div id="main-content">
             <!-- Page Header -->
             <div class="mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Teacher Dashboard</h1>

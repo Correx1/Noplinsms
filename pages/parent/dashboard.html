@@ -23,66 +23,7 @@
     <!-- Navbar Container -->
     <div id="navbar-container"></div>
     <!-- Sidebar -->
-<aside
-  id="logo-sidebar"
-  class="fixed top-0 left-0 z-40 w-64 h-screen pt-[4.5rem] transition-transform -translate-x-full bg-primary-800 border-r border-primary-800 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900"
-  aria-label="Sidebar"
->
-  <div class="h-full pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
-    <ul class="space-y-2 font-medium">
-
-      <!-- Dashboard -->
-      <li onclick="loadParentHome(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group active-nav-link">
-        <a href="#">
-          <i class="fas fa-home w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">Dashboard</span>
-        </a>
-      </li>
-
-      <!-- My Children -->
-      <li onclick="loadMyChildren(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
-        <a href="#">
-          <i class="fas fa-users w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">My Children</span>
-        </a>
-      </li>
-
-      <!-- Attendance -->
-      <li onclick="loadParentAttendance(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
-        <a href="#">
-          <i class="fas fa-calendar-alt w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">Attendance</span>
-        </a>
-      </li>
-
-      <!-- Marks -->
-      <li onclick="loadParentMarks(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
-        <a href="#">
-          <i class="fas fa-chart-line w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">Marks</span>
-        </a>
-      </li>
-
-      <!-- Fees -->
-      <li onclick="loadParentFees(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
-        <a href="#">
-          <i class="fas fa-wallet w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">Fees</span>
-        </a>
-      </li>
-
-      <!-- Messages -->
-      <li onclick="loadParentMessages(); setActiveLink(this);" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
-        <a href="#">
-          <i class="fas fa-envelope w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
-          <span class="ms-3">Messages</span>
-        </a>
-      </li>
-
-    </ul>
-  </div>
-</aside>
-
+    <div id="sidebar-container"></div>
 
     <div class="p-4 sm:ml-64 mt-14" id="main-content">
         <!-- Dashboard Content -->

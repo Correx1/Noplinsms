@@ -58,10 +58,20 @@ document.addEventListener('DOMContentLoaded', async () => {
          window.location.href = '../../index.html';
     }
 
-    // Load components with relative paths from pages/admin/
+    // Determine Sidebar to load based on Role
+    let sidebarTemplate = '../../components/sidebar.html'; // Default Admin Sidebar
+    if (userRole === 'Teacher' || userRole === 'Staff') {
+        sidebarTemplate = '../../components/teacher-sidebar.html';
+    } else if (userRole === 'Student') {
+        sidebarTemplate = '../../components/student-sidebar.html';
+    } else if (userRole === 'Parent') {
+        sidebarTemplate = '../../components/parent-sidebar.html';
+    }
+
+    // Load components with relative paths
     await Promise.all([
         loadComponent('navbar-container', '../../components/navbar.html'),
-        loadComponent('sidebar-container', '../../components/sidebar.html')
+        loadComponent('sidebar-container', sidebarTemplate)
     ]);
 
     // Update User Info in Navbar
@@ -140,10 +150,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Phone Log': loadPhoneLogPage,
                 'Email Logs': loadEmailLogsPage,
                 'SMS Logs': loadSMSLogsPage,
-    
-                // Discipline
-                'Discipline': loadDisciplinePage,
+
+                // Communications / Notice
+                'Notices': loadNoticesList,
+                'Messages': loadTeacherMessages,
+
+                // Events
+                'Events': loadEventsPage,
+
+                // AI & Automations
+                'AI & Automations': loadAIPage,
+
+                // Library
+                'Books': loadLibraryBooksPage,
+                'Add Book': loadAddBookPage,
+                'Issue / Return': loadIssueReturnPage,
+                'Members': loadLibraryMembersPage,
+                'Book Search': loadLibraryBooksPage, // Teacher View
                 
+                // Transport
+                'Vehicles': loadTransVehiclesPage,
+                'Routes': loadTransRoutesPage,
+                'Drivers': loadTransDriversPage,
+                'Allocations': loadTransAllocationPage,
+                
+                // Hostel
+                'Buildings': loadHostelBuildingsPage,
+                'Rooms': loadHostelRoomsPage,
+                'Allocations': loadHostelAllocationPage, // Duplicated name in admin
+                'Attendance': loadHostelAttendancePage,  // Duplicated name in admin
+
                 // Human Resources
                 'Staff Directory': loadHRStaffDirectoryPage,
                 'Add Staff': loadHRAddStaffPage,
@@ -151,18 +187,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Designations': loadHRDesignationsPage,
                 'Leave Management': loadHRLeavePage,
                 'Payroll': loadHRPayrollPage,
-    
-                // Standalone Pages
-                'Events': loadEventsPage,
-                'Notices': loadNoticesList,
-                'Library': loadLibraryDashboard,
-                'Transportation': loadTransportationPage,
-                'Hostel': loadHostelPage,
-                'Reports': loadReportsPage,
-    
-                // Settings Section
+                
+                // Teacher / Staff specific
+                'My Classes': loadMyClasses,
+                'Timetables': loadTeacherTimetable,
+                'Assignments': loadTeacherAssignments,
+                'Grade Book': loadGradeBook,
+                'Student Directory': loadTeacherStudents,
+                'Mark Attendance': loadTeacherAttendance,
+                'Exam Duties/Tasks': loadTeacherExams,
+                'My Profile': loadTeacherProfile,
+                'Leave Requests': loadStaffLeavePage, // Assuming specific loader logic handles this later
+                'Payslips': loadPayslipsPage,         // Assuming specific loader logic handles this later
+                'Reports': loadTeacherReports,        
+
+                // Settings
                 'System Profile': loadSettingsProfilePage,
                 'User Management': loadSettingsUsersPage,
+                'Templates': loadTemplatesPage,
+                'Theme': loadThemeSettingsPage,
             };
 
             if (href === 'dashboard.html' || href === '#') {
@@ -305,6 +348,7 @@ window.loadOnlineExamPage = () => loadPage('academics/examinations/online-exams.
 window.loadCBTExamPage = () => loadPage('academics/examinations/cbt-exams.html', '../../js/cbt-exams.js', 'cbt-exams-script');
 window.loadPhysicalExamPage = () => loadPage('academics/examinations/physical-exams.html', '../../js/physical-exams.js', 'physical-exams-script');
 window.loadCumulativeMasterSheetPage = () => loadPage('academics/examinations/cumulative-master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
+window.loadMasterSheetPage = () => loadPage('academics/examinations/master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
 window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 
 window.loadScoreSheetsPage = () => loadPage('academics/score-sheets.html', '../../js/score-sheets.js', 'scores-script');

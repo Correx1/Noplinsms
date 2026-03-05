@@ -1,93 +1,52 @@
-# School Management System
+# Noplin School Management System - Frontend Architecture & Flow
 
-Complete School Management System built with HTML, TailwindCSS, Flowbite, and Vanilla JavaScript.
+This repository contains the frontend implementation for the Noplin School Management System. It is designed to be a comprehensive, role-based Single Page Application (SPA)-like experience.
 
-## Features
+## Goal of this Documentation
 
-- **Dashboard** - Overview with stats and quick actions
-- **Student Management** - Add, edit, view students
-- **Teacher Management** - Manage teaching staff
-- **Parent Management** - Parent information and contacts
-- **Academics** - Classes, exams, assessments, results
-- **Attendance** - Student and staff attendance tracking
-- **Finance** - Income and expense management
-- **Records** - Visitors, phone, email, SMS logs
-- **Events & Notices** - School events and announcements
-- **Library** - Book management and tracking
-- **Transportation** - Route and vehicle management
-- **Hostel** - Hostel management
-- **Reports** - Generate various reports
-- **Settings** - Profile and user management
+This documentation serves as the blueprint for the **Backend Architecture and Modular Design Pattern**. It explicitly defines what each user role can see, control, and access based on the frontend UI/UX design. The backend must strictly follow these constraints and authorization checks when building out the API.
 
-## Tech Stack
+## Core Application Flow
 
-- HTML5
-- TailwindCSS (installed via npm)
-- Flowbite (installed via npm)
-- Vanilla JavaScript (ES6 Modules)
-- Vite (Dev Server)
-- localStorage (Data Persistence)
+### 1. Unified Authentication
 
-## Installation
+- All users log in through a central authentication portal (`index.html` / `login.html`).
+- Upon successful authentication, the backend should return a JSON Web Token (JWT) or session cookie, containing the user's `role` (Admin, Teacher, Student, Parent).
+- The frontend redirects the user to their designated dashboard based on this `role`.
 
-```bash
-npm install
-```
+### 2. Single Page Application (SPA) Strategy
 
-## Development
+- The frontend utilizes a dynamic loading structure without full page reloads to maintain a seamless experience.
+- Each user role has a unified dashboard wrapper (e.g., `admin/dashboard.html`, `teacher/dashboard.html`) which holds the persistent Navbar and Sidebar.
+- Navigation links trigger JavaScript functions (e.g., `loadStudentsList()`) that fetch the raw HTML of the target module and inject it into the `#main-content` container.
+- Necessary JavaScript scripts for that specific module are then dynamically appended to the DOM.
 
-```bash
-npm run dev
-```
+### 3. Role-Based Access Control (RBAC) Requirements for Backend
 
-The application will open at `http://localhost:3000`
+The backend must enforce strict RBAC on every API endpoint.
 
-## Build
+- **Verifying Endpoints:** Just because a module is dynamically loaded does not secure it. The backend API must verify the `role` and `permissions` of the requesting user token for every GET, POST, PUT, and DELETE request.
+- **Data Scoping:**
+  - Admins can fetch all data in the school.
+  - Teachers can only fetch data regarding the classes they teach or the exams they oversee.
+  - Students can only fetch their own data (their marks, their attendance).
+  - Parents can only fetch data regarding their specific children.
 
-```bash
-npm run build
-```
+## Existing Roles
 
-## Default Login
+Detailed documentation for each specific role and their intended backend modules are broken down in the following files:
 
-- **Email:** admin@school.com
-- **Password:** admin123
+- [SUPERADMIN.md](./SUPERADMIN.md)
+- [ADMIN.md](./ADMIN.md)
+- [TEACHER.md](./TEACHER.md)
+- [STUDENT.md](./STUDENT.md)
+- [PARENTS.md](./PARENTS.md)
 
-## Project Structure
+## Universal UI Components
 
-```
-root/
-├── index.html (Login page)
-├── css/
-│   └── styles.css
-├── js/
-│   ├── auth.js
-│   ├── sidebar.js
-│   ├── breadcrumb.js
-│   ├── storage.js
-│   └── utils.js
-├── components/
-│   ├── header.html
-│   ├── sidebar.html
-│   ├── breadcrumb.html
-│   └── footer.html
-├── dummydatas/
-│   └── *.json (Sample data files)
-└── pages/
-    └── admin/
-        ├── dashboard.html
-        ├── manage/
-        ├── academics/
-        ├── attendance/
-        ├── finance/
-        ├── record/
-        └── settings/
-```
+- **Navbar:** The top navigation bar is shared across all roles, providing a global search mechanism, theme toggling, notification dropdown, and a user profile dropdown for logout.
+- **Sidebar:** The sidebar is highly dynamic and unique to each role, acting as the primary navigation hierarchy.
 
-## Color Theme
+## Developer Note for Backend
 
-Primary color: Blue (#3b82f6)
-
-## License
-
-MIT
+When constructing the API modules, follow the exact naming conventions and hierarchical grouping outlined in the role documentation. If a module exists in the frontend sidebar, there MUST be a corresponding backend controller/service handling its data.
