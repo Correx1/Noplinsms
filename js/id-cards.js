@@ -1,11 +1,11 @@
-// ID Cards Module — table view, settings-aware school name/logo
+// ID Cards Module — table view, settings-aware school name/logo, full CRUD
 (function() {
     const CLASSES = ['JSS1A','JSS1B','JSS2A','JSS2B','JSS3A','JSS3B','SSS1A','SSS1B','SSS2A','SSS2B','SSS3A','SSS3B'];
     const FIRST_NAMES = ['Ada','Emeka','Chidi','Ngozi','Yemi','Tunde','Fatima','Ibrahim','Amara','Kelechi','Zainab','Seun','Biodun','Chiamaka','Okoro'];
     const LAST_NAMES = ['Okafor','Adeyemi','Nwachukwu','Bello','Eze','Adeleke','Musa','Ajibade','Okonkwo','Abubakar','Oluwole','Ihejirika','Osei','Afolabi','Nduka'];
     const PHOTOS = ['👧','👦','👩','👨','🧒'];
 
-    function getStudents() {
+    function loadFromStorage() {
         let sts = JSON.parse(localStorage.getItem('sms_students') || '[]');
         if (sts.length === 0) {
             let id = 1;
@@ -33,24 +33,33 @@
         return sts;
     }
 
+    function saveToStorage() {
+        localStorage.setItem('sms_students', JSON.stringify(allStudents));
+    }
+
+    function nextId() {
+        if (allStudents.length === 0) return 'STU0001';
+        const nums = allStudents.map(s => parseInt((s.id || '0').replace(/\D/g, ''), 10) || 0);
+        return `STU${String(Math.max(...nums) + 1).padStart(4, '0')}`;
+    }
+
     function getSchoolInfo() {
         const p = JSON.parse(localStorage.getItem('sms_school_profile') || '{}');
         return {
             name:    p.name    || p['school-name']    || 'No School',
             address: p.address || p['school-address'] || '',
             phone:   p.phone   || p['school-phone']   || '',
-            logo:    p.logo    || ''  // base64 or URL
+            logo:    p.logo    || ''
         };
     }
 
-    // ── Card HTML (used for print & preview) ──────────────────────────────
+    // ── ID Card visual (used for print + preview) ────────────────────────
     function buildCardHtml(s, school) {
         const logoHtml = school.logo
             ? `<img src="${school.logo}" style="height:32px;width:auto;object-fit:contain;" alt="logo">`
-            : `<div style="width:32px;height:32px;border-radius:50%;background:#1e3a8a;display:flex;align-items:center;justify-content:center;color:#fde047;font-weight:bold;font-size:14px;">${(school.name||'N')[0]}</div>`;
+            : `<div style="width:32px;height:32px;border-radius:50%;background:#1e3a8a;display:flex;align-items:center;justify-content:center;color:#fde047;font-weight:bold;font-size:14px;">${(school.name || 'N')[0]}</div>`;
         return `
         <div style="width:320px;border-radius:12px;overflow:hidden;border:2px solid #1e3a8a;font-family:Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.15);display:inline-block;vertical-align:top;">
-            <!-- Header -->
             <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:10px 12px;display:flex;align-items:center;gap:10px;">
                 ${logoHtml}
                 <div style="flex:1;text-align:center;">
@@ -59,64 +68,65 @@
                 </div>
                 <div style="background:#fde047;color:#1e3a8a;font-size:8px;font-weight:bold;padding:2px 5px;border-radius:4px;">STUDENT</div>
             </div>
-            <!-- Body -->
             <div style="background:#fff;display:flex;gap:10px;padding:10px 12px;">
-                <!-- Photo -->
-                <div style="width:60px;height:72px;background:#eff6ff;border:2px solid #bfdbfe;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;">
-                    ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">` : s.emoji||'👤'}
+                <div style="width:60px;height:72px;background:#eff6ff;border:2px solid #bfdbfe;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden;">
+                    ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">` : s.emoji || '👤'}
                 </div>
-                <!-- Info -->
                 <div style="flex:1;min-width:0;">
-                    <div style="font-weight:bold;font-size:11px;color:#111;margin-bottom:1px;line-height:1.3;">${s.name}</div>
+                    <div style="font-weight:bold;font-size:11px;color:#111;margin-bottom:1px;">${s.name}</div>
                     <div style="color:#2563eb;font-size:9px;font-weight:700;margin-bottom:5px;">${s.id}</div>
                     <table style="font-size:8.5px;color:#444;border-collapse:collapse;width:100%;">
                         <tr><td style="padding:1px 0;color:#999;width:50px;">Class</td><td style="font-weight:600;color:#111;">${s.className}</td></tr>
                         <tr><td style="padding:1px 0;color:#999;">DOB</td><td style="font-weight:600;color:#111;">${s.dob}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">Gender</td><td style="font-weight:600;color:#111;">${s.gender||'—'}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">Blood</td><td style="font-weight:600;color:#111;">${s.bloodGroup||'—'}</td></tr>
+                        <tr><td style="padding:1px 0;color:#999;">Gender</td><td style="font-weight:600;color:#111;">${s.gender || '—'}</td></tr>
+                        <tr><td style="padding:1px 0;color:#999;">Blood</td><td style="font-weight:600;color:#111;">${s.bloodGroup || '—'}</td></tr>
                         <tr><td style="padding:1px 0;color:#999;">Session</td><td style="font-weight:600;color:#111;">${s.session}</td></tr>
                     </table>
                 </div>
             </div>
-            <!-- Barcode strip -->
             <div style="background:#f8fafc;border-top:1px dashed #e2e8f0;padding:4px 12px;display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-family:monospace;font-size:8px;letter-spacing:2px;color:#94a3b8;">||||| ${s.id} |||||</span>
                 <span style="font-size:7px;color:#94a3b8;">Valid 1 Year</span>
             </div>
-            <!-- Footer -->
             <div style="background:linear-gradient(90deg,#1e3a5f,#2563eb);padding:4px;text-align:center;">
-                <span style="color:#bfdbfe;font-size:7.5px;">${school.phone ? '☎ '+school.phone : 'STUDENT IDENTITY CARD'}</span>
+                <span style="color:#bfdbfe;font-size:7.5px;">${school.phone ? '☎ ' + school.phone : 'STUDENT IDENTITY CARD'}</span>
             </div>
         </div>`;
     }
 
-    const allStudents = getStudents();
+    let allStudents = loadFromStorage();
     let filtered = [...allStudents];
     let selected = new Set();
     let _previewStudent = null;
+    let _pendingPhoto = null;
 
     // ── Table row ─────────────────────────────────────────────────────────
     function buildRow(s) {
         const isChecked = selected.has(s.id);
         return `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors ${isChecked ? 'bg-primary-50 dark:bg-primary-900/20' : ''}">
             <td class="px-4 py-3">
-                <input type="checkbox" onchange="window.idCardApp.toggle('${s.id}',this.checked)" ${isChecked?'checked':''} class="rounded w-4 h-4 cursor-pointer">
+                <input type="checkbox" onchange="window.idCardApp.toggle('${s.id}',this.checked)" ${isChecked ? 'checked' : ''} class="rounded w-4 h-4 cursor-pointer">
             </td>
             <td class="px-4 py-3">
-                <div class="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-lg">${s.emoji||'👤'}</div>
+                <div class="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-lg overflow-hidden">
+                    ${s.photo ? `<img src="${s.photo}" class="w-full h-full object-cover rounded-full">` : s.emoji || '👤'}
+                </div>
             </td>
             <td class="px-4 py-3 font-mono text-xs text-primary-700 dark:text-primary-400 font-semibold">${s.id}</td>
             <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${s.name}</td>
             <td class="px-4 py-3"><span class="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded font-semibold">${s.className}</span></td>
-            <td class="px-4 py-3 text-sm">${s.gender||'—'}</td>
+            <td class="px-4 py-3 text-sm">${s.gender || '—'}</td>
             <td class="px-4 py-3 text-sm">${s.dob}</td>
-            <td class="px-4 py-3"><span class="text-xs font-bold text-red-600 dark:text-red-400">${s.bloodGroup||'—'}</span></td>
+            <td class="px-4 py-3"><span class="text-xs font-bold text-red-600 dark:text-red-400">${s.bloodGroup || '—'}</span></td>
             <td class="px-4 py-3 text-xs text-gray-500">${s.session}</td>
-            <td class="px-4 py-3 text-center">
+            <td class="px-4 py-3 text-center whitespace-nowrap">
+                <button onclick="window.idCardApp.openModal('${s.id}')" class="text-xs px-2.5 py-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-700 rounded hover:bg-yellow-100 mr-1" title="Edit student">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
                 <button onclick="window.idCardApp.preview('${s.id}')" class="text-xs px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-700 rounded hover:bg-primary-100 mr-1" title="Preview ID Card">
                     <i class="fas fa-eye"></i>
                 </button>
-                <button onclick="window.idCardApp.printOne('${s.id}')" class="text-xs px-2.5 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" title="Print this card">
+                <button onclick="window.idCardApp.printOne('${s.id}')" class="text-xs px-2.5 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" title="Print card">
                     <i class="fas fa-print"></i>
                 </button>
             </td>
@@ -124,85 +134,193 @@
     }
 
     function render() {
-        const tbody = document.getElementById('idc-tbody');
+        const tbody   = document.getElementById('idc-tbody');
         const countEl = document.getElementById('idc-count');
-        const selEl = document.getElementById('idc-selected');
+        const selEl   = document.getElementById('idc-selected');
         if (countEl) countEl.textContent = filtered.length;
-        if (selEl) selEl.textContent = selected.size;
+        if (selEl)   selEl.textContent   = selected.size;
         if (!tbody) return;
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" class="px-4 py-16 text-center text-gray-400"><i class="fas fa-id-card text-4xl mb-3 block opacity-20"></i>No students found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="10" class="px-4 py-16 text-center text-gray-400"><i class="fas fa-id-card text-4xl mb-3 block opacity-20"></i>No students found. Click <strong>Add Student</strong> to create the first record.</td></tr>';
             return;
         }
         tbody.innerHTML = filtered.map(s => buildRow(s)).join('');
-        // Sync header checkbox
         const hdr = document.getElementById('idc-check-all');
         if (hdr) hdr.checked = filtered.length > 0 && filtered.every(s => selected.has(s.id));
     }
 
     function printCards(students) {
         const school = getSchoolInfo();
-        const cardsHtml = students.map(s => buildCardHtml(s, school)).join('<div style="display:inline-block;width:8mm;"></div>');
+        const html = students.map(s => buildCardHtml(s, school)).join('<div style="display:inline-block;width:8mm;"></div>');
         const win = window.open('', '_blank', 'width=900,height=700');
         win.document.write(`<!DOCTYPE html><html><head><title>ID Cards — ${school.name}</title>
-            <style>
-                body{background:#e5e7eb;padding:10mm;font-family:Arial,sans-serif;}
-                @media print{body{background:#fff;padding:5mm;}@page{margin:5mm;}}
-            </style></head>
-            <body>${cardsHtml}</body></html>`);
+            <style>body{background:#e5e7eb;padding:10mm;}@media print{body{background:#fff;padding:5mm;}@page{margin:5mm;}}</style>
+            </head><body>${html}</body></html>`);
         win.document.close();
         setTimeout(() => win.print(), 500);
     }
 
+    function setField(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+    function getField(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
     window.idCardApp = {
         filter() {
             const cls = document.getElementById('idc-filter-class')?.value || '';
-            const q = (document.getElementById('idc-search')?.value || '').toLowerCase();
+            const q   = (document.getElementById('idc-search')?.value || '').toLowerCase();
             filtered = allStudents.filter(s =>
                 (!cls || s.className === cls) &&
                 (!q || s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q))
             );
             render();
         },
+
         toggle(id, checked) {
             if (checked) selected.add(id); else selected.delete(id);
-            // Update count only (no full re-render for performance)
             const selEl = document.getElementById('idc-selected');
             if (selEl) selEl.textContent = selected.size;
             const hdr = document.getElementById('idc-check-all');
             if (hdr) hdr.checked = filtered.length > 0 && filtered.every(s => selected.has(s.id));
         },
+
         toggleAll(checked) {
             if (checked) filtered.forEach(s => selected.add(s.id));
             else filtered.forEach(s => selected.delete(s.id));
             render();
         },
+
         selectAll() { filtered.forEach(s => selected.add(s.id)); render(); },
-        clearAll() { selected.clear(); render(); },
+        clearAll()  { selected.clear(); render(); },
+
         preview(id) {
-            const s = allStudents.find(x => x.id === id); if (!s) return;
+            const s = allStudents.find(x => x.id === id);
+            if (!s) return;
             _previewStudent = s;
-            const school = getSchoolInfo();
-            document.getElementById('idc-preview-card').innerHTML = buildCardHtml(s, school);
+            document.getElementById('idc-preview-card').innerHTML = buildCardHtml(s, getSchoolInfo());
             document.getElementById('idc-preview-modal').classList.remove('hidden');
         },
-        printPreview() {
-            if (_previewStudent) printCards([_previewStudent]);
-        },
+
+        printPreview() { if (_previewStudent) printCards([_previewStudent]); },
+
         printOne(id) {
-            const s = allStudents.find(x => x.id === id); if (!s) return;
-            printCards([s]);
+            const s = allStudents.find(x => x.id === id);
+            if (s) printCards([s]);
         },
+
         generateSelected() {
-            const toPrint = filtered.filter(s => selected.has(s.id));
-            if (toPrint.length === 0) { alert('Select at least one student to generate cards for.'); return; }
-            // Show previews of selected in a print window
-            printCards(toPrint);
+            const list = filtered.filter(s => selected.has(s.id));
+            if (!list.length) { alert('Select at least one student to generate cards for.'); return; }
+            printCards(list);
         },
+
         printSelected() {
-            const toPrint = filtered.filter(s => selected.has(s.id));
-            if (toPrint.length === 0) { alert('Select at least one student card to print.'); return; }
-            printCards(toPrint);
+            const list = filtered.filter(s => selected.has(s.id));
+            if (!list.length) { alert('Select at least one student card to print.'); return; }
+            printCards(list);
+        },
+
+        // ── Add / Edit Modal ──────────────────────────────────────────────
+        openModal(editId) {
+            _pendingPhoto = null;
+            const isEdit = !!editId;
+            const s = isEdit ? allStudents.find(x => x.id === editId) : null;
+
+            document.getElementById('idc-modal-title').textContent = isEdit ? 'Edit Student' : 'Add New Student';
+            document.getElementById('idc-save-label').textContent  = isEdit ? 'Save Changes' : 'Add Student';
+
+            const delBtn = document.getElementById('idc-delete-btn');
+            if (delBtn) delBtn.classList.toggle('hidden', !isEdit);
+
+            setField('idc-edit-id',      isEdit ? s.id : '');
+            setField('idc-field-id',     isEdit ? s.id : '');
+            setField('idc-field-name',   isEdit ? s.name : '');
+            setField('idc-field-class',  isEdit ? s.className : '');
+            setField('idc-field-gender', isEdit ? s.gender : '');
+            setField('idc-field-dob',    isEdit ? s.dob : '');
+            setField('idc-field-blood',  isEdit ? s.bloodGroup : '');
+            setField('idc-field-session',isEdit ? s.session : '2024/2025');
+            setField('idc-field-phone',  isEdit ? s.phone : '');
+
+            const pp = document.getElementById('idc-photo-preview');
+            if (pp) {
+                if (isEdit && s.photo) pp.innerHTML = `<img src="${s.photo}" class="w-full h-full object-cover rounded-lg">`;
+                else pp.textContent = isEdit ? (s.emoji || '👤') : '👤';
+            }
+
+            const fi = document.getElementById('idc-photo-upload');
+            if (fi) fi.value = '';
+
+            document.getElementById('idc-form-modal').classList.remove('hidden');
+        },
+
+        closeModal() {
+            document.getElementById('idc-form-modal').classList.add('hidden');
+            _pendingPhoto = null;
+        },
+
+        handlePhotoUpload(input) {
+            const file = input.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                _pendingPhoto = e.target.result;
+                const pp = document.getElementById('idc-photo-preview');
+                if (pp) pp.innerHTML = `<img src="${_pendingPhoto}" class="w-full h-full object-cover rounded-lg">`;
+            };
+            reader.readAsDataURL(file);
+        },
+
+        saveStudent() {
+            const name = getField('idc-field-name');
+            const cls  = getField('idc-field-class');
+            if (!name) { alert('Please enter the student\'s full name.'); return null; }
+            if (!cls)  { alert('Please select a class.'); return null; }
+
+            const editId   = getField('idc-edit-id');
+            const existing = editId ? allStudents.find(s => s.id === editId) : null;
+            const customId = getField('idc-field-id');
+
+            const student = {
+                id:         existing ? existing.id : (customId || nextId()),
+                name,
+                className:  cls,
+                gender:     getField('idc-field-gender'),
+                dob:        getField('idc-field-dob'),
+                bloodGroup: getField('idc-field-blood'),
+                session:    getField('idc-field-session') || '2024/2025',
+                phone:      getField('idc-field-phone'),
+                emoji:      existing ? existing.emoji : PHOTOS[Math.floor(Math.random() * PHOTOS.length)],
+                photo:      _pendingPhoto !== null ? _pendingPhoto : (existing ? existing.photo : null)
+            };
+
+            if (existing) {
+                allStudents[allStudents.findIndex(s => s.id === editId)] = student;
+            } else {
+                allStudents.unshift(student);
+            }
+            saveToStorage();
+            filtered = [...allStudents];
+            this.filter();
+            this.closeModal();
+            return student;
+        },
+
+        saveAndPrint() {
+            const s = this.saveStudent();
+            if (s) printCards([s]);
+        },
+
+        deleteStudent() {
+            const editId = getField('idc-edit-id');
+            if (!editId) return;
+            if (!confirm(`Delete student ${editId}? This cannot be undone.`)) return;
+            const idx = allStudents.findIndex(s => s.id === editId);
+            if (idx !== -1) {
+                allStudents.splice(idx, 1);
+                selected.delete(editId);
+                saveToStorage();
+                filtered = [...allStudents];
+                this.filter();
+                this.closeModal();
+            }
         }
     };
 
