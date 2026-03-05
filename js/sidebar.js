@@ -295,7 +295,9 @@ window.loadCreateAssessmentPage = () => loadPage('academics/assessments/create-a
 window.loadViewAssessmentPage = () => loadPage('academics/assessments/view-assessment.html', '../../js/assessments.js', 'assessments-script');
 
 window.loadExaminationsPage = () => loadPage('academics/examinations/examinations.html', '../../js/examinations.js', 'examinations-script');
-window.loadCreateExamPage = () => loadPage('academics/examinations/create-examination.html', '../../js/examinations.js', 'examinations-script');
+window.loadCreateExamPage = async () => {
+    await loadPage('academics/examinations/examinations.html', '../../js/examinations.js', 'examinations-script');
+};
 window.loadExamSchedulePage = () => loadPage('academics/examinations/exam-schedule.html', '../../js/examinations.js', 'examinations-script');
 window.loadViewExamPage = () => loadPage('academics/examinations/view-examination.html', '../../js/examinations.js', 'examinations-script');
 window.loadAdmitCardsPage = () => loadPage('academics/examinations/admit-cards.html', '../../js/examinations.js', 'examinations-script');

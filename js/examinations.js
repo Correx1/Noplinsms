@@ -170,7 +170,50 @@
         }
     }
 
-    // =================== CREATE PAGE ===================
-    // Handled by create-examination.html inline (it has its own MCQ builder app)
+
+    // =================== CREATE EXAM MODAL ===================
+    window.openCreateExamModal = function() {
+        const form = document.getElementById('create-exam-form');
+        const modal = document.getElementById('create-exam-modal');
+        if (!modal) return;
+        if (form) form.reset();
+        modal.classList.remove('hidden');
+        // backdrop click
+        modal.onclick = function(e) {
+            if (e.target === modal) window.closeCreateExamModal();
+        };
+    };
+
+    window.closeCreateExamModal = function() {
+        const modal = document.getElementById('create-exam-modal');
+        if (modal) modal.classList.add('hidden');
+    };
+
+    window._saveExam = function() {
+        const nameNode = document.getElementById('exam-name');
+        const name = nameNode ? nameNode.value.trim() : '';
+        if (!name) { alert('Exam name required.'); return; }
+        const classes = Array.from(document.querySelectorAll('#create-exam-modal input[name="classes"]:checked')).map(c => c.value);
+        if (!classes.length) { alert('Select at least one class.'); return; }
+        const exam = {
+            id: 'EXM' + Date.now(),
+            name,
+            type: document.getElementById('exam-type').value,
+            category: document.getElementById('exam-category').value,
+            session: document.getElementById('exam-session').value,
+            startDate: document.getElementById('exam-start-date').value,
+            endDate: document.getElementById('exam-end-date').value,
+            classes,
+            description: document.getElementById('exam-description').value,
+            status: 'Upcoming',
+            questions: {}
+        };
+        const arr = JSON.parse(localStorage.getItem('sms_exams') || '[]');
+        arr.push(exam);
+        localStorage.setItem('sms_exams', JSON.stringify(arr));
+        window.closeCreateExamModal();
+        // Refresh table
+        if (typeof renderExamsTable === 'function') renderExamsTable();
+    };
 
 })();

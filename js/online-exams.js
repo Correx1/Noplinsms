@@ -62,19 +62,19 @@
                 <td class="px-4 py-3">${statusBadge(e.status)}</td>
                 <td class="px-4 py-3">
                     <div class="flex flex-wrap gap-1">
-                        <button onclick="window.onlineExamApp.viewQs('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200" title="View Questions">
-                            <i class="fas fa-eye mr-1"></i>Questions
+                        <button onclick="window.onlineExamApp.viewQs('${e.id}')" class="text-xs px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700" title="View Questions">
+                            <i class="fas fa-eye mr-1"></i><span class="hidden sm:inline">Questions</span>
                         </button>
-                        <button onclick="window.onlineExamApp.startExam('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-green-600 text-white hover:bg-green-700" title="Start Exam">
-                            <i class="fas fa-play mr-1"></i>Start
+                        <button onclick="window.onlineExamApp.startExam('${e.id}')" class="text-xs px-2 py-1 rounded bg-green-600 text-white hover:bg-green-700" title="Start Exam">
+                            <i class="fas fa-play"></i><span class="hidden sm:inline ml-1">Start</span>
                         </button>
-                        <button onclick="window.onlineExamApp.edit('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-primary-50 text-primary-700 hover:bg-primary-100" title="Edit">
+                        <button onclick="window.onlineExamApp.edit('${e.id}')" class="text-xs px-2 py-1 rounded bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-900/50" title="Edit">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button onclick="window.onlineExamApp.toggleStatus('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-yellow-50 text-yellow-700 hover:bg-yellow-100" title="Toggle Status">
+                        <button onclick="window.onlineExamApp.toggleStatus('${e.id}')" class="text-xs px-2 py-1 rounded bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/40" title="Toggle Status">
                             <i class="fas fa-power-off"></i>
                         </button>
-                        <button onclick="window.onlineExamApp.del('${e.id}')" class="text-xs px-2.5 py-1 rounded bg-red-50 text-red-600 hover:bg-red-100" title="Delete">
+                        <button onclick="window.onlineExamApp.del('${e.id}')" class="text-xs px-2 py-1 rounded bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50" title="Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
