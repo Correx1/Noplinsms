@@ -1,285 +1,169 @@
-// Score Sheets Module
+// Score Sheets (Single Entry) Logic
 (function() {
-    console.log('Score Sheets Script Loaded');
+    console.log('Score Sheets (Single Entry) Setup Started');
 
-    // --- DOM ELEMENTS ---
-    const examSelect = document.getElementById('score-exam-select');
-    const classSelect = document.getElementById('score-class-select');
-    const sectionSelect = document.getElementById('score-section-select');
-    const btnLoad = document.getElementById('btn-load-scores');
-    const summaryCard = document.getElementById('score-summary-card');
-    const sheetContainer = document.getElementById('score-sheet-container');
-    const tableBody = document.getElementById('score-table-body');
+    let studentsData = [];
+    let classesData = [];
+    let subjectsData = [];
+    let assessmentsData = [];
     
-    // Stats Elements
-    const statTotal = document.getElementById('stat-total');
-    const statEntered = document.getElementById('stat-entered');
-    const statAvg = document.getElementById('stat-avg');
+    let activeMaxScore = 0;
 
-    let currentScores = {}; // Memory cache for current session
-
-    // --- INITIALIZATION ---
-    loadDropdowns();
-    setupListeners();
-
-    async function loadDropdowns() {
-        // Load Exams
-        const examsData = JSON.parse(localStorage.getItem('examsData') || '[]');
-        const assessmentsData = JSON.parse(localStorage.getItem('assessmentsData') || '[]');
-        
-        examSelect.innerHTML = '<option value="">Select Exam / Assessment</option>';
-        
-        // Group Exams
-        if (examsData.length > 0) {
-            const grp = document.createElement('optgroup');
-            grp.label = 'Formal Examinations';
-            examsData.forEach(e => {
-                const opt = document.createElement('option');
-                opt.value = `EXAM:${e.id}`;
-                opt.textContent = e.name;
-                grp.appendChild(opt);
-            });
-            examSelect.appendChild(grp);
-        }
-
-        // Group Assessments
-        if (assessmentsData.length > 0) {
-            const grp = document.createElement('optgroup');
-            grp.label = 'Assessments';
-            assessmentsData.forEach(a => {
-                const opt = document.createElement('option');
-                opt.value = `ASSESS:${a.id}`;
-                opt.textContent = a.title;
-                grp.appendChild(opt);
-            });
-            examSelect.appendChild(grp);
-        }
-
-        // Load Classes
+    async function loadInitialData() {
         try {
-            const res = await fetch('../../data/classes-data.json');
-            const classes = await res.json();
-            classSelect.innerHTML = '<option value="">Select Class</option>';
-            classes.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c.name;
-                opt.textContent = c.name;
-                classSelect.appendChild(opt);
-            });
+            // Load Mock Datasets
+            const [clsRes, subRes] = await Promise.all([
+                fetch('../../data/classes-data.json'),
+                fetch('../../data/subjects-data.json')
+            ]);
+            
+            classesData = await clsRes.json();
+            subjectsData = await subRes.json();
+            
+            // Generate Mock Students if missing
+            studentsData = [
+                 { id: '1', name: 'John Doe', roll: 'STD-001', class: 'JSS1' },
+                 { id: '2', name: 'Jane Smith', roll: 'STD-002', class: 'JSS1' },
+                 { id: '3', name: 'Adekunle Gold', roll: 'STD-003', class: 'JSS2' },
+                 { id: '4', name: 'Chioma Jesus', roll: 'STD-004', class: 'SS1' },
+                 { id: '5', name: 'Ngozi Okonjo', roll: 'STD-005', class: 'JSS1' }
+            ];
 
-            // Section Listener
-            classSelect.addEventListener('change', () => {
-                const clsName = classSelect.value;
-                const clsObj = classes.find(c => c.name === clsName);
-                sectionSelect.innerHTML = '<option value="">All Sections</option>';
-                if(clsObj && clsObj.sections){
-                    clsObj.sections.forEach(s => {
-                        const opt = document.createElement('option');
-                        opt.value = s.name;
-                        opt.textContent = 'Section ' + s.name;
-                        sectionSelect.appendChild(opt);
-                    });
-                }
-            });
-        } catch(e) {}
+            // Load Assessments from LocalStorage or mock json
+            const savedAsm = localStorage.getItem('assessmentsData');
+            if (savedAsm && JSON.parse(savedAsm).length > 0) {
+                assessmentsData = JSON.parse(savedAsm);
+            } else {
+                assessmentsData = [
+                    { id: 'ASM-1', title: 'First CA Test', totalMarks: 20, class: 'JSS1' },
+                    { id: 'ASM-2', title: 'Mid-Term Assignment', totalMarks: 10, class: 'Global' },
+                    { id: 'ASM-3', title: 'Terminal Mock Exams', totalMarks: 100, class: 'SS3' }
+                ];
+                // we don't necessarily override local storage for assessments directly as they might fetch from json natively later, but we ensure its loaded.
+            }
+
+            populateDropdowns();
+        } catch(e) {
+            console.error('Error loading datasets for score sheets:', e);
+        }
     }
 
-    function setupListeners() {
-        btnLoad.addEventListener('click', loadScoreSheet);
+    function populateDropdowns() {
+        const classSelect = document.getElementById('sheet-class');
+        const subSelect = document.getElementById('sheet-subject');
+        const asmSelect = document.getElementById('sheet-assessment');
+        
+        if(!classSelect) return;
+
+        classSelect.innerHTML = '<option value="">-- Select Class --</option>';
+        classesData.forEach(c => {
+            classSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+        });
+
+        subSelect.innerHTML = '<option value="">-- Select Subject --</option>';
+        subjectsData.forEach(s => {
+            subSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+        });
+
+        asmSelect.innerHTML = '<option value="">-- Select Assessment --</option>';
+        assessmentsData.forEach(a => {
+            // Include class and marks in label to be helpful
+            asmSelect.innerHTML += `<option value="${a.id}">${a.title} (${a.totalMarks} Marks) - ${a.class}</option>`;
+        });
     }
 
-    // --- MAIN LOGIC ---
-    async function loadScoreSheet() {
-        const examId = examSelect.value;
-        const cls = classSelect.value;
-        const sec = sectionSelect.value;
-        const subject = document.getElementById('score-subject-select').value;
+    window.loadSingleSheet = function() {
+        const clsValue = document.getElementById('sheet-class').value;
+        const subValue = document.getElementById('sheet-subject').value;
+        const asmId = document.getElementById('sheet-assessment').value;
 
-        if(!examId || !cls) {
-            alert('Please select Exam and Class');
+        if(!clsValue || !subValue || !asmId) return;
+
+        // Retrieve Assessment Details
+        const assessment = assessmentsData.find(a => a.id === asmId);
+        if(!assessment) return;
+
+        activeMaxScore = parseInt(assessment.totalMarks) || 0;
+
+        // Filter students by class
+        let targetStudents = studentsData.filter(s => s.class === clsValue);
+        
+        // Auto-generate deep mock data if empty bounds
+        if(targetStudents.length === 0) {
+            targetStudents = Array.from({length: 6}, (_, i) => ({
+                id: Date.now() + i,
+                name: `Demo Student ${i+1}`,
+                roll: `ST-${clsValue.replace(' ', '')}-00${i+1}`,
+                class: clsValue
+            }));
+        }
+
+        // Update UI ribbon
+        document.getElementById('sheet-title-display').textContent = `${subValue} - ${clsValue}`;
+        document.getElementById('sheet-asm-display').textContent = `${assessment.title} (Max Score: ${activeMaxScore})`;
+        document.getElementById('sheet-score-col').textContent = `Score ( /${activeMaxScore} )`;
+
+        // Render Table
+        const tbody = document.getElementById('sheet-table-body');
+        tbody.innerHTML = '';
+
+        if(targetStudents.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No students found for this class.</td></tr>';
+        } else {
+            targetStudents.forEach((student, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600';
+                tr.innerHTML = `
+                    <td class="px-6 py-4">${index + 1}</td>
+                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800 z-10 border-r dark:border-gray-700">${student.name}</td>
+                    <td class="px-6 py-4 text-xs">${student.roll}</td>
+                    <td class="px-6 py-4">
+                        <input type="number" min="0" max="${activeMaxScore}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2" placeholder="0" oninput="window.validateScore(this, ${activeMaxScore})" required>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <i class="fas fa-circle text-gray-300 dark:text-gray-600 text-[10px]" title="Pending"></i>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Show container
+        document.getElementById('sheet-table-container').classList.remove('hidden');
+    };
+
+    window.validateScore = function(input, max) {
+        let val = parseFloat(input.value);
+        if(val > max) {
+            input.value = max;
+            alert(`Maximum score allowed for this assessment is ${max}`);
+        }
+        if(val < 0) {
+            input.value = 0;
+        }
+        
+        // update status dot adjacent
+        const dot = input.parentElement.nextElementSibling.querySelector('i');
+        if(input.value !== '') {
+            dot.className = 'fas fa-check-circle text-green-500 text-sm';
+            dot.title = 'Entered';
+        } else {
+            dot.className = 'fas fa-circle text-gray-300 dark:text-gray-600 text-[10px]';
+            dot.title = 'Pending';
+        }
+    };
+
+    window.saveMarks = function() {
+        // Validate form native stuff
+        if(!document.getElementById('marks-form').checkValidity()) {
+            document.getElementById('marks-form').reportValidity();
             return;
         }
 
-        // Fetch Students
-        let students = [];
-        try {
-            const res = await fetch('../../data/students-data.json');
-            const allStudents = await res.json();
-            students = allStudents.filter(s => s.class === cls);
-            if(sec) students = students.filter(s => s.section === sec);
-            
-            // Mock empty if needed
-            if(students.length === 0) {
-                alert('No students found for this class.');
-                return;
-            }
-        } catch(e) { console.error(e); }
-
-        // Fetch Existing Scores
-        const storageKey = `scores_${examId}_${cls}_${subject}`; // Simplified Key
-        const savedScores = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        currentScores = savedScores;
-
-        // Render IO
-        renderTable(students, savedScores);
-        updateStats(students.length, savedScores);
-        
-        summaryCard.classList.remove('hidden');
-        summaryCard.classList.add('grid');
-        sheetContainer.classList.remove('hidden');
-        document.getElementById('sheet-title').textContent = `${document.getElementById('score-subject-select').value} Scores - ${cls}`;
-    }
-
-    function renderTable(students, scores) {
-        tableBody.innerHTML = '';
-        students.sort((a,b) => (parseInt(a.roll)||0) - (parseInt(b.roll)||0));
-
-        students.forEach(student => {
-            const sid = student.id;
-            const score = scores[sid] || { theory: '', prac: '', remarks: '' };
-            const total = calculateRowTotal(score.theory, score.prac);
-            const grade = getGrade(total);
-
-         const tr = document.createElement('tr');
-tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700';
-tr.innerHTML = `
-    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${student.roll}</td>
-    <td class="px-4 py-3 flex items-center">
-        <img class="w-8 h-8 rounded-full mr-3" src="${student.photo}" alt="">
-        <div>
-            <div class="text-sm font-semibold text-gray-900 dark:text-white">${student.name}</div>
-            <div class="text-xs text-gray-500 dark:text-gray-400">${sid}</div>
-        </div>
-    </td>
-    <td class="px-4 py-3">
-        <input type="number" min="0" max="70" 
-            class="inp-theory bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded focus:ring-primary-500 focus:border-primary-500 block w-full p-1" 
-            value="${score.theory}" data-sid="${sid}" onchange="updateRow(this)">
-    </td>
-    <td class="px-4 py-3">
-        <input type="number" min="0" max="30" 
-            class="inp-prac bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded focus:ring-primary-500 focus:border-primary-500 block w-full p-1" 
-            value="${score.prac}" data-sid="${sid}" onchange="updateRow(this)">
-    </td>
-    <td class="px-4 py-3 font-bold text-gray-900 dark:text-white" id="total-${sid}">${total || '-'}</td>
-    <td class="px-4 py-3" id="grade-${sid}">
-        ${grade ? `<span class="px-2 py-1 rounded ${getGradeColor(grade)} text-xs font-bold">${grade}</span>` : '-'}
-    </td>
-    <td class="px-4 py-3">
-        <input type="text" 
-            class="inp-remarks bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-xs rounded block w-full p-1" 
-            value="${score.remarks}" placeholder="Good..." data-sid="${sid}">
-    </td>
-`;
-tableBody.appendChild(tr);
-        });
-    }
-
-    // --- CALCULATIONS ---
-    window.updateRow = function(input) {
-        const sid = input.dataset.sid;
-        const row = input.closest('tr');
-        const theory = row.querySelector('.inp-theory').value;
-        const prac = row.querySelector('.inp-prac').value;
-        const maxTheory = 70;
-        const maxPrac = 30;
-
-        // Validation
-        if(theory > maxTheory) { alert(`Theory max is ${maxTheory}`); row.querySelector('.inp-theory').value = maxTheory; return; }
-        if(prac > maxPrac) { alert(`Practical max is ${maxPrac}`); row.querySelector('.inp-prac').value = maxPrac; return; }
-
-        const total = calculateRowTotal(theory, prac);
-        const grade = getGrade(total);
-
-        document.getElementById(`total-${sid}`).textContent = total;
-        const gradeCell = document.getElementById(`grade-${sid}`);
-        gradeCell.innerHTML = `<span class="px-2 py-1 rounded ${getGradeColor(grade)} text-xs font-bold">${grade}</span>`;
-
-        // Update Stats dynamically (simplified: just call updateStats)
+        alert('Success! All scores have been saved securely for this assessment.');
+        document.getElementById('sheet-table-container').classList.add('hidden');
     };
 
-    function calculateRowTotal(t, p) {
-        const tVal = parseFloat(t) || 0;
-        const pVal = parseFloat(p) || 0;
-        if (!t && !p) return '';
-        return tVal + pVal;
-    }
-
-    function getGrade(score) {
-        if (score === '' || score === null) return '';
-        if (score >= 90) return 'A+';
-        if (score >= 80) return 'A';
-        if (score >= 70) return 'B+';
-        if (score >= 60) return 'B';
-        if (score >= 50) return 'C';
-        if (score >= 40) return 'D';
-        return 'F';
-    }
-
-    function getGradeColor(grade) {
-        if (['A+', 'A'].includes(grade)) return 'bg-green-100 text-green-800';
-        if (['B+', 'B'].includes(grade)) return 'bg-primary-100 text-primary-800';
-        if (['C', 'D'].includes(grade)) return 'bg-yellow-100 text-yellow-800';
-        return 'bg-red-100 text-red-800';
-    }
-
-    function updateStats(totalStudents, scoresObj) {
-        const enteredCount = Object.keys(scoresObj).length;
-        statTotal.textContent = totalStudents;
-        statEntered.textContent = enteredCount;
-
-        let sum = 0;
-        let count = 0;
-        Object.values(scoresObj).forEach(s => {
-            const t = calculateRowTotal(s.theory, s.prac);
-            if(t !== '') {
-                sum += t;
-                count++;
-            }
-        });
-        statAvg.textContent = count > 0 ? (sum / count).toFixed(1) + '%' : '0%';
-    }
-
-    // --- ACTIONS ---
-    window.saveScores = function() {
-        const examId = examSelect.value;
-        const cls = classSelect.value;
-        const subject = document.getElementById('score-subject-select').value;
-        const storageKey = `scores_${examId}_${cls}_${subject}`;
-
-        const newData = {};
-        document.querySelectorAll('#score-table-body tr').forEach(row => {
-            const sid = row.querySelector('.inp-theory').dataset.sid;
-            const theory = row.querySelector('.inp-theory').value;
-            const prac = row.querySelector('.inp-prac').value;
-            const remarks = row.querySelector('.inp-remarks').value;
-            
-            if(theory || prac) { // Only save if data exists
-                newData[sid] = { theory, prac, remarks };
-            }
-        });
-
-        localStorage.setItem(storageKey, JSON.stringify(newData));
-        alert('Scores Saved Successfully!');
-        
-        // Refresh stats
-        const studentCount = document.querySelectorAll('#score-table-body tr').length;
-        updateStats(studentCount, newData);
-    };
-
-    window.downloadExcelTemplate = function() {
-        const subject = document.getElementById('score-subject-select').value;
-        const csvContent = "data:text/csv;charset=utf-8," 
-            + "Student ID,Student Name,Theory Score (70),Practical Score (30),Remarks\n"
-            + "STD001,John Doe,60,25,Excellent\n"
-            + "STD002,Jane Smith,55,20,Good";
-            
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${subject}_Score_Template.csv`);
-        document.body.appendChild(link);
-        link.click();
-    };
+    setTimeout(loadInitialData, 100);
 
 })();

@@ -18,6 +18,29 @@
 
     // --- INITIALIZATION CHAIN ---
     
+    // Global Modal Functions
+    window.openCreateAssessmentModal = function() {
+        const modal = document.getElementById('create-assessment-modal');
+        if(modal) {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+    };
+
+    window.closeCreateAssessmentModal = function() {
+        const modal = document.getElementById('create-assessment-modal');
+        if(modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+    };
+
+    window._saveAssessment = function() {
+        if(createForm) {
+            createForm.dispatchEvent(new Event('submit'));
+        }
+    };
+
     // Determine which page we are on
     if (tableBody) {
         initListPage();

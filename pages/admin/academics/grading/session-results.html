@@ -1,0 +1,144 @@
+<!-- Session Results / Annual Broadsheet -->
+<div class="print:hidden">
+    <!-- Header -->
+    <div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+        <div class="w-full mb-1">
+            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Session Results / Annual Broadsheet</h1>
+            <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Generate Annual Cumulative Report Cards comparing all 3 terms securely.</p>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="p-4 sm:p-6">
+        <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+            <form class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); window.loadSessionBroadsheet();">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Target Class</label>
+                    <select id="sr-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                        <!-- JS populated -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Academic Session</label>
+                    <select id="sr-session" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value="2024/2025">2024/2025</option>
+                        <option value="2025/2026">2025/2026</option>
+                        <option value="2026/2027">2026/2027</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Report Template</label>
+                    <select id="sr-template" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value="annual">Annual Cumulative Format</option>
+                    </select>
+                </div>
+                <div class="flex items-end gap-2">
+                    <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors dark:bg-primary-600 dark:hover:bg-primary-700 flex justify-center items-center shadow-sm">
+                        <i class="fas fa-chart-line mr-2"></i> Compute Broadsheet
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Master Broadsheet UI (Hidden initially) -->
+        <div id="sr-broadsheet-container" class="hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                <!-- Ribbon -->
+                <div class="bg-gray-50 dark:bg-gray-700/50 p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white" id="sr-title">Annual Broadsheet Summary</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" id="sr-subtitle">Computed Records</p>
+                    </div>
+                    <button type="button" onclick="window.printAllSessionReports()" class="text-white bg-indigo-600 hover:bg-indigo-700 font-semibold rounded-lg text-sm px-5 py-2.5 transition-colors shadow-sm flex items-center">
+                        <i class="fas fa-print mr-2"></i> Print All Annual Reports
+                    </button>
+                </div>
+
+                <!-- Aggregate Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Student Name</th>
+                                <th scope="col" class="px-6 py-3">Annual Position</th>
+                                <th scope="col" class="px-6 py-3 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sr-tbody">
+                            <!-- JS Generated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PREVIEW MODAL (FULL SCREEN REPORT CARD PREVIEW NATIVELY IN UI) -->
+<div id="sr-preview-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[100] w-full p-4 overflow-x-hidden overflow-y-auto bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
+    <div class="relative w-full max-w-5xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800 flex flex-col max-h-[90vh]">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 shrink-0">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="sr-preview-title">
+                    Annual Report Card Preview
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="window.printSingleSessionReportCard()" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2 shadow-sm transition-colors flex items-center">
+                        <i class="fas fa-print mr-2"></i> Print This Result
+                    </button>
+                    <button type="button" onclick="closeSessionPreviewModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4 overflow-y-auto grow bg-gray-100 dark:bg-gray-900">
+                <div id="sr-preview-body" class="w-full max-w-[210mm] mx-auto bg-white shadow-xl min-h-[297mm]">
+                    <!-- Dynamic Print HTML Injected Here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRINT CONTAINER: Only visible during Window.print() / Ctrl+P -->
+<div id="sr-print-container" class="hidden print:block w-full bg-white print:bg-white text-black p-0 m-0 print:absolute print:top-0 print:left-0 print:z-[9999]">
+    <!-- JS fully injects the paginated HD Report Cards here just before calling print() -->
+</div>
+
+<!-- Internal CSS forcing exact PDF print layouts -->
+<style>
+@media print {
+    @page { margin: 0; size: A4 portrait; }
+    
+    body { background-color: white !important; margin: 0 !important; padding: 0 !important; }
+    aside, nav, header, footer, .sidebar, #sidebar-container, #navbar-container { display: none !important; }
+    .print\:hidden { display: none !important; }
+    
+    #sr-print-container {
+        display: block !important;
+        position: absolute !important;
+        left: 0 !important; top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important; padding: 0 !important;
+        background: white !important;
+        z-index: 99999 !important;
+    }
+    
+    .print-page-break {
+        page-break-after: always;
+        break-after: page;
+        min-height: 100vh;
+        width: 100%;
+        padding: 30px;
+        box-sizing: border-box;
+        overflow: hidden;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>

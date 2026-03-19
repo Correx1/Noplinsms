@@ -1,0 +1,66 @@
+<!-- Multi Score Sheet -->
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Multi Score Sheet</h1>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="p-2 sm:p-4">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
+        <p class="text-sm text-gray-500 mb-4">Select a class to automatically load its specific grading structure and enter all component marks at once.</p>
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); window.loadMultiSheet();">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Class</label>
+                <select id="ms-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                     <!-- JS Populated -->
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                <select id="ms-subject" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                     <!-- JS Populated -->
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Term</label>
+                <select id="ms-term" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                    <option value="2024/2025 First Term">2024/2025 First Term</option>
+                    <option value="2024/2025 Second Term">2024/2025 Second Term</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 shadow-sm flex items-center justify-center">
+                    <i class="fas fa-magic mr-2"></i> Generate Sheet
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data Table Grid -->
+    <div id="ms-table-container" class="hidden w-full bg-white dark:bg-gray-800 p-0 rounded-lg shadow overflow-hidden relative">
+        <!-- Header Ribbon -->
+        <div class="bg-primary-50 dark:bg-primary-900/40 p-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center flex-wrap gap-2">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="ms-title-display">Mathematics - JSS 1</h3>
+                <p class="text-xs text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wide" id="ms-struct-display">Using Structure: Junior Secondary Grading</p>
+            </div>
+            <button type="button" onclick="window.saveAllMultiMarks()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-sm transition-colors flex items-center">
+                <i class="fas fa-save mr-2"></i> Save All Marks
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <form id="ms-marks-form" onsubmit="event.preventDefault()">
+                <table class="w-full text-[11px] sm:text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead id="ms-head" class="text-[10px] sm:text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <!-- JS Injected Headers -->
+                    </thead>
+                    <tbody id="ms-body">
+                        <!-- JS Injected Rows -->
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>

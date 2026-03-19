@@ -1,3 +1,6 @@
+<!-- Assessments Management page + embedded Create Assessment modal -->
+
+<!-- Header -->
 <div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <nav class="flex mb-5" aria-label="Breadcrumb">
@@ -18,7 +21,7 @@
         </nav>
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
             <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Assessments Management</h1>
-            <button type="button" onclick="loadCreateAssessmentPage()" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+            <button type="button" onclick="window.openCreateAssessmentModal()" class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                 Create New Assessment
             </button>
@@ -26,46 +29,16 @@
     </div>
 </div>
 
-<div class="p-4 space-y-4">
-    <!-- Filters -->
-    <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 bg-white p-4 rounded-lg shadow dark:bg-gray-800">
-        <input type="text" id="assessment-search" placeholder="Search assessments..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        
-        <select id="filter-type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <option value="">All Types</option>
-            <option value="Quiz">Quiz</option>
-            <option value="Class Test">Class Test</option>
-            <option value="Assignment">Assignment</option>
-            <option value="Project">Project</option>
-            <option value="Practical">Practical</option>
-        </select>
-
-        <select id="filter-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <option value="">All Classes</option>
-            <!-- Populated via JS -->
-        </select>
-
-        <select id="filter-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <option value="">All Status</option>
-            <option value="Upcoming">Upcoming</option>
-            <option value="Ongoing">Ongoing</option>
-            <option value="Completed">Completed</option>
-        </select>
-        
-        <button id="btn-apply-assessment-filters" class="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-500 dark:hover:bg-gray-600 focus:outline-none">
-            Filter
-        </button>
-    </div>
-
-    <!-- Table -->
+<!-- Table -->
+<div class="p-4">
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col" class="px-6 py-3">ID</th>
-                    <th scope="col" class="px-6 py-3">Details</th>
-                    <th scope="col" class="px-6 py-3">Class & Subject</th>
-                    <th scope="col" class="px-6 py-3">Schedule</th>
+                    <th scope="col" class="px-6 py-3">Assessment Name</th>
+                    <th scope="col" class="px-6 py-3">Type / Session</th>
+                    <th scope="col" class="px-6 py-3">Date Range</th>
+                    <th scope="col" class="px-6 py-3">Classes</th>
                     <th scope="col" class="px-6 py-3">Status</th>
                     <th scope="col" class="px-6 py-3">Actions</th>
                 </tr>
@@ -74,5 +47,109 @@
                 <!-- Rows injected via JS -->
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- ─────────────── Create Assessment Modal ─────────────── -->
+<div id="create-assessment-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto">
+
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10 rounded-t-2xl">
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white">Create New Assessment</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Set up the assessment details. Add practicals, assignments, or quizzes.</p>
+            </div>
+            <button onclick="window.closeCreateAssessmentModal()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Close">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <form id="create-assessment-form" onsubmit="event.preventDefault(); window._saveAssessment();" class="p-6 space-y-4">
+
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Assessment Name <span class="text-red-500">*</span></label>
+                <input type="text" id="assessment-name" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500" placeholder="e.g. Mid-Term Project / First CA" required>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Assessment Mode <span class="text-red-500">*</span></label>
+                    <select id="assessment-type" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                        <option value="Physical">Physical (Paper / Presentation)</option>
+                        <option value="Online">Online Quiz</option>
+                        <option value="Assignment">Take-Home Assignment</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Category</label>
+                    <select id="assessment-category" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500">
+                        <option>Continuous Assessment (CA1)</option>
+                        <option>Continuous Assessment (CA2)</option>
+                        <option>Mid-Term Test</option>
+                        <option>Practical Assessment</option>
+                        <option>Project-based</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Academic Session / Term</label>
+                <input type="text" id="assessment-session" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="e.g. 2024/2025 First Term">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Start Date <span class="text-red-500">*</span></label>
+                    <input type="date" id="assessment-start-date" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+                <div>
+                    <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">End Date <span class="text-red-500">*</span></label>
+                    <input type="date" id="assessment-end-date" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                </div>
+            </div>
+
+            <!-- Assigned Classes -->
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Assigned Classes <span class="text-red-500">*</span></label>
+                <div class="flex flex-wrap gap-2 p-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                    <div class="w-full flex flex-wrap justify-between items-center mb-1 border-b dark:border-gray-600 pb-2 gap-2">
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Select all that apply</span>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="document.querySelectorAll('#create-assessment-modal input[name=classes]').forEach(c=>c.checked=true)" class="text-xs text-primary-600 dark:text-primary-400 hover:underline font-medium">All</button>
+                            <button type="button" onclick="document.querySelectorAll('#create-assessment-modal input[name=classes]').forEach(c=>c.checked=false)" class="text-xs text-red-500 dark:text-red-400 hover:underline font-medium">Clear</button>
+                        </div>
+                    </div>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS1A" class="rounded"> JSS1A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS1B" class="rounded"> JSS1B</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS2A" class="rounded"> JSS2A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS2B" class="rounded"> JSS2B</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS3A" class="rounded"> JSS3A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="JSS3B" class="rounded"> JSS3B</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS1A" class="rounded"> SSS1A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS1B" class="rounded"> SSS1B</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS2A" class="rounded"> SSS2A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS2B" class="rounded"> SSS2B</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS3A" class="rounded"> SSS3A</label>
+                    <label class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 select-none"><input type="checkbox" name="classes" value="SSS3B" class="rounded"> SSS3B</label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Notes / Instructions</label>
+                <textarea id="assessment-description" rows="2" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5" placeholder="Optional notes..."></textarea>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="flex items-center gap-3 pt-2">
+                <button type="submit" class="flex-1 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors">
+                    <i class="fas fa-check mr-2"></i>Create Assessment
+                </button>
+                <button type="button" onclick="window.closeCreateAssessmentModal()" class="px-5 py-2.5 text-sm text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Cancel
+                </button>
+            </div>
+        </form>
     </div>
 </div>

@@ -1,278 +1,63 @@
+<!-- Master Results Matrix Broadsheet -->
 <div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
-        <nav class="flex mb-5" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
-                <li class="inline-flex items-center">
-                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                        <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500">Academics</span>
-                    </div>
-                </li>
-                <li>
-                     <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Examination Results</span>
-                </li>
-            </ol>
-        </nav>
-        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Examination Results And Broadsheets</h1>
+        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Master Results Matrix</h1>
+        <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Comprehensive view of all students and their subject performance.</p>
     </div>
 </div>
 
-<div class="p-4">
+<div class="p-4 sm:p-6">
     <!-- Filters -->
-    <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-             <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
-                <select id="res-year-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="2023/2024">2023/2024</option>
+    <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
+        <form class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); window.loadMasterResults();">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Class</label>
+                <select id="mr-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                    <!-- JS populated -->
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Term</label>
+                <select id="mr-term" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                    <option value="1st Term">1st Term</option>
+                    <option value="2nd Term" selected>2nd Term</option>
+                    <option value="3rd Term">3rd Term</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Academic Session</label>
+                <select id="mr-session" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                     <option value="2024/2025">2024/2025</option>
+                    <option value="2025/2026">2025/2026</option>
                 </select>
             </div>
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Examination</label>
-                <select id="res-exam-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="">Select Exam</option>
-                    <option value="EXAM:EXAM001">First Term Examination 2024</option>
-                    <option value="EXAM:EXAM002">Second Term Examination 2024</option>
-                    <option value="EXAM:EXAM003">Third Term Examination 2024</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
-                <select id="res-class-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="">Select Class</option>
-                    <option value="JSS1">JSS1</option>
-                    <option value="JSS2">JSS2</option>
-                    <option value="JSS3">JSS3</option>
-                    <option value="SS1">SS1</option>
-                    <option value="SS2">SS2</option>
-                    <option value="SS3">SS3</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
-                <select id="res-section-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="">All Sections</option>
-                </select>
-            </div>
-            <div>
-                <button id="btn-generate-results" class="w-full text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 focus:outline-none dark:focus:ring-purple-800">
-                    Generate Results
+            <div class="flex items-end">
+                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors dark:bg-primary-600 dark:hover:bg-primary-700 shadow-sm flex justify-center items-center">
+                    <i class="fas fa-table mr-2"></i> Load Matrix
                 </button>
             </div>
-        </div>
+        </form>
     </div>
 
-    <!-- Summary Cards -->
-    <div id="results-summary" class="hidden grid-cols-1 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Total Students</div>
-             <div class="text-2xl font-bold text-gray-500 dark:text-gray-200" id="card-total">0</div>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Passed</div>
-             <div class="text-2xl font-bold text-green-600 dark:text-green-200" id="card-passed">0</div>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Failed</div>
-             <div class="text-2xl font-bold text-red-600 dark:text-red-200" id="card-failed">0</div>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Pass %</div>
-             <div class="text-2xl font-bold text-primary-600 dark:text-primary-200" id="card-percentage">0%</div>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Class Avg</div>
-             <div class="text-2xl font-bold text-purple-600  dark:text-purple-200" id="card-avg">0%</div>
-        </div>
-        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-             <div class="text-xs text-gray-500 dark:text-gray-200 uppercase">Highest</div>
-             <div class="text-xl font-bold text-yellow-600 dark:text-yellow-200 truncate" id="card-highest">--</div>
-        </div>
-    </div>
-
-    <!-- Results Table -->
-    <div id="results-container" class="hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-4">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 md:mb-0">Broadsheet Report</h3>
-            <div class="flex flex-wrap gap-2">
-                 <button onclick="exportResultsCSV()" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                     <i class="fas fa-file-excel text-green-600 mr-2"></i>Export Excel
-                 </button>
-                 <button class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
-                     <i class="fas fa-print mr-2"></i>Print
-                 </button>
-                 <button class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2">
-                     <i class="fas fa-id-card mr-2"></i>All Report Cards
-                 </button>
+    <!-- Results Matrix UI -->
+    <div id="mr-matrix-container" class="hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white" id="mr-title">Matrix Table</h2>
+                <button type="button" onclick="alert('Export to Excel initiated.')" class="bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center shadow-sm">
+                    <i class="fas fa-file-excel mr-2"></i> Export Excel
+                </button>
             </div>
-        </div>
-        
-        <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr id="results-table-header">
-                        <!-- Dynamic Headers -->
-                        <th class="px-4 py-3">Rank</th>
-                        <th class="px-4 py-3">Student</th>
-                        <th class="px-4 py-3">Math</th>
-                        <th class="px-4 py-3">Eng</th>
-                        <th class="px-4 py-3">Total</th>
-                        <th class="px-4 py-3">Avg</th>
-                        <th class="px-4 py-3">Grade</th>
-                        <th class="px-4 py-3">Status</th>
-                        <th class="px-4 py-3">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="results-table-body">
-                    <!-- Rows -->
-                </tbody>
-            </table>
+            <div class="overflow-x-auto relative shadow-inner">
+                <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-300 sticky top-0 z-10" id="mr-thead">
+                        <!-- JS Generated dynamic columns -->
+                    </thead>
+                    <tbody id="mr-tbody">
+                        <!-- JS Generated -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- Individual Student Result Modal (Printable) -->
-<div id="studentResultModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/60 flex items-start justify-center pt-8 pb-8">
-    <div class="relative w-full max-w-3xl mx-4">
-        <!-- Print Controls (hidden when printing) -->
-        <div class="no-print flex justify-between items-center mb-4">
-            <h2 class="text-white font-semibold text-lg">Student Result Sheet</h2>
-            <div class="flex gap-2">
-                <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-lg font-medium text-sm hover:bg-gray-100">
-                    <i class="fas fa-print"></i> Print
-                </button>
-                <button onclick="document.getElementById('studentResultModal').classList.add('hidden')" class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium text-sm hover:bg-red-600">
-                    <i class="fas fa-times"></i> Close
-                </button>
-            </div>
-        </div>
-
-        <!-- Result Sheet (Printable Area) -->
-        <div id="result-sheet-print" class="bg-white p-8 rounded-lg shadow-xl">
-            <!-- School Header -->
-            <div class="text-center border-b-4 border-double border-primary-700 pb-4 mb-6">
-                <div class="flex justify-center mb-2">
-                    <div class="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center text-white text-2xl font-bold">S</div>
-                </div>
-                <h1 class="text-2xl font-extrabold text-primary-800 uppercase tracking-wide">Greenfield Academy</h1>
-                <p class="text-sm text-gray-500">123 School Road, Education City • Tel: 08000000000</p>
-                <p class="text-base font-bold text-gray-700 mt-2" id="rp-exam-title">First Term Examination 2024</p>
-            </div>
-
-            <!-- Student Bio -->
-            <div class="flex justify-between items-start mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <div class="space-y-1">
-                    <p class="text-sm text-gray-500">Student Name</p>
-                    <p class="text-xl font-bold text-gray-900" id="rp-student-name">—</p>
-                    <p class="text-sm text-gray-600" id="rp-student-id">ID: —</p>
-                </div>
-                <div class="text-center">
-                    <div class="w-20 h-24 border-2 border-gray-300 rounded bg-gray-100 flex items-center justify-center text-gray-400">
-                        <i class="fas fa-user text-3xl"></i>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">Passport</p>
-                </div>
-                <div class="text-right space-y-1">
-                    <p class="text-sm text-gray-500">Class</p>
-                    <p class="text-base font-bold text-gray-900" id="rp-class">—</p>
-                    <p class="text-sm text-gray-500 mt-1">Term</p>
-                    <p class="text-sm font-semibold text-primary-700" id="rp-term">—</p>
-                </div>
-            </div>
-
-            <!-- Scores Table -->
-            <table class="w-full text-sm border-collapse mb-6">
-                <thead>
-                    <tr class="bg-primary-700 text-white">
-                        <th class="text-left px-4 py-2">Subject</th>
-                        <th class="text-center px-4 py-2">CA (40)</th>
-                        <th class="text-center px-4 py-2">Exam (60)</th>
-                        <th class="text-center px-4 py-2">Total (100)</th>
-                        <th class="text-center px-4 py-2">Grade</th>
-                        <th class="text-center px-4 py-2">Remark</th>
-                    </tr>
-                </thead>
-                <tbody id="rp-scores-body">
-                    <!-- Populated by JS -->
-                </tbody>
-            </table>
-
-            <!-- Summary Footer -->
-            <div class="grid grid-cols-2 gap-4 border-t pt-4">
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="font-medium text-gray-600">Total Score:</span>
-                        <span class="font-bold text-gray-900" id="rp-total">—</span>
-                    </div>
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="font-medium text-gray-600">Average:</span>
-                        <span class="font-bold text-gray-900" id="rp-average">—</span>
-                    </div>
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="font-medium text-gray-600">Class Position:</span>
-                        <span class="font-bold text-primary-700" id="rp-position">—</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="font-medium text-gray-600">Status:</span>
-                        <span class="font-bold" id="rp-status">—</span>
-                    </div>
-                </div>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="font-medium text-gray-600">No. of Subjects:</span>
-                        <span class="font-bold text-gray-900" id="rp-subject-count">—</span>
-                    </div>
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="font-medium text-gray-600">Class Size:</span>
-                        <span class="font-bold text-gray-900" id="rp-class-size">—</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="font-medium text-gray-600">Academic Year:</span>
-                        <span class="font-bold text-gray-900" id="rp-year">—</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Grading Key & Signatures -->
-            <div class="mt-6 pt-4 border-t grid grid-cols-2 gap-6">
-                <div>
-                    <p class="text-xs font-bold text-gray-600 uppercase mb-2">Grading Key</p>
-                    <div class="grid grid-cols-3 gap-1 text-xs text-gray-600">
-                        <span>A1: 75–100</span><span>B2: 70–74</span><span>B3: 65–69</span>
-                        <span>C4: 60–64</span><span>C5: 55–59</span><span>C6: 50–54</span>
-                        <span>D7: 45–49</span><span>E8: 40–44</span><span>F9: 0–39</span>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <p class="text-xs text-gray-500">Class Teacher's Remark:</p>
-                        <div class="border-b border-gray-400 h-6 mt-1"></div>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500">Principal's Signature:</p>
-                        <div class="border-b border-gray-400 h-6 mt-1"></div>
-                    </div>
-                </div>
-            </div>
-
-            <p class="text-center text-xs text-gray-400 mt-6">Generated by CorrexSMS • <span id="rp-date"></span></p>
-        </div>
-    </div>
-</div>
-
-<style>
-@media print {
-    body * { visibility: hidden !important; }
-    #result-sheet-print, #result-sheet-print * { visibility: visible !important; }
-    #result-sheet-print { position: fixed; top: 0; left: 0; width: 100%; }
-    .no-print { display: none !important; }
-}
-</style>
-
-<script src="../../../js/add-dummy-scores.js"></script>
-<script src="../../../js/init-dummy-data.js"></script>
-<script src="../../../js/results.js"></script>

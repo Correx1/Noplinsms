@@ -1,4 +1,4 @@
-﻿<aside
+<aside
   id="logo-sidebar"
   class="fixed top-0 left-0 z-40 w-64 h-screen pt-[4.5rem] transition-transform -translate-x-full bg-primary-800 border-r border-primary-800 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900"
   aria-label="Sidebar"
@@ -92,18 +92,17 @@
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadCreateExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Create Examination</a>
                </li>
-
                <li class="border-t border-white/10">
-                  <a href="#" onclick="loadPhysicalExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Physical Exams</a>
+                  <a href="#" onclick="loadAssessmentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Assessments</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadExamQuestionsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Exam Questions</a>
                </li>
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadOnlineExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Online Exams</a>
                </li>
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadCBTExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">CBT (Mock / Real)</a>
-               </li>
-               <li class="border-t border-white/10">
-                  <a href="#" onclick="loadAssessmentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Assessments</a>
                </li>
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadMasterSheetPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">
@@ -129,13 +128,31 @@
             </button>
             <ul id="dropdown-grading" class="hidden bg-primary-600 dark:bg-primary-800">
                <li class="border-t border-white/10">
-                  <a href="#" onclick="loadResultsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Results</a>
+                  <a href="#" onclick="loadGradeBoundariesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Grade Boundaries</a>
                </li>
                <li class="border-t border-white/10">
-                  <a href="#" onclick="loadMarksEntryPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Marks Register</a>
+                  <a href="#" onclick="loadGradingComponentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Grading Components</a>
                </li>
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadScoreSheetsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Score Sheets</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadMultiScoreSheetPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Multi Score Sheet</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadMarksEntryPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Mark Register</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Results</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultSheetsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Result Sheets</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultSheetSettingsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Result Sheet Settings</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadSessionResultsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Session Results</a>
                </li>
                <li class="border-t border-white/10">
                   <a href="#" onclick="loadPromoteStudentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Promote Students</a>

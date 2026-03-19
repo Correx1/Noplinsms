@@ -129,8 +129,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Subjects': loadSubjectsPage,
                 'Syllabus': loadSyllabusPage,
                 'Assessments': loadAssessmentsPage,
+                'Exam Questions': loadExamQuestionsPage,
+                'Grade Boundaries': loadGradeBoundariesPage,
+                'Grading Components': loadGradingComponentsPage,
                 'Score Sheets': loadScoreSheetsPage,
-                'Marks Register': loadMarksEntryPage,
+                'Multi Score Sheet': loadMultiScoreSheetPage,
+                'Mark Register': loadMarksEntryPage,
+                'Result Sheets': loadResultSheetsPage,
+                'Result Sheet Settings': loadResultSheetSettingsPage,
                 'Results': loadResultsPage,
                 'Timetable': loadTimetablePage,
     
@@ -348,10 +354,19 @@ window.loadOnlineExamPage = () => loadPage('academics/examinations/online-exams.
 window.loadCBTExamPage = () => loadPage('academics/examinations/cbt-exams.html', '../../js/cbt-exams.js', 'cbt-exams-script');
 window.loadPhysicalExamPage = () => loadPage('academics/examinations/physical-exams.html', '../../js/physical-exams.js', 'physical-exams-script');
 window.loadCumulativeMasterSheetPage = () => loadPage('academics/examinations/cumulative-master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
-window.loadMasterSheetPage = () => loadPage('academics/examinations/master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
+window.loadMasterSheetPage = () => loadPage('academics/examinations/master-sheet.html', '../../js/master-sheet.js', 'ms-script');
 window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 
-window.loadScoreSheetsPage = () => loadPage('academics/score-sheets.html', '../../js/score-sheets.js', 'scores-script');
+window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
+
+window.loadExamQuestionsPage = () => loadPage('academics/examinations/exam-questions.html', '../../js/exam-questions.js', 'exam-questions-script');
+window.loadGradeBoundariesPage = () => loadPage('academics/grading/grade-boundaries.html', '../../js/grade-boundaries.js', 'grade-bounds-script');
+window.loadGradingComponentsPage = () => loadPage('academics/grading/grading-components.html', '../../js/grading-components.js', 'grade-comp-script');
+window.loadMultiScoreSheetPage = () => loadPage('academics/grading/multi-score-sheet.html', '../../js/multi-score-sheet.js', 'multi-score-script');
+window.loadResultSheetsPage = () => loadPage('academics/grading/result-sheets.html', '../../js/result-sheets.js', 'result-sheets-script');
+window.loadResultSheetSettingsPage = () => loadPage('academics/grading/result-settings.html', '../../js/result-settings.js', 'result-settings-script');
+window.loadSessionResultsPage = () => loadPage('academics/grading/session-results.html', '../../js/session-results.js', 'session-results-script');
+window.loadScoreSheetsPage = () => loadPage('academics/grading/score-sheets.html', '../../js/score-sheets.js', 'scores-script');
 window.loadMarksEntryPage = () => loadPage('academics/marks/marks.html', '../../js/marks.js', 'marks-script');
 window.loadResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
 

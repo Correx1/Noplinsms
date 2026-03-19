@@ -13,7 +13,7 @@
             <p class="text-sm text-gray-500 mt-0.5">Detailed examination performance across subjects for a specific class.</p>
         </div>
         <div class="flex flex-wrap gap-2">
-            <button onclick="window.cmsApp.exportCSV()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+            <button onclick="window.msApp.exportCSV()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
             <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gray-700 hover:bg-gray-800 rounded-lg transition-colors">
@@ -28,7 +28,7 @@
     <div class="flex flex-wrap gap-3 items-end">
         <div>
             <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Class</label>
-            <select id="cms-class" onchange="window.cmsApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[130px]">
+            <select id="cms-class" onchange="window.msApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[130px]">
                 <option value="">Select Class</option>
                 <option>JSS1A</option><option>JSS1B</option><option>JSS2A</option><option>JSS2B</option>
                 <option>JSS3A</option><option>JSS3B</option><option>SSS1A</option><option>SSS1B</option>
@@ -37,7 +37,7 @@
         </div>
         <div>
             <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Term</label>
-            <select id="cms-term" onchange="window.cmsApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[160px]">
+            <select id="cms-term" onchange="window.msApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[160px]">
                 <option value="">Select Term</option>
                 <option>First Term 2024/2025</option>
                 <option>Second Term 2024/2025</option>
@@ -47,9 +47,9 @@
         </div>
         <div>
             <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Search Student</label>
-            <input type="text" id="cms-search" oninput="window.cmsApp.filter()" placeholder="Name or ID…" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+            <input type="text" id="cms-search" oninput="window.msApp.filter()" placeholder="Name or ID…" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
         </div>
-        <button onclick="window.cmsApp.load()" class="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+        <button onclick="window.msApp.load()" class="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
             <i class="fas fa-search mr-1"></i> Retrieve
         </button>
     </div>

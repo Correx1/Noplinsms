@@ -1,325 +1,162 @@
-// Results Module
+// Master Results Matrix Logic
 (function() {
-    console.log('Results Script Loaded');
+    console.log('Results Matrix initialized');
 
-    const examSelect = document.getElementById('res-exam-select');
-    const classSelect = document.getElementById('res-class-select');
-    const btnGenerate = document.getElementById('btn-generate-results');
-    const summaryCard = document.getElementById('results-summary');
-    const resultsContainer = document.getElementById('results-container');
-    const tableHead = document.getElementById('results-table-header');
-    const tableBody = document.getElementById('results-table-body');
+    let classesData = [];
+    let subjectsData = [];
+    let gradeBoundariesData = [];
 
-    // Shared State
-    let studentsData = [];
-    let processedResults = [];
-
-    // Subjects List (Mock or Configurable)
-    const SUBJECTS = ['Mathematics', 'English Language', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Computer Science'];
-
-    init();
-
-    async function init() {
-        console.log('Results init() called');
-        console.log('examSelect:', examSelect);
-        console.log('classSelect:', classSelect);
-        console.log('btnGenerate:', btnGenerate);
-        
-        if (!examSelect || !classSelect || !btnGenerate) {
-            console.error('ERROR: One or more elements not found!');
-            console.error('examSelect:', examSelect);
-            console.error('classSelect:', classSelect);
-            console.error('btnGenerate:', btnGenerate);
-            return;
-        }
-        
-         // Load Exams
-        const examsData = JSON.parse(localStorage.getItem('examsData') || '[]');
-        console.log('Loaded examsData:', examsData);
-        
-        examSelect.innerHTML = '<option value="">Select Exam</option>';
-        examsData.forEach(e => {
-            const opt = document.createElement('option');
-            opt.value = `EXAM:${e.id}`; // Consistent with Scores and Marks
-            opt.textContent = e.name;
-            examSelect.appendChild(opt);
-        });
-
-        // Load Classes
+    async function initialize() {
         try {
-            const res = await fetch('../../data/classes-data.json');
-            const classes = await res.json();
-            console.log('Loaded classes:', classes);
-            
-            classSelect.innerHTML = '<option value="">Select Class</option>';
-            classes.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c.name;
-                opt.textContent = c.name;
-                classSelect.appendChild(opt);
-            });
+            const [clsRes, subRes] = await Promise.all([
+                fetch('../../data/classes-data.json'),
+                fetch('../../data/subjects-data.json')
+            ]);
+            classesData = await clsRes.json();
+            subjectsData = await subRes.json();
+
+            // Load Grade Boundaries to attach Grade pills
+            const boundsMap = localStorage.getItem('gradeBoundariesData');
+            if(boundsMap) {
+                gradeBoundariesData = JSON.parse(boundsMap);
+            } else {
+                gradeBoundariesData = [
+                    { grade: 'A', min: 75, max: 100 },
+                    { grade: 'B', min: 60, max: 74 },
+                    { grade: 'C', min: 50, max: 59 },
+                    { grade: 'D', min: 40, max: 49 },
+                    { grade: 'F', min: 0, max: 39 }
+                ];
+            }
+            gradeBoundariesData.sort((a,b) => b.min - a.min);
+
+            // Populate Checkboxes
+            const classSelect = document.getElementById('mr-class');
+            if(classSelect) {
+                classSelect.innerHTML = '<option value="">-- Select Target Class --</option>';
+                classesData.forEach(c => {
+                    classSelect.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+                });
+            }
         } catch(e) {
-            console.error('Error loading classes:', e);
+            console.error(e);
         }
-
-        console.log('Adding click listener to button...');
-        btnGenerate.addEventListener('click', function() {
-            console.log('Button clicked!');
-            generateResults();
-        });
-        console.log('Init complete!');
-    }
-
-    async function generateResults() {
-        console.log('=== generateResults() called ===');
-        const examId = examSelect.value;
-        const cls = classSelect.value;
-        console.log('examId:', examId);
-        console.log('cls:', cls);
-
-        if(!examId || !cls) { 
-            console.warn('Missing exam or class selection');
-            alert('Select Exam and Class'); 
-            return; 
-        }
-
-        console.log('Fetching students...');
-        // 1. Fetch Students
-        try {
-            const res = await fetch('../../data/students-data.json');
-            const all = await res.json();
-            studentsData = all.filter(s => s.class === cls);
-            console.log('Students found:', studentsData.length);
-        } catch(e) { 
-            console.error('Error fetching students:', e);
-            studentsData = []; 
-        }
-
-        if(studentsData.length === 0) { alert('No students found'); return; }
-
-        // 2. Fetch Scores for All Subjects
-        // We iterate through known subjects and construct the cache keys: scores_{examId}_{cls}_{subj}
-        const classScores = {}; // Map: subject -> { studentId: {total: X} }
-        
-        SUBJECTS.forEach(sub => {
-            const key = `scores_${examId}_${cls}_${sub}`;
-            const data = JSON.parse(localStorage.getItem(key) || '{}');
-            // Normalize: Ensure we just get the total
-            const subMap = {};
-            Object.keys(data).forEach(sid => {
-                const s = data[sid];
-                const t = (parseFloat(s.theory)||0) + (parseFloat(s.prac)||0);
-                if(s.theory !== '' || s.prac !== '') subMap[sid] = t; 
-            });
-            classScores[sub] = subMap;
-        });
-
-        // 3. Process Each Student
-        processedResults = studentsData.map(student => {
-            let totalMarks = 0;
-            let subjectsCount = 0;
-            const subjectMarks = {};
-
-            SUBJECTS.forEach(sub => {
-                const val = classScores[sub]?.[student.id];
-                subjectMarks[sub] = val !== undefined ? val : '-';
-                if(val !== undefined) {
-                    totalMarks += val;
-                    subjectsCount++;
-                }
-            });
-
-            const avg = subjectsCount > 0 ? (totalMarks / subjectsCount).toFixed(1) : 0;
-            
-            // Pass Logic: e.g., Pass if Avg >= 40 
-            const isPass = avg >= 40; 
-            
-            return {
-                ...student,
-                subjectMarks,
-                totalMarks,
-                avg: parseFloat(avg),
-                isPass,
-                grade: getGrade(avg)
-            };
-        });
-
-        // 4. Rank
-        processedResults.sort((a,b) => b.avg - a.avg);
-        processedResults.forEach((r, idx) => r.rank = idx + 1);
-
-        // 5. Render
-        renderUI(processedResults, SUBJECTS);
-        updateStats(processedResults);
-    }
-
-    function renderUI(results, subjects) {
-        summaryCard.classList.remove('hidden');
-        summaryCard.classList.add('grid');
-        resultsContainer.classList.remove('hidden');
-
-        // Dynamic Header
-        let thHTML = `<th class="px-4 py-3">Rank</th><th class="px-4 py-3">Student</th>`;
-        subjects.forEach(sub => {
-            thHTML += `<th class="px-4 py-3">${sub.substring(0,3)}</th>`;
-        });
-        thHTML += `<th class="px-4 py-3">Total</th><th class="px-4 py-3">Avg</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Report</th>`;
-        tableHead.innerHTML = thHTML;
-
-        // Rows
-        tableBody.innerHTML = '';
-        results.forEach(r => {
-            let trHTML = `
-                <td class="px-4 py-3 font-bold">${getRankBadge(r.rank)}</td>
-                <td class="px-4 py-3 flex items-center">
-                    <img src="${r.photo}" class="w-8 h-8 rounded-full mr-2">
-                    <div>
-                        <div class="font-semibold text-gray-900 dark:text-white">${r.name}</div>
-                        <div class="text-xs text-gray-500">${r.id}</div>
-                    </div>
-                </td>
-            `;
-
-            subjects.forEach(sub => {
-                const m = r.subjectMarks[sub];
-                // Color code low marks
-                const color = (m !== '-' && m < 40) ? 'text-red-500 font-bold' : '';
-                trHTML += `<td class="px-4 py-3 ${color}">${m}</td>`;
-            });
-
-            trHTML += `
-                <td class="px-4 py-3 font-bold">${r.totalMarks}</td>
-                <td class="px-4 py-3 font-bold text-gray-600 dark:text-gray-200">${r.avg}%</td>
-                <td class="px-4 py-3">
-                    ${r.isPass 
-                        ? '<span class="bg-green-100 text-green-800 text-xs font-bold px-2.5 py-0.5 rounded">PASS</span>'
-                        : '<span class="bg-red-100 text-red-800 text-xs font-bold px-2.5 py-0.5 rounded">FAIL</span>'}
-                </td>
-                <td class="px-4 py-3">
-                    <button onclick="generateStudentResult('${r.id}')" class="text-xs text-white bg-primary-600 hover:bg-primary-700 font-medium rounded px-2.5 py-1.5 whitespace-nowrap">
-                        <i class="fas fa-id-card mr-1"></i>Result
-                    </button>
-                </td>
-            `;
-
-            const tr = document.createElement('tr');
-            tr.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50';
-            tr.innerHTML = trHTML;
-            tableBody.appendChild(tr);
-        });
-    }
-
-    function updateStats(results) {
-        document.getElementById('card-total').textContent = results.length;
-        const passed = results.filter(r => r.isPass).length;
-        document.getElementById('card-passed').textContent = passed;
-        document.getElementById('card-failed').textContent = results.length - passed;
-        
-        const perc = ((passed / results.length) * 100).toFixed(1);
-        document.getElementById('card-percentage').textContent = perc + '%';
-
-        const classAvg = (results.reduce((acc, curr) => acc + curr.avg, 0) / results.length).toFixed(1);
-        document.getElementById('card-avg').textContent = classAvg + '%';
-
-        if(results.length > 0) {
-            document.getElementById('card-highest').textContent = `${results[0].avg}% (${results[0].name})`;
-        }
-    }
-
-    window.exportResultsCSV = function() {
-        if(processedResults.length === 0) return;
-        
-        let csv = 'Rank,ID,Name,';
-        SUBJECTS.forEach(s => csv += s + ',');
-        csv += 'Total,Average,Status\n';
-
-        processedResults.forEach(r => {
-            csv += `${r.rank},${r.id},${r.name},`;
-            SUBJECTS.forEach(s => csv += (r.subjectMarks[s] === '-' ? '' : r.subjectMarks[s]) + ',');
-            csv += `${r.totalMarks},${r.avg},${r.isPass ? 'PASS' : 'FAIL'}\n`;
-        });
-
-        const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csv);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'Class_Results.csv');
-        document.body.appendChild(link);
-        link.click();
-    };
-
-    window.generateStudentResult = function(studentId) {
-        const student = processedResults.find(r => r.id === studentId);
-        if (!student) return;
-
-        const examLabel = examSelect.options[examSelect.selectedIndex]?.text || 'Examination';
-        const yearVal = document.getElementById('res-year-select')?.value || '';
-
-        // Populate header fields
-        document.getElementById('rp-exam-title').textContent = examLabel;
-        document.getElementById('rp-student-name').textContent = student.name;
-        document.getElementById('rp-student-id').textContent = 'ID: ' + student.id;
-        document.getElementById('rp-class').textContent = classSelect.value;
-        document.getElementById('rp-term').textContent = examLabel;
-        document.getElementById('rp-total').textContent = student.totalMarks;
-        document.getElementById('rp-average').textContent = student.avg + '%';
-        document.getElementById('rp-position').textContent = student.rank + getOrdinalSuffix(student.rank) + ' / ' + processedResults.length;
-        document.getElementById('rp-status').textContent = student.isPass ? 'PROMOTED' : 'REFERRED';
-        document.getElementById('rp-status').className = 'font-bold ' + (student.isPass ? 'text-green-600' : 'text-red-600');
-        document.getElementById('rp-subject-count').textContent = SUBJECTS.length;
-        document.getElementById('rp-class-size').textContent = processedResults.length;
-        document.getElementById('rp-year').textContent = yearVal;
-        document.getElementById('rp-date').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'long', year:'numeric'});
-
-        // Populate scores table
-        const tbody = document.getElementById('rp-scores-body');
-        tbody.innerHTML = '';
-        SUBJECTS.forEach(sub => {
-            const score = student.subjectMarks[sub];
-            if (score === '-' || score === undefined) return;
-            const ca = Math.round(score * 0.4);
-            const exam = Math.round(score * 0.6);
-            const grade = getGrade(score);
-            const remark = score >= 50 ? 'CREDIT' : score >= 40 ? 'PASS' : 'FAIL';
-            const rowColor = score < 40 ? 'bg-red-50' : '';
-            tbody.innerHTML += `
-                <tr class="border-b ${rowColor}">
-                    <td class="px-4 py-2 font-medium text-gray-800">${sub}</td>
-                    <td class="px-4 py-2 text-center">${ca}</td>
-                    <td class="px-4 py-2 text-center">${exam}</td>
-                    <td class="px-4 py-2 text-center font-bold">${score}</td>
-                    <td class="px-4 py-2 text-center font-bold text-primary-700">${grade}</td>
-                    <td class="px-4 py-2 text-center text-sm ${score < 40 ? 'text-red-600 font-bold' : 'text-green-700'}">${remark}</td>
-                </tr>
-            `;
-        });
-
-        // Show modal
-        const modal = document.getElementById('studentResultModal');
-        modal.classList.remove('hidden');
-        modal.scrollTop = 0;
-    };
-
-    function getOrdinalSuffix(n) {
-        if (n === 1) return 'st';
-        if (n === 2) return 'nd';
-        if (n === 3) return 'rd';
-        return 'th';
-    }
-
-    function getRankBadge(rank) {
-        if(rank === 1) return '🥇 1st';
-        if(rank === 2) return '🥈 2nd';
-        if(rank === 3) return '🥉 3rd';
-        return rank + 'th';
     }
 
     function getGrade(score) {
-        if (score >= 90) return 'A+';
-        if (score >= 80) return 'A';
-        if (score >= 70) return 'B+';
-        if (score >= 60) return 'B';
-        if (score >= 50) return 'C';
-        if (score >= 40) return 'D';
-        return 'F';
+        let bnd = gradeBoundariesData.find(b => score >= b.min && score <= b.max);
+        return bnd ? bnd.grade : '-';
     }
+
+    function getGradeColor(grade) {
+        if(grade === 'A') return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+        if(grade === 'B') return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+        if(grade === 'C') return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+        if(grade === 'D' || grade === 'E') return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
+        if(grade === 'F') return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+    }
+
+    window.loadMasterResults = function() {
+        const clsValue = document.getElementById('mr-class').value;
+        const termValue = document.getElementById('mr-term').value;
+        if(!clsValue) return;
+
+        // Generate exactly 10 mock students (like Result Sheets)
+        let students = Array.from({length: 10}, (_, i) => ({
+            id: `STD-M-${i+1}`,
+            name: `Student Model ${i+1}`,
+            roll: `00${i+1}`
+        }));
+
+        // Limit to 12 active subjects for visual feasibility
+        let activeSubs = subjectsData.slice(0, 12).map(s => s.name);
+
+        // Build generic aggregated matrix mock data
+        let records = [];
+        students.forEach(student => {
+            let userGrandTotal = 0;
+            let subs = {};
+            let baseSkill = 0.4 + (Math.random() * 0.5); // 40% to 90%
+            
+            activeSubs.forEach(sub => {
+                let variance = (Math.random() * 0.2) - 0.1;
+                let score = Math.round(100 * (baseSkill + variance));
+                if(score > 100) score = 100;
+                if(score < 0) score = 0;
+                
+                subs[sub] = score;
+                userGrandTotal += score;
+            });
+
+            records.push({
+                student: student,
+                subjects: subs,
+                grandTotal: userGrandTotal,
+                average: (userGrandTotal / activeSubs.length).toFixed(1)
+            });
+        });
+
+        // Sort by grand total (Position)
+        records.sort((a,b) => b.grandTotal - a.grandTotal);
+
+        // Render Table Headers
+        const thead = document.getElementById('mr-thead');
+        let thHtml = `
+            <tr>
+                <th scope="col" class="px-6 py-4 sticky left-0 z-20 bg-gray-200 dark:bg-gray-700 border-r border-gray-300 dark:border-gray-600 text-left w-48 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Student Info</th>
+        `;
+        activeSubs.forEach(sub => {
+            thHtml += `<th scope="col" class="px-4 py-4 min-w-[120px] border-r border-gray-300 dark:border-gray-600 truncate max-w-[150px]" title="${sub}">${sub}</th>`;
+        });
+        thHtml += `
+                <th scope="col" class="px-6 py-4 border-r border-gray-300 dark:border-gray-600 text-primary-700 dark:text-primary-400 font-bold min-w-[100px]">Total Score</th>
+                <th scope="col" class="px-6 py-4 text-primary-700 dark:text-primary-400 font-bold min-w-[100px]">Average</th>
+            </tr>
+        `;
+        thead.innerHTML = thHtml;
+
+        // Render Table Body
+        const tbody = document.getElementById('mr-tbody');
+        tbody.innerHTML = '';
+        records.forEach((rec, index) => {
+            let position = index + 1;
+            let rowClass = index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800/80';
+            
+            let html = `
+                <tr class="${rowClass} border-b border-gray-200 dark:border-gray-700 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
+                    <td class="px-6 py-3 font-medium text-gray-900 dark:text-white sticky left-0 z-20 ${rowClass} border-r border-gray-200 dark:border-gray-600 text-left shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                        <div class="flex flex-col">
+                            <span class="truncate block w-40 font-bold text-sm" title="${rec.student.name}">${rec.student.name}</span>
+                            <span class="text-xs text-gray-500 font-normal">Pos: <span class="badge bg-primary-100 text-primary-800 px-1 py-0.5 rounded font-bold">${position}</span> | Roll: ${rec.student.roll}</span>
+                        </div>
+                    </td>
+            `;
+
+            activeSubs.forEach(sub => {
+                let score = rec.subjects[sub];
+                let grade = getGrade(score);
+                let gColor = getGradeColor(grade);
+                
+                html += `
+                    <td class="px-4 py-3 border-r border-gray-200 dark:border-gray-700 relative group">
+                        <span class="font-bold text-sm text-gray-700 dark:text-gray-300 block">${score}</span>
+                        <span class="inline-block mt-0.5 ${gColor} text-[10px] font-bold px-1.5 py-0.5 rounded-sm">${grade}</span>
+                    </td>
+                `;
+            });
+
+            html += `
+                    <td class="px-6 py-3 border-r border-gray-200 dark:border-gray-700 font-black text-primary-600 dark:text-primary-400 text-base bg-primary-50/50 dark:bg-primary-900/10">${rec.grandTotal}</td>
+                    <td class="px-6 py-3 font-bold ${rec.average >= 50 ? 'text-green-600' : 'text-red-500'} bg-primary-50/50 dark:bg-primary-900/10">${rec.average}%</td>
+                </tr>
+            `;
+            tbody.innerHTML += html;
+        });
+
+        document.getElementById('mr-title').textContent = `${clsValue} - Master Results Matrix`;
+        document.getElementById('mr-matrix-container').classList.remove('hidden');
+    };
+
+    setTimeout(initialize, 100);
 })();
