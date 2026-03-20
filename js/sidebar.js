@@ -66,6 +66,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         sidebarTemplate = '../../components/student-sidebar.html';
     } else if (userRole === 'Parent') {
         sidebarTemplate = '../../components/parent-sidebar.html';
+    } else if (userRole === 'Owner') {
+        sidebarTemplate = '../../components/owner-sidebar.html';
     }
 
     // Load components with relative paths
@@ -80,6 +82,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userRoleDisplay = document.getElementById('user-role-display');
         if (userNameDisplay) userNameDisplay.textContent = localStorage.getItem('savedUsername') || 'User';
         if (userRoleDisplay) userRoleDisplay.textContent = userRole || 'Role';
+
+        // Set Active Branch Context Header
+        const branchHeader = document.getElementById('branch-context-header');
+        const branchNameEl = document.getElementById('current-branch-name');
+        const currentBranch = localStorage.getItem('sms_currentBranchName');
+        
+        if (branchHeader && currentBranch) {
+            branchNameEl.textContent = currentBranch;
+            branchHeader.classList.remove('hidden');
+            branchHeader.classList.add('flex');
+        }
     }, 500); // Wait for components to load
 
     // Logout Handler (Delegation)

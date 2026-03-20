@@ -62,9 +62,17 @@
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="ms-title-display">Mathematics - JSS 1</h3>
                 <p class="text-xs text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wide" id="ms-struct-display">Using Structure: Junior Secondary Grading</p>
             </div>
-            <button type="button" onclick="window.saveAllMultiMarks()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-sm transition-colors flex items-center">
-                <i class="fas fa-save mr-2"></i> Save All Marks
-            </button>
+            <div class="flex flex-wrap gap-2 items-center">
+                <button type="button" onclick="window.downloadBlankSheet()" class="bg-white border text-gray-700 hover:bg-gray-50 border-gray-300 font-semibold py-2 px-4 rounded-lg shadow-sm text-sm transition-colors flex items-center dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:bg-gray-600">
+                    <i class="fas fa-print mr-2"></i> Print Template
+                </button>
+                <button type="button" onclick="window.openOcrModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-sm transition-colors flex items-center">
+                    <i class="fas fa-camera mr-2"></i> Scan & Upload
+                </button>
+                <button type="button" onclick="window.saveAllMultiMarks()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-sm text-sm transition-colors flex items-center">
+                    <i class="fas fa-save mr-2"></i> Save All Marks
+                </button>
+            </div>
         </div>
 
         <div class="overflow-x-auto">
@@ -81,3 +89,68 @@
         </div>
     </div>
 </div>
+
+<!-- OCR Scan Modal -->
+<div id="ocrUploadModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full bg-black/50 backdrop-blur-sm">
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+        <div class="relative bg-white rounded-xl shadow-2xl dark:bg-gray-800">
+            <!-- Modal header -->
+            <div class="flex justify-between items-start p-4 rounded-t border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-camera-retro mr-3 text-primary-600"></i> Smart Scan & Autofill
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="ocrUploadModal">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6">
+                <!-- Dropzone -->
+                <div id="ocr-dropzone" class="flex justify-center items-center w-full mb-4">
+                    <label for="ocr-file-upload" class="flex flex-col justify-center items-center w-full h-48 bg-gray-50 rounded-lg border-2 border-dashed border-primary-300 cursor-pointer dark:bg-gray-700 dark:border-gray-500 hover:bg-primary-50 dark:hover:bg-gray-600 transition-colors">
+                        <div class="flex flex-col justify-center items-center pt-5 pb-6">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-primary-400 mb-3"></i>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-bold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Scan of the Multi-Score Template (JPG, PNG)</p>
+                        </div>
+                        <input id="ocr-file-upload" type="file" class="hidden" accept="image/*" onchange="window.handleOcrFileUpload(event)" />
+                    </label>
+                </div>
+                
+                <!-- Preview & Progress Area (Hidden initially) -->
+                <div id="ocr-progress-area" class="hidden w-full flex-col items-center">
+                    <div class="w-full relative rounded-lg overflow-hidden border border-gray-200 shadow-sm bg-gray-100 flex justify-center p-2 mb-4 h-64 object-contain">
+                        <img id="ocr-preview-img" class="max-h-full opacity-50" />
+                        <div class="absolute inset-0 bg-primary-900/10 flex items-center justify-center">
+                            <div class="text-center">
+                                <i class="fas fa-cog fa-spin text-4xl text-primary-600 mb-2"></i>
+                                <h4 id="ocr-status-text" class="text-lg font-bold text-gray-900">Scanning Document...</h4>
+                                <p id="ocr-substatus-text" class="text-sm text-gray-600 mt-1">Detecting Context QR Code...</p>
+                            </div>
+                        </div>
+                        <!-- Scanning laser animation -->
+                        <div class="absolute top-0 w-full h-1 bg-green-400 shadow-[0_0_8px_2px_rgba(74,222,128,0.8)] animate-[scan_2s_ease-in-out_infinite]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Canvas for Image Processing -->
+<canvas id="ocr-canvas" class="hidden"></canvas>
+
+<!-- Hidden Print Template for Generating the Blank Sheet -->
+<div id="print-template-container" class="hidden !fixed top-[-9999px] left-0 bg-white">
+    <div id="print-sheet-content" style="width: 210mm; background: white; font-family: sans-serif; color: black; box-sizing: border-box;">
+        <!-- Dynamically filled with paginated pages in js -->
+    </div>
+</div>
+
+<style>
+@keyframes scan {
+    0% { top: 0; }
+    50% { top: 100%; }
+    100% { top: 0; }
+}
+</style>

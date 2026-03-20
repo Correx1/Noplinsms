@@ -61,6 +61,7 @@
                         <div class="w-1/2">
                             <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2" required>
                                 <option value="" disabled selected>Select Role</option>
+                                <option value="Owner">Owner</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Teacher">Teacher</option>
                             </select>
@@ -131,7 +132,9 @@
             localStorage.setItem('userRole', role);
             
             // Redirect based on role
-            if (role === 'Admin') {
+            if (role === 'Owner') {
+                window.location.href = 'pages/owner/dashboard.html';
+            } else if (role === 'Admin') {
                 window.location.href = 'pages/admin/dashboard.html';
             } else if (role === 'Teacher') {
                 window.location.href = 'pages/teacher/dashboard.html';

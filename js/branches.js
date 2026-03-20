@@ -62,6 +62,7 @@
         const branch = branches.find(b => b.id === id);
         if(!branch) return;
         localStorage.setItem('sms_active_branch', id);
+        localStorage.setItem('sms_currentBranchName', branch.name);
         
         // Show realistic loading state then reload
         if (typeof showToast === 'function') {
