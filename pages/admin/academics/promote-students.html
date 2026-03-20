@@ -22,6 +22,25 @@
 </div>
 
 <div class="p-4 sm:p-6">
+    <!-- Promotion Rules Card -->
+    <div class="p-4 sm:p-6 bg-white border border-primary-200 rounded-lg shadow-sm mb-6 bg-primary-50/10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-lg font-bold text-primary-900 flex items-center gap-2"><i class="fas fa-cogs"></i> Global Promotion Rules</h3>
+                <p class="text-sm text-gray-600">Configure the minimum average score required for a student to be promoted to the next class.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 shadow-sm">
+                    <label class="text-sm font-bold text-gray-700 whitespace-nowrap">Pass Average (%):</label>
+                    <input type="number" id="rule-min-average" class="w-20 border-0 bg-transparent p-0 text-center font-black text-primary-700 focus:ring-0" placeholder="50" min="0" max="100">
+                </div>
+                <button id="btn-save-rule" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 shadow-sm transition-colors whitespace-nowrap">
+                    Save Rule
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Setup Card -->
     <div class="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Promotion Criteria</h3>
@@ -59,9 +78,17 @@
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-6">
             <div class="p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
                 <h3 class="font-semibold text-gray-900 dark:text-white">Student List</h3>
-                <div class="flex flex-wrap gap-2">
-                    <button id="btn-bulk-promote" class="px-3 py-2 text-xs font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Promote Selected</button>
-                    <button id="btn-bulk-hold" class="px-3 py-2 text-xs font-medium text-center text-white bg-yellow-400 rounded-lg hover:bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-yellow-300 dark:focus:ring-yellow-900">Hold Selected</button>
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 mr-4">
+                        <label class="text-xs font-bold text-gray-600">Filter:</label>
+                        <select id="filter-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-1.5 px-3">
+                            <option value="All">All Students</option>
+                            <option value="Promote">Promoted Only</option>
+                            <option value="Hold">Failed / Held Only</option>
+                        </select>
+                    </div>
+                    <button id="btn-bulk-promote" class="px-3 py-2 text-xs font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 shadow-sm transition-colors">Promote Selected</button>
+                    <button id="btn-bulk-hold" class="px-3 py-2 text-xs font-medium text-center text-white bg-amber-500 rounded-lg hover:bg-amber-600 focus:ring-4 focus:outline-none focus:ring-amber-300 shadow-sm transition-colors text-black">Hold Selected</button>
                 </div>
             </div>
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

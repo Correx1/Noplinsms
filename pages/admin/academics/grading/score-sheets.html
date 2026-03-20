@@ -21,11 +21,20 @@
 <div class="p-2 sm:p-4">
     <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-6">
         <p class="text-sm text-gray-500 mb-4">Select an Assessment to load the single-entry sheet for a specific class and subject.</p>
-        <form id="load-sheet-form" class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); window.loadSingleSheet();">
+        <form id="load-sheet-form" class="grid grid-cols-1 md:grid-cols-5 gap-4" onsubmit="event.preventDefault(); window.loadSingleSheet();">
             <div>
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="sheet-class">Class</label>
                 <select id="sheet-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                     <!-- Injected via JS -->
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="sheet-section">Section</label>
+                <select id="sheet-section" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                    <option value="ALL">All Sections</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
                 </select>
             </div>
             <div>
@@ -35,7 +44,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="sheet-assessment">Assessment</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="sheet-assessment">Exam / Assessment</label>
                 <select id="sheet-assessment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                     <!-- Injected via JS from assessmentsData -->
                 </select>
@@ -51,7 +60,7 @@
     <!-- Generated Table -->
     <div id="sheet-table-container" class="hidden bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden relative">
         <!-- Header Ribbon -->
-        <div class="bg-primary-50 dark:bg-primary-900/40 p-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center flex-wrap gap-2">
+        <div class="bg-primary-50  dark:bg-gray-800 p-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center flex-wrap gap-2">
             <div>
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="sheet-title-display">Mathematics - JSS 1</h3>
                 <p class="text-xs text-primary-600 dark:text-primary-400 font-semibold uppercase tracking-wide" id="sheet-asm-display">First Term CA 1 (Max Score: 20)</p>
@@ -64,10 +73,10 @@
         <div class="overflow-x-auto">
             <form id="marks-form" onsubmit="event.preventDefault()">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-900 dark:text-gray-300">
                         <tr>
                             <th scope="col" class="px-6 py-3 w-16">S/N</th>
-                            <th scope="col" class="px-6 py-3 min-w-[200px] sticky left-0 bg-gray-50 dark:bg-gray-700 z-10 w-full sm:w-auto">Student Name</th>
+                            <th scope="col" class="px-6 py-3 min-w-[200px] sticky left-0 bg-gray-50 dark:bg-gray-900 z-10 w-full sm:w-auto">Student Name</th>
                             <th scope="col" class="px-6 py-3 w-32">Admission No</th>
                             <th scope="col" class="px-6 py-3 w-40" id="sheet-score-col">Score ( /20)</th>
                             <th scope="col" class="px-6 py-3 w-16 text-center">Status</th>

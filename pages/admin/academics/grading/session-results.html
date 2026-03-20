@@ -13,28 +13,33 @@
         <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
             <form class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault(); window.loadSessionBroadsheet();">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Target Class</label>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Class</label>
                     <select id="sr-class" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
                         <!-- JS populated -->
                     </select>
                 </div>
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Section</label>
+                    <select id="sr-section" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        <option value="All Sections">All Sections</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Academic Session</label>
                     <select id="sr-session" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                        <option value="2024/2025">2024/2025</option>
+                        <option value="2023/2024">2023/2024</option>
+                        <option value="2024/2025" selected>2024/2025</option>
                         <option value="2025/2026">2025/2026</option>
                         <option value="2026/2027">2026/2027</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Report Template</label>
-                    <select id="sr-template" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                        <option value="annual">Annual Cumulative Format</option>
-                    </select>
-                </div>
                 <div class="flex items-end gap-2">
                     <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors dark:bg-primary-600 dark:hover:bg-primary-700 flex justify-center items-center shadow-sm">
-                        <i class="fas fa-chart-line mr-2"></i> Compute Broadsheet
+                        <i class="fas fa-search mr-2"></i> Compute
                     </button>
                 </div>
             </form>
@@ -74,36 +79,30 @@
     </div>
 </div>
 
-<!-- PREVIEW MODAL (FULL SCREEN REPORT CARD PREVIEW NATIVELY IN UI) -->
-<div id="sr-preview-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-[100] w-full p-4 overflow-x-hidden overflow-y-auto bg-gray-900/80 backdrop-blur-sm flex items-center justify-center">
-    <div class="relative w-full max-w-5xl max-h-full">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800 flex flex-col max-h-[90vh]">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 shrink-0">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="sr-preview-title">
-                    Annual Report Card Preview
-                </h3>
-                <div class="flex items-center gap-3">
-                    <button type="button" onclick="window.printSingleSessionReportCard()" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-4 py-2 shadow-sm transition-colors flex items-center">
-                        <i class="fas fa-print mr-2"></i> Print This Result
-                    </button>
-                    <button type="button" onclick="closeSessionPreviewModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
+<!-- PREVIEW MODAL -->
+    <div id="sr-preview-modal" tabindex="-1" class="hidden fixed inset-0 z-[100] w-full h-full overflow-y-auto bg-gray-900/95 backdrop-blur-sm flex-col items-center">
+        <!-- Floating Header -->
+        <div class="w-full max-w-5xl flex justify-between items-center p-4 md:p-6 sticky top-0 z-10 transition-all">
+            <h3 class="text-white font-bold text-sm md:text-xl drop-shadow-md truncate max-w-[50%]" id="sr-preview-title">
+                Annual Report Card Preview
+            </h3>
+            <div class="flex items-center gap-2 md:gap-4 shrink-0">
+                <button type="button" onclick="window.printSingleSessionReportCard()" class="text-gray-900 bg-white hover:bg-gray-100 font-bold rounded-full text-xs md:text-sm px-4 md:px-6 py-2 shadow-xl flex items-center transition-transform active:scale-95">
+                    <i class="fas fa-print mr-2"></i> <span class="hidden md:inline">Print Result</span><span class="md:hidden">Print</span>
+                </button>
+                <button type="button" onclick="closeSessionPreviewModal()" class="text-white bg-red-500 hover:bg-red-600 rounded-full w-8 h-8 md:w-10 md:h-10 flex justify-center items-center shadow-xl transition-transform active:scale-95">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <!-- Modal body -->
-            <div class="p-4 md:p-5 space-y-4 overflow-y-auto grow bg-gray-100 dark:bg-gray-900">
-                <div id="sr-preview-body" class="w-full max-w-[210mm] mx-auto bg-white shadow-xl min-h-[297mm]">
-                    <!-- Dynamic Print HTML Injected Here -->
-                </div>
+        </div>
+        
+        <!-- Scaled A4 Container -->
+        <div class="w-full flex-1 flex justify-center items-start pt-2 pb-20 overflow-x-hidden">
+            <div id="sr-preview-body" class="bg-white shadow-2xl origin-top transition-transform duration-300" style="width: 210mm; min-height: 297mm;">
+                <!-- Dynamic Print HTML Injected Here -->
             </div>
         </div>
     </div>
-</div>
 
 <!-- PRINT CONTAINER: Only visible during Window.print() / Ctrl+P -->
 <div id="sr-print-container" class="hidden print:block w-full bg-white print:bg-white text-black p-0 m-0 print:absolute print:top-0 print:left-0 print:z-[9999]">
@@ -132,13 +131,15 @@
     .print-page-break {
         page-break-after: always;
         break-after: page;
-        min-height: 100vh;
         width: 100%;
-        padding: 30px;
         box-sizing: border-box;
         overflow: hidden;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+    }
+    .print-page-break:last-child {
+        page-break-after: auto;
+        break-after: auto;
     }
 }
 </style>

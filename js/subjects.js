@@ -52,7 +52,6 @@
                             ${sub.type}
                         </span>
                     </div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-4">Code: ${sub.code}</p>
                     
                     <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Assigned Classes</p>
                         <div class="flex flex-wrap gap-y-2 items-center">
@@ -80,8 +79,7 @@
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
                 const filtered = subjectsData.filter(s => 
-                    s.name.toLowerCase().includes(term) || 
-                    s.code.toLowerCase().includes(term)
+                    s.name.toLowerCase().includes(term)
                 );
                 renderSubjectsGrid(filtered);
             });
@@ -101,7 +99,6 @@
             const subject = data.find(s => s.id === window.editingSubjectId);
             if (subject) {
                 document.getElementById('subjectName').value = subject.name;
-                document.getElementById('subjectCode').value = subject.code;
                 document.getElementById('subjectType').value = subject.type;
                 const deptSelect = document.getElementById('subjectDepartment');
                 if (deptSelect && subject.department) deptSelect.value = subject.department;
@@ -119,9 +116,8 @@
         addSubjectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('subjectName').value;
-            const code = document.getElementById('subjectCode').value;
             
-            if(name && code) {
+            if(name) {
                 alert(window.editingSubjectId ? 'Subject updated successfully! (Mock)' : 'Subject added successfully! (Mock)');
                 if(window.loadSubjectsPage) {
                     window.loadSubjectsPage();

@@ -73,22 +73,26 @@
     window.cmsApp = {
         load() {
             const cls  = document.getElementById('cms-class')?.value  || '';
+            const sec  = document.getElementById('cms-section')?.value || '';
+            const fullCls = (cls && sec && sec !== 'All Sections') ? `${cls}${sec}` : cls;
             const session = document.getElementById('cms-term')?.value || ''; // Interpreting term as session generically
-            _data = buildSheet(cls, session);
+            _data = buildSheet(fullCls, session);
             _filtered = [..._data];
             
             // Sort by cumulative grand total
             _filtered.sort((a,b) => b.grandCum - a.grandCum);
 
-            this.render(cls, session);
+            this.render(fullCls, session);
         },
 
         filter() {
             const q = (document.getElementById('cms-search')?.value || '').toLowerCase();
             _filtered = q ? _data.filter(s => s.name.toLowerCase().includes(q) || (s.admissionNo||'').toLowerCase().includes(q)) : [..._data];
             const cls  = document.getElementById('cms-class')?.value  || '';
+            const sec  = document.getElementById('cms-section')?.value || '';
+            const fullCls = (cls && sec && sec !== 'All Sections') ? `${cls}${sec}` : cls;
             const session = document.getElementById('cms-term')?.value || '';
-            this.render(cls, session);
+            this.render(fullCls, session);
         },
 
         render(cls, session) {
@@ -205,5 +209,6 @@
 
     // Auto-load
     document.getElementById('cms-class') && document.getElementById('cms-class').addEventListener('change', () => window.cmsApp.load());
+    document.getElementById('cms-section') && document.getElementById('cms-section').addEventListener('change', () => window.cmsApp.load());
 
 })();

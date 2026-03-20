@@ -95,20 +95,6 @@
             loadClassesPage(); // Go back
         });
 
-        // Toggle Department visibility if class level >= 10 (SSS 1 = 10, SSS 2 = 11, SSS 3 = 12)
-        const levelInput = document.getElementById('class-level');
-        const deptContainer = document.getElementById('department-container');
-        if (levelInput && deptContainer) {
-            levelInput.addEventListener('input', (e) => {
-                const lvl = parseInt(e.target.value);
-                if (lvl >= 10 && lvl <= 12) {
-                    deptContainer.classList.remove('hidden');
-                } else {
-                    deptContainer.classList.add('hidden');
-                    document.getElementById('class-department').value = 'General';
-                }
-            });
-        }
     }
 
     function populateTeacherDropdown(elementId) {

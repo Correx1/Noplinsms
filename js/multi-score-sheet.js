@@ -158,7 +158,7 @@
         const thead = document.getElementById('ms-head');
         let thHtml = `
             <tr>
-                <th scope="col" class="px-2 sm:px-4 py-3 min-w-[150px] sticky left-0 bg-gray-50 dark:bg-gray-700 z-20">Student Name</th>
+                <th scope="col" class="px-2 sm:px-4 py-3 min-w-[150px] sticky left-0 bg-gray-50 dark:bg-gray-900 dark:text-gray-300 z-20">Student Name</th>
         `;
         
         activeComponents.forEach(c => {
@@ -194,7 +194,7 @@
                 activeComponents.forEach(c => {
                     tdHtml += `
                         <td class="px-2 sm:px-4 py-2">
-                             <input type="number" min="0" max="${c.weight}" data-weight="${c.weight}" class="score-input bg-gray-50 border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-primary-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="0" oninput="window.calcMultiSheetRow(this)">
+                             <input type="number" min="0" max="${c.weight}" data-weight="${c.weight}" class="score-input bg-gray-50 border border-gray-300 text-gray-900 text-base sm:text-sm rounded-lg focus:ring-primary-500 block w-full min-w-[60px] p-2 sm:p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white h-10 sm:h-auto" placeholder="0" oninput="window.calcMultiSheetRow(this)">
                         </td>
                     `;
                 });
@@ -218,11 +218,12 @@
         const max = parseInt(inputEl.getAttribute('data-weight'));
         let val = parseFloat(inputEl.value);
         if(val > max) {
-            inputEl.value = max;
-            val = max;
+            alert(`Error: The mark entered exceeds the maximum limit of ${max} for this component.`);
+            inputEl.value = '';
+            val = 0;
         }
         if(val < 0) {
-            inputEl.value = 0;
+            inputEl.value = '';
             val = 0;
         }
 

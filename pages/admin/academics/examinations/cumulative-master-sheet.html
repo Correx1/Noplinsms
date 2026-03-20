@@ -1,22 +1,22 @@
 <!-- Cumulative Master Sheet Page -->
-<div class="p-4 sm:p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div class="p-3 sm:p-5 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
         <div>
             <nav class="flex mb-2">
-                <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <ol class="inline-flex items-center space-x-1 text-xs sm:text-sm font-medium md:space-x-2">
                     <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
                     <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadExaminationsPage()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Examinations</a></li>
                     <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">Cumulative Master Sheet</span></li>
                 </ol>
             </nav>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Cumulative Master Sheet</h1>
-            <p class="text-sm text-gray-500 mt-0.5">Consolidated academic performance across all subjects and terms for a class.</p>
+            <h1 class="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Cumulative Master Sheet</h1>
+            <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Consolidated academic performance across all subjects and terms for a class.</p>
         </div>
-        <div class="flex flex-wrap gap-2">
-            <button onclick="window.cmsApp.exportCSV()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto mt-2 md:mt-0">
+            <button onclick="window.cmsApp.exportCSV()" class="flex-1 sm:flex-none justify-center items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 dark:bg-gray-700 dark:text-white dark:border-gray-600 hover:bg-gray-50 rounded-lg transition-colors flex">
                 <i class="fas fa-file-csv"></i> Export CSV
             </button>
-            <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gray-700 hover:bg-gray-800 rounded-lg transition-colors">
+            <button onclick="window.print()" class="flex-1 sm:flex-none justify-center items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-gray-700 hover:bg-gray-800 rounded-lg transition-colors flex">
                 <i class="fas fa-print"></i> Print
             </button>
         </div>
@@ -24,15 +24,24 @@
 </div>
 
 <!-- Filters -->
-<div class="p-4 sm:px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-    <div class="flex flex-wrap gap-3 items-end">
+<div class="p-3 sm:p-5 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+    <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 items-end">
         <div>
             <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Class</label>
-            <select id="cms-class" onchange="window.cmsApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[130px]">
-                <option value="">All Classes</option>
-                <option>JSS1A</option><option>JSS1B</option><option>JSS2A</option><option>JSS2B</option>
-                <option>JSS3A</option><option>JSS3B</option><option>SSS1A</option><option>SSS1B</option>
-                <option>SSS2A</option><option>SSS2B</option><option>SSS3A</option><option>SSS3B</option>
+            <select id="cms-class" onchange="window.msApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[130px]">
+                <option value="">Select Class</option>
+                <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+                <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+            </select>
+        </div>
+        <div>
+            <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Section</label>
+            <select id="cms-section" onchange="window.msApp.load()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 min-w-[130px]">
+                <option value="All Sections">All Sections</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+                <option value="C">Section C</option>
+                <option value="D">Section D</option>
             </select>
         </div>
         <div>
@@ -45,41 +54,41 @@
                 <option>First Term 2025/2026</option>
             </select>
         </div>
-        <div>
+        <div class="col-span-2 sm:col-span-1">
             <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Search Student</label>
-            <input type="text" id="cms-search" oninput="window.cmsApp.filter()" placeholder="Name or ID…" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+            <input type="text" id="cms-search" oninput="window.cmsApp.filter()" placeholder="Name or ID…" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 w-full">
         </div>
-        <button onclick="window.cmsApp.load()" class="px-4 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
+        <button onclick="window.cmsApp.load()" class="col-span-2 sm:col-span-1 w-full justify-center px-4 py-2.5 sm:px-5 sm:py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg flex items-center">
             <i class="fas fa-sync-alt mr-1"></i> Generate
         </button>
     </div>
 </div>
 
 <!-- Summary Cards -->
-<div class="p-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
-        <div class="text-xs text-gray-500 uppercase">Total Students</div>
-        <div class="text-2xl font-bold text-primary-600" id="cms-total">—</div>
+<div class="p-3 sm:p-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="text-[10px] sm:text-xs text-gray-500 uppercase">Total Students</div>
+        <div class="text-xl sm:text-2xl font-bold text-primary-600" id="cms-total">—</div>
     </div>
-    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
-        <div class="text-xs text-gray-500 uppercase">Class Average</div>
-        <div class="text-2xl font-bold text-green-600" id="cms-avg">—</div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="text-[10px] sm:text-xs text-gray-500 uppercase">Class Average</div>
+        <div class="text-xl sm:text-2xl font-bold text-green-600" id="cms-avg">—</div>
     </div>
-    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
-        <div class="text-xs text-gray-500 uppercase">Distinction (≥70%)</div>
-        <div class="text-2xl font-bold text-blue-600" id="cms-distinction">—</div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="text-[10px] sm:text-xs text-gray-500 uppercase">Distinction (≥70%)</div>
+        <div class="text-xl sm:text-2xl font-bold text-blue-600" id="cms-distinction">—</div>
     </div>
-    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-4 shadow-sm">
-        <div class="text-xs text-gray-500 uppercase">Below Average</div>
-        <div class="text-2xl font-bold text-red-500" id="cms-below">—</div>
+    <div class="bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl p-3 sm:p-4 shadow-sm">
+        <div class="text-[10px] sm:text-xs text-gray-500 uppercase">Below Average</div>
+        <div class="text-xl sm:text-2xl font-bold text-red-500" id="cms-below">—</div>
     </div>
 </div>
 
 <!-- Master Sheet Table -->
-<div class="px-4 sm:px-6 pb-8">
+<div class="px-3 sm:px-5 pb-8">
     <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
-        <div class="p-4 border-b dark:border-gray-700 flex items-center justify-between">
-            <h2 class="font-semibold text-gray-900 dark:text-white">Student Performance Sheet</h2>
+        <div class="p-4 border-b dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h2 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">Student Performance Sheet</h2>
             <span class="text-xs text-gray-400" id="cms-label">Select filters and click Generate</span>
         </div>
         <div id="cms-table-wrapper">

@@ -383,6 +383,19 @@ window.loadAttendancePage = () => loadPage('attendance/student-attendance.html',
 
 
 // ============================================
+// OWNER & BRANCH SECTION
+// ============================================
+
+window.loadOwnerDashboard = () => loadPage('owner-dashboard.html', '../../js/owner-dashboard.js', 'owner-dashboard-script');
+window.loadBranchesPage = () => loadPage('branches.html', '../../js/branches.js', 'branches-script');
+
+// ============================================
+// DASHBOARD SECTION
+// ============================================
+
+window.loadAdminDashboard = () => loadPage('dashboard.html', '../../js/dashboard.js', 'dashboard-script');
+
+// ============================================
 // FINANCE SECTION
 // ============================================
 window.loadIncomePage = () => loadPage('finance/income.html', '../../js/income.js', 'income-script');

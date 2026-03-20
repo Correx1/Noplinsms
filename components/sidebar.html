@@ -6,9 +6,23 @@
   <div class="h-full px- pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
       <ul class="space-y-2 font-medium">
 
+         <!-- ══════════════ SUPER ADMIN ══════════════ -->
+         <li onclick="loadOwnerDashboard(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900 group">
+            <a href="#" class="w-full flex items-center">
+               <i class="fas fa-crown w-5 h-5 text-yellow-400 transition duration-75 group-hover:text-yellow-300"></i>
+               <span class="ms-3 font-bold tracking-wide">Owner</span>
+            </a>
+         </li>
+         <li onclick="loadBranchesPage(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900 group">
+            <a href="#" class="w-full flex items-center">
+               <i class="fas fa-sitemap w-5 h-5 text-white transition duration-75"></i>
+               <span class="ms-3 font-bold tracking-wide">Branch</span>
+            </a>
+         </li>
+
          <!-- Dashboard -->
          <li onclick="loadDashboardHome(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900 group active-nav-link">
-            <a href="dashboard.html" class="">
+            <a href="dashboard.html" class="w-full flex items-center">
                <i class="fas fa-home w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
                <span class="ms-3">Dashboard</span>
             </a>

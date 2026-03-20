@@ -10,6 +10,11 @@
     const tableBody = document.getElementById('promotion-table-body');
     const selectAllCheckbox = document.getElementById('checkbox-all-promotions');
     
+    // Rules and Filters
+    const ruleMinAverage = document.getElementById('rule-min-average');
+    const btnSaveRule = document.getElementById('btn-save-rule');
+    const filterStatus = document.getElementById('filter-status');
+    
     // Preview Modal Elements
     const previewBtn = document.getElementById('btn-preview-promotion');
     const finalizeBtn = document.getElementById('btn-finalize-promotion');
@@ -47,6 +52,49 @@
         
         previewBtn.addEventListener('click', showPreview);
         finalizeBtn.addEventListener('click', finalizePromotion);
+        
+        // Promotion Rule logic
+        const savedRule = localStorage.getItem('sms_promotion_rule') || 50;
+        if(ruleMinAverage) ruleMinAverage.value = savedRule;
+        if(btnSaveRule) btnSaveRule.addEventListener('click', savePromotionRule);
+        if(filterStatus) filterStatus.addEventListener('change', applyStatusFilter);
+        
+        // Listen to inline status changes for filters
+        tableBody.addEventListener('change', (e) => {
+            if(e.target.classList.contains('status-select')) {
+                applyStatusFilter();
+            }
+        });
+    }
+
+    function savePromotionRule() {
+        if(!ruleMinAverage) return;
+        const val = parseInt(ruleMinAverage.value);
+        if(isNaN(val) || val < 0 || val > 100) {
+            alert('Please enter a valid percentage between 0 and 100.');
+            return;
+        }
+        localStorage.setItem('sms_promotion_rule', val);
+        alert('Promotion rule saved. Minimum average set to ' + val + '%.');
+        if(currentStudents.length > 0) {
+            renderPromotionTable(toClassSelect.value); // Re-render to reflect new pass/fail statuses
+            applyStatusFilter();
+        }
+    }
+
+    function applyStatusFilter() {
+        if(!filterStatus) return;
+        const filterVal = filterStatus.value;
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const sel = row.querySelector('.status-select');
+            if(!sel) return;
+            if(filterVal === 'All' || sel.value === filterVal) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
 
     function populateClassDropdowns() {
@@ -100,49 +148,63 @@
         
         // Find target class object for section dropdowns
         const targetClassObj = classesData.find(c => c.name === targetClassName) || { sections: [{name: 'A'}] };
+        const rule = parseInt(localStorage.getItem('sms_promotion_rule') || 50);
 
         currentStudents.forEach((student, index) => {
             const tr = document.createElement('tr');
-            tr.className = 'bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600';
             
             // Auto-calculate new roll
             const nextRoll = (parseInt(student.roll) || 0) + 1; // Dummy logic
+            
+            // Pseudo-random mock average generation for demonstration
+            student.mockAverage = student.mockAverage || (30 + ((student.name.length * 13) % 65)); // Avg between 30 and 95
+            
+            const isPassing = student.mockAverage >= rule;
+            const bgClass = isPassing ? 'bg-white hover:bg-gray-50' : 'bg-red-50/60 hover:bg-red-50 border-red-200';
+            
+            tr.className = `${bgClass} border-b dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors`;
 
             tr.innerHTML = `
-                <td class="w-4 p-4">
+                <td class="w-4 p-4 align-middle">
                     <div class="flex items-center">
                         <input type="checkbox" class="promote-checkbox w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     </div>
                 </td>
                 <td class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                    <img class="w-10 h-10 rounded-full" src="${student.photo}" alt="${student.name}">
+                    <img class="w-10 h-10 rounded-full object-cover" src="${student.photo}" alt="${student.name}">
                     <div class="ps-3">
-                        <div class="text-base font-semibold">${student.name}</div>
+                        <div class="text-base font-semibold ${!isPassing ? 'text-red-900' : ''}">${student.name}</div>
                         <div class="font-normal text-gray-500">${student.id}</div>
                     </div>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 align-middle">
                     <div class="text-sm font-medium">${student.class} - ${student.section}</div>
                     <div class="text-xs text-gray-500">Roll: ${student.roll}</div>
                 </td>
-                <td class="px-6 py-4">
-                    <select class="status-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        <option value="Promote" selected>Promote</option>
-                        <option value="Hold" class="text-yellow-600">Hold / Repeat</option>
-                        <option value="Transfer" class="text-red-600">Transfer Out</option>
+                <td class="px-6 py-4 align-middle">
+                    <div class="text-xs font-bold mb-1.5 flex items-center justify-between">
+                        <span class="text-gray-500">Average:</span>
+                        <span class="${isPassing ? 'text-green-600 bg-green-50 px-2 py-0.5 rounded' : 'text-red-600 bg-red-100 px-2 py-0.5 rounded'}">${student.mockAverage}%</span>
+                    </div>
+                    <select class="status-select ${!isPassing ? 'border-red-300 bg-red-50' : 'bg-gray-50 border-gray-300'} text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors">
+                        <option value="Promote" class="font-bold text-gray-900" ${isPassing ? 'selected' : ''}>Promote</option>
+                        <option value="Hold" class="font-bold text-yellow-600" ${!isPassing ? 'selected' : ''}>Hold / Repeat</option>
+                        <option value="Transfer" class="font-bold text-red-600">Transfer Out</option>
                     </select>
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 align-middle">
                     <div class="grid grid-cols-2 gap-2">
-                        <select class="new-section-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <select class="new-section-select bg-gray-50 border ${!isPassing ? 'border-red-200 opacity-50' : 'border-gray-300'} text-gray-900 text-sm rounded-lg block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                              ${targetClassObj.sections.map(s => `<option value="${s.name}" ${s.name === student.section ? 'selected' : ''}>Sec ${s.name}</option>`).join('')}
                         </select>
-                        <input type="text" value="${student.roll}" class="new-roll-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Roll No">
+                        <input type="text" value="${nextRoll}" class="new-roll-input bg-gray-50 border ${!isPassing ? 'border-red-200 opacity-50' : 'border-gray-300'} text-gray-900 text-sm rounded-lg block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Roll No">
                     </div>
                 </td>
             `;
             tableBody.appendChild(tr);
         });
+        
+        applyStatusFilter(); // Ensure filter applies automatically after rendering
     }
 
     function toggleAllCheckboxes(e) {
@@ -157,6 +219,7 @@
                 if (select) select.value = status;
             }
         });
+        applyStatusFilter(); // update filters seamlessly
     }
 
     function showPreview() {

@@ -65,7 +65,7 @@
             subSelect.innerHTML += `<option value="${s.name}">${s.name}</option>`;
         });
 
-        asmSelect.innerHTML = '<option value="">-- Select Assessment --</option>';
+        asmSelect.innerHTML = '<option value="">-- Select Exam/Assessment --</option>';
         assessmentsData.forEach(a => {
             // Include class and marks in label to be helpful
             asmSelect.innerHTML += `<option value="${a.id}">${a.title} (${a.totalMarks} Marks) - ${a.class}</option>`;
@@ -118,7 +118,7 @@
                     <td class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap sticky left-0 bg-white dark:bg-gray-800 z-10 border-r dark:border-gray-700">${student.name}</td>
                     <td class="px-6 py-4 text-xs">${student.roll}</td>
                     <td class="px-6 py-4">
-                        <input type="number" min="0" max="${activeMaxScore}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2" placeholder="0" oninput="window.validateScore(this, ${activeMaxScore})" required>
+                        <input type="number" min="0" max="${activeMaxScore}" class="bg-gray-50 border border-gray-300 text-gray-900 text-lg sm:text-sm font-bold sm:font-normal rounded-lg focus:ring-primary-500 block w-full min-w-[80px] p-3 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2 h-12 sm:h-auto text-center sm:text-left" placeholder="0" oninput="window.validateScore(this, ${activeMaxScore})" required>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <i class="fas fa-circle text-gray-300 dark:text-gray-600 text-[10px]" title="Pending"></i>
@@ -135,11 +135,11 @@
     window.validateScore = function(input, max) {
         let val = parseFloat(input.value);
         if(val > max) {
-            input.value = max;
-            alert(`Maximum score allowed for this assessment is ${max}`);
+            alert(`Error: The mark entered exceeds the maximum limit of ${max}.`);
+            input.value = '';
         }
         if(val < 0) {
-            input.value = 0;
+            input.value = '';
         }
         
         // update status dot adjacent

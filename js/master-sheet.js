@@ -44,18 +44,22 @@
     window.msApp = {
         load() {
             const cls  = document.getElementById('cms-class')?.value  || '';
+            const sec  = document.getElementById('cms-section')?.value || '';
+            const fullCls = (cls && sec && sec !== 'All Sections') ? `${cls}${sec}` : cls;
             const term = document.getElementById('cms-term')?.value   || '';
-            _data = buildSheet(cls, term);
+            _data = buildSheet(fullCls, term);
             _filtered = [..._data];
-            this.render(cls, term);
+            this.render(fullCls, term);
         },
 
         filter() {
             const q = (document.getElementById('cms-search')?.value || '').toLowerCase();
             _filtered = q ? _data.filter(s => s.name.toLowerCase().includes(q) || (s.admissionNo||'').toLowerCase().includes(q)) : [..._data];
             const cls  = document.getElementById('cms-class')?.value  || '';
+            const sec  = document.getElementById('cms-section')?.value || '';
+            const fullCls = (cls && sec && sec !== 'All Sections') ? `${cls}${sec}` : cls;
             const term = document.getElementById('cms-term')?.value   || '';
-            this.render(cls, term);
+            this.render(fullCls, term);
         },
 
         render(cls, term) {
@@ -171,7 +175,8 @@
         }
     };
 
-    // Auto-load if class is set natively
+    // Auto-load if class or section is set natively
     document.getElementById('cms-class') && document.getElementById('cms-class').addEventListener('change', () => window.msApp.load());
+    document.getElementById('cms-section') && document.getElementById('cms-section').addEventListener('change', () => window.msApp.load());
 
 })();
