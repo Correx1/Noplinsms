@@ -74,9 +74,11 @@ Step 7. Result card generated
 **Page:** `grading/grading-components.html` · **JS:** `grading-components.js`
 
 ### Concept
+
 A **Grading Structure** is a named group of **score components** with percentage weights. Each structure is mapped to one or more classes. A class can belong to **only one structure** (strictly enforced).
 
 ### Default Structures
+
 ```json
 {
   "id": "STR-Junior",
@@ -91,6 +93,7 @@ A **Grading Structure** is a named group of **score components** with percentage
 ```
 
 ### Rules the Backend MUST Enforce
+
 1. Sum of component weights per structure must equal exactly **100%**
 2. Each class can belong to **at most one grading structure** — enforce with a UNIQUE constraint on `class_id` in the `grading_structure_classes` pivot table
 3. A component can optionally be **linked to an Assessment** (`assessment_id`) — if linked, the score is auto-pulled from assessment results; otherwise manually entered
@@ -129,19 +132,20 @@ CREATE TABLE grading_components (
 
 ### Default Boundaries (Nigerian WAEC System)
 
-| Grade | Min | Max | Remark |
-|-------|-----|-----|--------|
-| A1 | 75 | 100 | Excellent |
-| B2 | 70 | 74 | Very Good |
-| B3 | 65 | 69 | Good |
-| C4 | 60 | 64 | Credit |
-| C5 | 55 | 59 | Credit |
-| C6 | 50 | 54 | Credit |
-| D7 | 45 | 49 | Pass |
-| E8 | 40 | 44 | Pass |
-| F9 | 0  | 39 | Fail |
+| Grade | Min | Max | Remark    |
+| ----- | --- | --- | --------- |
+| A1    | 75  | 100 | Excellent |
+| B2    | 70  | 74  | Very Good |
+| B3    | 65  | 69  | Good      |
+| C4    | 60  | 64  | Credit    |
+| C5    | 55  | 59  | Credit    |
+| C6    | 50  | 54  | Credit    |
+| D7    | 45  | 49  | Pass      |
+| E8    | 40  | 44  | Pass      |
+| F9    | 0   | 39  | Fail      |
 
 ### Grade Lookup Algorithm (Must replicate in Laravel)
+
 ```php
 // Sort descending by min_score, then find first match
 $grade = GradeBoundary::where('branch_id', $branchId)
@@ -151,6 +155,7 @@ $grade = GradeBoundary::where('branch_id', $branchId)
 ```
 
 ### Laravel Table
+
 ```sql
 CREATE TABLE grade_boundaries (
     id BIGINT PK,
@@ -170,6 +175,7 @@ CREATE TABLE grade_boundaries (
 **Pages:** `marks/marks.html`, `grading/score-sheets.html`, `grading/multi-score-sheet.html`
 
 ### Individual Score Record
+
 ```json
 {
   "student_id": "STU006",
@@ -185,6 +191,7 @@ CREATE TABLE grade_boundaries (
 > One database row per **student × component × subject × term**. The total is always computed server-side, never stored directly.
 
 ### Computing a Student's Subject Total
+
 ```sql
 SELECT SUM(score) as total
 FROM scores
@@ -193,6 +200,7 @@ WHERE student_id = ? AND subject_id = ? AND term_id = ?
 ```
 
 ### Computing Position in Class
+
 ```sql
 SELECT student_id,
        SUM(score) as subject_total,
@@ -203,6 +211,7 @@ GROUP BY student_id;
 ```
 
 ### Laravel Table
+
 ```sql
 CREATE TABLE scores (
     id BIGINT PK,
@@ -226,6 +235,7 @@ CREATE TABLE scores (
 **Page:** `grading/result-settings.html` · **JS:** `result-settings.js`
 
 ### Full Settings Object
+
 ```json
 {
   "session": "2024/2025",
@@ -236,8 +246,18 @@ CREATE TABLE scores (
   "principal_name": "Mr. Adewale Babatunde",
   "principal_title": "Principal / Director",
   "active_template": "classic",
-  "domains": ["Discipline","Neatness","Attentiveness","Punctuality","Leadership"],
-  "psychomotor_domains": ["Handwriting","Drawing & Painting","Verbal Fluency"],
+  "domains": [
+    "Discipline",
+    "Neatness",
+    "Attentiveness",
+    "Punctuality",
+    "Leadership"
+  ],
+  "psychomotor_domains": [
+    "Handwriting",
+    "Drawing & Painting",
+    "Verbal Fluency"
+  ],
   "principal_sign": "base64_or_url",
   "headteacher_sign": "base64_or_url",
   "times_opened": 110,
@@ -250,20 +270,24 @@ CREATE TABLE scores (
 }
 ```
 
+<!-- Nothing will be hardcoded -->
+
 ### Template Selection
+
 `active_template` selects which layout is used: `classic`, `modern`, or `elegant`. Each template declares **capabilities** (which sections it supports). The UI hides/shows setting fields based on these capabilities.
 
-| Capability | Meaning |
-|-----------|---------|
-| `affectiveDomains` | Show behavioral scores section |
+| Capability           | Meaning                         |
+| -------------------- | ------------------------------- |
+| `affectiveDomains`   | Show behavioral scores section  |
 | `psychomotorDomains` | Show psychomotor skills section |
-| `teacherRemark` | Show teacher's comment field |
-| `headTeacherRemark` | Show head teacher comment |
-| `principalRemark` | Show principal comment |
-| `attendance` | Show attendance summary |
-| `schoolBills` | Show fees/bills section |
+| `teacherRemark`      | Show teacher's comment field    |
+| `headTeacherRemark`  | Show head teacher comment       |
+| `principalRemark`    | Show principal comment          |
+| `attendance`         | Show attendance summary         |
+| `schoolBills`        | Show fees/bills section         |
 
 ### Laravel Table: `result_settings`
+
 ```sql
 CREATE TABLE result_settings (
     id BIGINT PK,
@@ -295,15 +319,17 @@ CREATE TABLE result_settings (
 After generating the broadsheet, each student row has an **"Add Domains"** button. Clicking it opens a modal where the teacher rates the student on behavioral and skill domains.
 
 ### Rating Scale
-| Score | Label |
-|-------|-------|
-| 5 | Excellent |
-| 4 | Good |
-| 3 | Fair |
-| 2 | Poor |
-| 1 | Very Poor |
+
+| Score | Label     |
+| ----- | --------- |
+| 5     | Excellent |
+| 4     | Good      |
+| 3     | Fair      |
+| 2     | Poor      |
+| 1     | Very Poor |
 
 ### Evaluation Object
+
 ```json
 {
   "student_id": "STU001",
@@ -320,6 +346,7 @@ After generating the broadsheet, each student row has an **"Add Domains"** butto
 ```
 
 ### Laravel Table: `student_result_evaluations`
+
 ```sql
 CREATE TABLE student_result_evaluations (
     id BIGINT PK,
@@ -344,6 +371,7 @@ CREATE TABLE student_result_evaluations (
 This is the central function in `result-sheets.js`. It assembles all data into a single **payload object** passed to the active template's `renderTerm(payload)` function.
 
 ### Payload Structure
+
 ```json
 {
   "_templateId": "classic",
@@ -438,8 +466,9 @@ GET /api/v1/result-sheets?section_id=S006&term_id=TM002&academic_year_id=AY002
 ```
 
 ### Grade Derivation Flow (must happen server-side)
+
 ```
-scores.score (per component) 
+scores.score (per component)
   → SUM per student per subject per term = subject_total
   → lookup grade_boundaries WHERE subject_total BETWEEN min AND max
   → returns grade (A1) + remark (Excellent)
@@ -456,6 +485,7 @@ scores.score (per component)
 Annual result combines all 3 terms into one cumulative report.
 
 ### Formula
+
 ```
 Annual Score per Subject = (Term1_total + Term2_total + Term3_total) / 3
 Annual Grand Total = SUM of all annual subject scores
@@ -463,6 +493,7 @@ Annual Position = RANK by annual grand total
 ```
 
 ### Laravel Query
+
 ```sql
 SELECT
     s.student_id,
@@ -480,6 +511,7 @@ GROUP BY term_totals.student_id, term_totals.subject_id;
 ```
 
 ### API Endpoint
+
 ```
 GET /api/v1/session-results?section_id=S006&academic_year_id=AY002
 ```
@@ -527,23 +559,23 @@ student_evaluations  result_settings       school_profile
 
 ## 10. Laravel API Endpoints Summary
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/grade-boundaries` | List grade boundaries |
-| POST/PUT/DELETE | `/api/v1/grade-boundaries/{id}` | CRUD |
-| GET | `/api/v1/grading-structures` | All structures with components |
-| POST | `/api/v1/grading-structures` | Create structure |
-| POST | `/api/v1/grading-structures/{id}/components` | Add component |
-| PUT/DELETE | `/api/v1/grading-structures/{id}/components/{cid}` | Edit/delete |
-| GET | `/api/v1/scores?section_id=&subject_id=&term_id=` | Scores for mark entry |
-| POST | `/api/v1/scores/bulk` | Bulk score submission |
-| GET | `/api/v1/result-sheets` | Full broadsheet — the main result engine |
-| GET | `/api/v1/result-sheets/student/{id}` | Single student result data |
-| POST | `/api/v1/student-evaluations` | Save domain evaluations |
-| GET | `/api/v1/student-evaluations/{student_id}` | Fetch evaluations |
-| GET | `/api/v1/session-results` | Annual broadsheet |
-| GET/PUT | `/api/v1/result-settings` | Get/save result settings |
+| Method          | Endpoint                                           | Description                              |
+| --------------- | -------------------------------------------------- | ---------------------------------------- |
+| GET             | `/api/v1/grade-boundaries`                         | List grade boundaries                    |
+| POST/PUT/DELETE | `/api/v1/grade-boundaries/{id}`                    | CRUD                                     |
+| GET             | `/api/v1/grading-structures`                       | All structures with components           |
+| POST            | `/api/v1/grading-structures`                       | Create structure                         |
+| POST            | `/api/v1/grading-structures/{id}/components`       | Add component                            |
+| PUT/DELETE      | `/api/v1/grading-structures/{id}/components/{cid}` | Edit/delete                              |
+| GET             | `/api/v1/scores?section_id=&subject_id=&term_id=`  | Scores for mark entry                    |
+| POST            | `/api/v1/scores/bulk`                              | Bulk score submission                    |
+| GET             | `/api/v1/result-sheets`                            | Full broadsheet — the main result engine |
+| GET             | `/api/v1/result-sheets/student/{id}`               | Single student result data               |
+| POST            | `/api/v1/student-evaluations`                      | Save domain evaluations                  |
+| GET             | `/api/v1/student-evaluations/{student_id}`         | Fetch evaluations                        |
+| GET             | `/api/v1/session-results`                          | Annual broadsheet                        |
+| GET/PUT         | `/api/v1/result-settings`                          | Get/save result settings                 |
 
 ---
 
-*See [EXAMINATION.md](./EXAMINATION.md) for exam scheduling and question banks that feed into score components.*
+_See [EXAMINATION.md](./EXAMINATION.md) for exam scheduling and question banks that feed into score components._
