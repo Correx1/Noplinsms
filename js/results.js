@@ -63,10 +63,12 @@
         if(!clsValue) return;
 
         // Generate exactly 10 mock students (like Result Sheets)
+        const sectionsList = ['A', 'B', 'C', 'D'];
         let students = Array.from({length: 10}, (_, i) => ({
             id: `STD-M-${i+1}`,
             name: `Student Model ${i+1}`,
-            roll: `00${i+1}`
+            roll: `00${i+1}`,
+            section: sectionsList[i % sectionsList.length]
         }));
 
         // Limit to 12 active subjects for visual feasibility
@@ -128,7 +130,8 @@
                     <td class="px-6 py-3 font-medium text-gray-900 dark:text-white sticky left-0 z-20 ${rowClass} border-r border-gray-200 dark:border-gray-600 text-left shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                         <div class="flex flex-col">
                             <span class="truncate block w-40 font-bold text-sm" title="${rec.student.name}">${rec.student.name}</span>
-                            <span class="text-xs text-gray-500 font-normal">Pos: <span class="badge bg-primary-100 text-primary-800 px-1 py-0.5 rounded font-bold">${position}</span> | Roll: ${rec.student.roll}</span>
+                            <span class="text-xs text-gray-500 font-normal">Pos: <span class="badge bg-primary-100 text-primary-800 px-1 py-0.5 rounded font-bold">${position}</span> &nbsp;|&nbsp; Roll: ${rec.student.roll}</span>
+                            <span class="text-xs mt-0.5"><span class="inline-block bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 px-1.5 py-0.5 rounded font-bold text-[10px]">Section ${rec.student.section}</span></span>
                         </div>
                     </td>
             `;

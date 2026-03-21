@@ -107,10 +107,20 @@
             // High-level Stats
             const avgs = _filtered.map(s => s.avgCum);
             const classAvg = Math.round(avgs.reduce((a,b)=>a+b,0)/avgs.length);
+
+            // Best & Least student
+            const sorted = [..._filtered].sort((a, b) => b.avgCum - a.avgCum);
+            const best   = sorted[0];
+            const least  = sorted[sorted.length - 1];
+            const passCount = avgs.filter(a => a >= 50).length;
+            const passRate  = Math.round((passCount / avgs.length) * 100);
+
             document.getElementById('cms-total').textContent = _filtered.length;
-            document.getElementById('cms-avg').textContent = classAvg + '%';
-            document.getElementById('cms-distinction').textContent = avgs.filter(a => a >= 70).length;
-            document.getElementById('cms-below').textContent = avgs.filter(a => a < 50).length;
+            document.getElementById('cms-best-score').textContent  = best  ? `${best.avgCum}%`  : '—';
+            document.getElementById('cms-best-name').textContent   = best  ? best.name           : '—';
+            document.getElementById('cms-least-score').textContent = least ? `${least.avgCum}%`  : '—';
+            document.getElementById('cms-least-name').textContent  = least ? least.name          : '—';
+            document.getElementById('cms-pass-rate').textContent   = `${passRate}%`;
             document.getElementById('cms-label').textContent = `${cls || 'All Classes'} — CUMULATIVE SESSION: ${session || '2024/2025'}`;
 
             // Build Matrix Headers (T1, T2, T3, CUM per Subject)
@@ -180,30 +190,112 @@
 
         exportCSV() {
             if (_filtered.length === 0) { alert('Generate data first.'); return; }
-            const cls = document.getElementById('cms-class')?.value || 'All';
-            const session = document.getElementById('cms-term')?.value || 'All';
-            
-            let headers = ['Pos', 'Student Name'];
-            SUBJECTS.forEach(sub => {
-                headers.push(`${sub} (T1)`, `${sub} (T2)`, `${sub} (T3)`, `${sub} (CUM)`);
-            });
-            headers.push('Total Cum', 'Avg Cum %', 'Grade', 'Remark');
+            const cls     = document.getElementById('cms-class')?.value  || 'All';
+            const session = document.getElementById('cms-term')?.value   || 'All';
 
+            // Row 1: group headers — subject name then 3 blank cells (mirrors colspan="4" on screen)
+            const groupRow1 = ['Pos', 'Student Name'];
+            SUBJECTS.forEach(sub => {
+                groupRow1.push(`"${sub}"`, '', '', '');   // subject + 3 empty = 4 cols
+            });
+            groupRow1.push('Total Cum', 'Avg %', 'Grade', 'Remark');
+
+            // Row 2: sub-column headers
+            const groupRow2 = ['', ''];
+            SUBJECTS.forEach(() => {
+                groupRow2.push('T1', 'T2', 'T3', 'CUM');
+            });
+            groupRow2.push('', '', '', '');
+
+            // Data rows — CUM shows "score (grade)", T1/T2/T3 show plain score
             const rows = _filtered.map((s, i) => {
-                let row = [i+1, `"${s.name}"`];
-                s.subs.forEach(sg => row.push(sg.t1, sg.t2, sg.t3, sg.cum));
-                row.push(s.grandCum, s.avgCum, grade(s.avgCum).g, grade(s.avgCum).r);
+                const row = [i + 1, `"${s.name}"`];
+                s.subs.forEach(sg => {
+                    const g = grade(sg.cum);
+                    row.push(sg.t1, sg.t2, sg.t3, `"${sg.cum} (${g.g})"`);
+                });
+                const ag = grade(s.avgCum);
+                row.push(s.grandCum, `${s.avgCum}%`, ag.g, ag.r);
                 return row;
             });
 
-            const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+            const csv = [groupRow1, groupRow2, ...rows].map(r => r.join(',')).join('\n');
             const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
             a.href = url;
-            a.download = `3-Term-CumulativeMasterSheet_${cls}_${session.replace(/\//g,'-')}.csv`;
+            a.download = `CumulativeMasterSheet_${cls}_${(session || 'All').replace(/\//g, '-')}.csv`;
             a.click();
             URL.revokeObjectURL(url);
+        },
+
+        printTable() {
+            if (_filtered.length === 0) { alert('Generate data first.'); return; }
+            const cls     = document.getElementById('cms-class')?.value || 'All Classes';
+            const session = document.getElementById('cms-term')?.value  || '2024/2025';
+            const label   = `${cls} — Cumulative Session: ${session}`;
+
+            const thStyle = 'border:1px solid #ccc;padding:5px 4px;font-size:10px;background:#1e429f;color:#fff;text-align:center;';
+            const thCumStyle = 'border:1px solid #ccc;padding:5px 4px;font-size:10px;background:#1e3a8a;color:#fff;text-align:center;font-weight:900;';
+
+            // Group headers (one per subject, spanning 4 sub-cols)
+            const groupThs = SUBJECTS.map(s =>
+                `<th colspan="4" style="${thStyle}">${s}</th>`
+            ).join('');
+
+            // Sub-column headers (T1 T2 T3 CUM × number of subjects)
+            const subThs = SUBJECTS.map(() =>
+                `<th style="${thStyle}">T1</th><th style="${thStyle}">T2</th><th style="${thStyle}">T3</th><th style="${thCumStyle}">CUM</th>`
+            ).join('');
+
+            const bodyRows = _filtered.map((s, idx) => {
+                const g = grade(s.avgCum);
+                const color = s.avgCum >= 70 ? '#15803d' : s.avgCum >= 50 ? '#1d4ed8' : s.avgCum >= 45 ? '#ca8a04' : '#dc2626';
+                const subCells = s.subs.map(sg => {
+                    const cg = grade(sg.cum);
+                    const cc = sg.cum >= 70 ? '#15803d' : sg.cum >= 50 ? '#1d4ed8' : sg.cum >= 45 ? '#ca8a04' : '#dc2626';
+                    return `<td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t1}</td>
+                            <td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t2}</td>
+                            <td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t3}</td>
+                            <td style="border:2px solid #1e429f;padding:4px;text-align:center;font-size:11px;font-weight:900;color:${cc};">${sg.cum}</td>`;
+                }).join('');
+                return `<tr style="background:${idx%2===0?'#fff':'#f9fafb'}">
+                    <td style="border:1px solid #ccc;padding:4px 6px;text-align:center;font-size:11px;font-weight:700;">${idx+1}</td>
+                    <td style="border:1px solid #ccc;padding:4px 8px;font-size:11px;font-weight:600;white-space:nowrap;">${s.name}</td>
+                    ${subCells}
+                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:800;font-size:12px;">${s.grandCum}</td>
+                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:700;color:${color};font-size:12px;">${s.avgCum}%</td>
+                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:700;color:${color};font-size:11px;">${g.g}</td>
+                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-size:11px;">${g.r}</td>
+                </tr>`;
+            }).join('');
+
+            const html = `<!DOCTYPE html><html><head><title>${label}</title>
+                <style>body{font-family:Arial,sans-serif;margin:12px;}h2{font-size:14px;margin-bottom:6px;}table{border-collapse:collapse;width:100%;font-size:10px;}@media print{@page{size:landscape;}}</style>
+            </head><body>
+                <h2>${label}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="${thStyle}">Pos</th>
+                            <th rowspan="2" style="${thStyle}">Student Name</th>
+                            ${groupThs}
+                            <th rowspan="2" style="${thStyle}">Total Cum</th>
+                            <th rowspan="2" style="${thStyle}">Avg%</th>
+                            <th rowspan="2" style="${thStyle}">Grade</th>
+                            <th rowspan="2" style="${thStyle}">Remark</th>
+                        </tr>
+                        <tr>${subThs}</tr>
+                    </thead>
+                    <tbody>${bodyRows}</tbody>
+                </table>
+            </body></html>`;
+
+            const win = window.open('', '_blank', 'width=1400,height=900');
+            win.document.write(html);
+            win.document.close();
+            win.focus();
+            setTimeout(() => win.print(), 500);
         }
     };
 

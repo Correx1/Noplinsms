@@ -33,141 +33,150 @@
     loadOcrLibs();
 
     window.downloadBlankSheet = function() {
-        if (typeof html2pdf === 'undefined' || typeof QRCode === 'undefined') {
-            alert('Libraries are still loading. Please try again in a few seconds.');
-            return;
-        }
-
         const cls = document.getElementById('ms-class').value;
         const sec = document.getElementById('ms-section').value;
         const sub = document.getElementById('ms-subject').value;
         const ses = document.getElementById('ms-session').value;
         const trm = document.getElementById('ms-term').value;
 
-        if (!cls || !sub) {
-            alert("Please generate a class sheet first.");
-            return;
-        }
+        if (!cls || !sub) { alert('Please generate a class sheet first.'); return; }
 
-        // Fill Metadata Dynamically from Settings
-        let schoolName = "EXCELLENCE INTERNATIONAL SCHOOL";
-        let schoolAddr = "14 Unity Road, Ikeja, Lagos";
-        let schoolMot = "Knowledge is Power";
-        
-        const settingsRaw = localStorage.getItem('sms_settings');
-        if (settingsRaw) {
-            try {
-                const settings = JSON.parse(settingsRaw);
-                if (settings.schoolName) schoolName = settings.schoolName.toUpperCase();
-                if (settings.schoolAddress) schoolAddr = settings.schoolAddress;
-                if (settings.schoolMotto) schoolMot = settings.schoolMotto;
-            } catch(e) {}
-        }
+        // School info
+        let schoolName = 'EXCELLENCE INTERNATIONAL SCHOOL';
+        let schoolAddr = '14 Unity Road, Ikeja, Lagos';
+        let schoolMot  = 'Knowledge is Power';
+        try {
+            const s = JSON.parse(localStorage.getItem('sms_settings') || '{}');
+            if (s.schoolName)    schoolName = s.schoolName.toUpperCase();
+            if (s.schoolAddress) schoolAddr = s.schoolAddress;
+            if (s.schoolMotto)   schoolMot  = s.schoolMotto;
+        } catch(e) {}
 
-        const qrContent = JSON.stringify({ class: cls, section: sec, subject: sub, session: ses, term: trm });
-        const printContainer = document.getElementById('print-sheet-content');
-        printContainer.innerHTML = '';
-        
-        let currentStudents = window.lastRenderedStudents || [];
-        let sortedStudents = [...currentStudents].sort((a, b) => a.name.localeCompare(b.name));
-        
-        const STUDENTS_PER_PAGE = 15; // Reduced from 20 to guarantee NO footer overlap
+
+        const sortedStudents = [...(window.lastRenderedStudents || [])].sort((a, b) => a.name.localeCompare(b.name));
+        const PPP = 20;
         const chunks = [];
-        for (let i = 0; i < sortedStudents.length; i += STUDENTS_PER_PAGE) {
-            chunks.push(sortedStudents.slice(i, i + STUDENTS_PER_PAGE));
-        }
-        
-        if (chunks.length === 0) chunks.push([]); // Handle empty class edge case
-        
-        chunks.forEach((chunk, pageIndex) => {
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'html2pdf__page-break';
-            pageDiv.style.cssText = "width: 210mm; height: 292mm; overflow: hidden; padding: 5mm 15mm 15mm 15mm; box-sizing: border-box; background: white; position: relative;";
-            
-            let html = `
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px;">
-                    <div style="flex: 1; color: #000;">
-                        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">${schoolName}</h1>
-                        <p style="margin: 2px 0; font-size: 13px; font-style: italic; font-weight: 600;">"${schoolMot}"</p>
-                        <p style="margin: 2px 0 0 0; font-size: 12px;">${schoolAddr}</p>
-                        <h2 style="margin: 10px 0 0 0; font-size: 15px; font-weight: bold; text-transform: uppercase;">Official Score Sheet (Page ${pageIndex + 1} of ${chunks.length})</h2>
-                    </div>
-                    <div id="qr-container-p${pageIndex}" style="width: 70px; height: 70px; border: 1px solid #000; padding: 2px;"></div>
-                </div>
-                
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 10px; font-size: 13px; background: #fff; padding: 8px; border: 1px solid #000; color: #000;">
-                    <div><strong>Class:</strong> ${cls}</div>
-                    <div><strong>Section:</strong> ${sec}</div>
-                    <div><strong>Subject:</strong> ${sub}</div>
-                    <div><strong>Session:</strong> ${ses}</div>
-                    <div><strong>Term:</strong> ${trm}</div>
-                </div>
-                
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #000;">
-                    <thead>
-                        <tr style="background-color: #fff;">
-                            <th style="border: 1px solid #000; padding: 4px; text-align: left; width: 30px;">S/N</th>
-                            <th style="border: 1px solid #000; padding: 4px; text-align: left;">Student Name</th>
-            `;
-            
-            activeComponents.forEach(comp => {
-                html += `<th style="border: 1px solid #000; padding: 4px; text-align: center; width: 80px;">${comp.name}<br><small>(${comp.weight}%)</small></th>`;
-            });
-            
-            html += `</tr></thead><tbody>`;
-            
-            chunk.forEach((student, localIndex) => {
-                const globalIndex = (pageIndex * STUDENTS_PER_PAGE) + localIndex + 1;
-                html += `<tr style="background-color: #fff; color: #000;">
-                    <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold;">${globalIndex}</td>
-                    <td style="border: 1px solid #000; padding: 4px; font-weight: 600;">${student.name} <br><small style="color:#000; font-size:10px; font-weight: normal;">${student.roll}</small></td>
-                `;
-                activeComponents.forEach(() => {
-                    html += `<td style="border: 1px solid #000; padding: 4px;"></td>`;
-                });
-                html += `</tr>`;
-            });
-            
-             html += `</tbody></table>
-                <div style="position: absolute; bottom: 15mm; left: 15mm; right: 15mm; display: flex; justify-content: space-between; font-size: 12px; color: #000;">
-                    <div>
-                        <p>Teacher's Name: _______________________</p>
-                        <p>Signature & Date: _______________________</p>
-                    </div>
-                    <div style="text-align: right;">
-                        <p>Please write scores clearly inside the boxes.</p>
-                        <p>DO NOT write outside the borders.</p>
-                    </div>
-                </div>
-            `;
-            
-            pageDiv.innerHTML = html;
-            printContainer.appendChild(pageDiv);
-            
-            // Generate QR code for this specific page
-            new QRCode(pageDiv.querySelector(`#qr-container-p${pageIndex}`), {
-                text: qrContent,
-                width: 76,
-                height: 76,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-            });
-        });
+        for (let i = 0; i < sortedStudents.length; i += PPP) chunks.push(sortedStudents.slice(i, i + PPP));
+        if (!chunks.length) chunks.push([]);
 
-        // Trigger PDF Download
-        const element = document.getElementById('print-sheet-content');
-        if (typeof showToast === 'function') showToast('Generating official worksheet PDF...', 'info');
-        
-        const opt = {
-            margin:       0,
-            filename:     `${cls}_${sub}_Worksheet.pdf`,
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: false },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak:    { mode: ['css', 'legacy'] }
+        const totalPages = chunks.length;
+        const qrData = encodeURIComponent(JSON.stringify({ class: cls, section: sec, subject: sub, session: ses, term: trm }));
+        const qrUrl  = `https://api.qrserver.com/v1/create-qr-code/?size=70x70&data=${qrData}&margin=0`;
+
+        // Build one HTML page per chunk
+        const buildPage = (chunk, pageIdx) => {
+            let thCells = `<th class="sn">S/N</th><th class="name">STUDENT NAME</th>`;
+            activeComponents.forEach(c => {
+                thCells += `<th class="score">${c.name.toUpperCase()}<br><span class="sub">(${c.weight}%)</span></th>`;
+            });
+            thCells += `<th class="score">TOTAL<br><span class="sub">/100</span></th>`;
+
+            let rows = '';
+            for (let r = 0; r < PPP; r++) {
+                const student  = chunk[r];
+                const globalNo = pageIdx * PPP + r + 1;
+                const shade    = r % 2 === 1 ? ' shade' : '';
+                const sn       = student ? globalNo : '';
+                const name     = student ? student.name.toUpperCase() : '';
+                let tds = `<td class="sn${shade}">${sn}</td><td class="name${shade}">${name}</td>`;
+                activeComponents.forEach(() => { tds += `<td class="score${shade}"></td>`; });
+                tds += `<td class="score${shade}"></td>`;
+                rows += `<tr>${tds}</tr>`;
+            }
+
+            return `
+            <div class="page">
+                <div class="header">
+                    <div class="school-info">
+                        <div class="school-name">${schoolName}</div>
+                        <div class="school-mot">&ldquo;${schoolMot}&rdquo;</div>
+                        <div class="school-addr">${schoolAddr}</div>
+                        <div class="sheet-title">OFFICIAL SCORE SHEET &nbsp;&mdash;&nbsp; Page ${pageIdx + 1} of ${totalPages}</div>
+                    </div>
+                    <img class="qr" src="${qrUrl}" alt="QR">
+                </div>
+                <div class="meta">
+                    <span><b>Class:</b> ${cls}</span>
+                    <span><b>Section:</b> ${sec || '&mdash;'}</span>
+                    <span><b>Subject:</b> ${sub}</span>
+                    <span><b>Term:</b> ${trm}</span>
+                    <span><b>Session:</b> ${ses}</span>
+                </div>
+                <table>
+                    <thead><tr>${thCells}</tr></thead>
+                    <tbody>${rows}</tbody>
+                </table>
+                <div class="footer">
+                    <div class="sign-line">
+                        <span>Teacher&rsquo;s Name: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+                        <span>Signature: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+                        <span>Date: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+                    </div>
+                    <div class="note">Write scores inside boxes. DO NOT alter this sheet.</div>
+                </div>
+            </div>`;
         };
-        
-        html2pdf().set(opt).from(element).save();
+
+        const allPages = chunks.map((chunk, i) => buildPage(chunk, i)).join('');
+
+        const win = window.open('', '_blank', 'width=900,height=700');
+        win.document.write(`<!DOCTYPE html><html><head>
+        <meta charset="UTF-8">
+        <title>${cls} ${sub} Score Sheet</title>
+        <style>
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family:Arial,Helvetica,sans-serif; background:#fff; color:#000; }
+
+            @page { size:A4 portrait; margin:0; }
+
+            .page {
+                width:210mm; height:297mm;
+                padding:8mm 10mm;
+                display:flex; flex-direction:column;
+                page-break-after:always; overflow:hidden;
+            }
+            .page:last-child { page-break-after:auto; }
+
+            .header { display:flex; justify-content:space-between; align-items:flex-start;
+                      border-bottom:2px solid #000; padding-bottom:3mm; margin-bottom:2.5mm; flex-shrink:0; }
+            .school-name { font-size:15pt; font-weight:900; text-transform:uppercase; line-height:1; }
+            .school-mot  { font-size:8pt; font-style:italic; font-weight:600; margin:1mm 0 0.5mm; }
+            .school-addr { font-size:8pt; margin-bottom:2mm; }
+            .sheet-title { font-size:9.5pt; font-weight:900; text-transform:uppercase; }
+            .qr { width:20mm; height:20mm; flex-shrink:0; border:1px solid #000; }
+
+            .meta { display:flex; gap:5mm; font-size:8pt; font-weight:700;
+                    border:1px solid #000; padding:1.5mm 3mm; margin-bottom:2mm; flex-shrink:0; }
+
+            table { width:100%; border-collapse:collapse; table-layout:fixed; flex:1; font-size:8pt; }
+            thead tr { background:#1a1a2e; color:#fff; }
+            th { border:1px solid #000; padding:2px; text-align:center; font-size:7pt; line-height:1.2; }
+            th.sn   { width:8mm; }
+            th.name { text-align:left; padding-left:5px; }
+            th.score { width:22mm; }
+            .sub { font-size:6pt; font-weight:400; }
+
+            td { border:1px solid #000; padding:0; vertical-align:middle; }
+            td.sn   { width:8mm; text-align:center; font-weight:700; font-size:8pt; }
+            td.name { padding-left:5px; font-weight:600; font-size:8pt; text-transform:uppercase;
+                      overflow:hidden; white-space:nowrap; }
+            td.score { width:22mm; text-align:center; }
+            .shade { background:#f0f0f0; }
+
+            /* 297 - 16pad - 26header - 9meta - 10footer = 236mm / 20 rows = 11.8mm */
+            tbody tr { height:11.7mm; }
+
+            .footer { display:flex; justify-content:space-between; align-items:flex-end;
+                      border-top:1px solid #000; margin-top:2mm; padding-top:2mm;
+                      font-size:7.5pt; font-weight:600; flex-shrink:0; }
+            .sign-line { display:flex; gap:6mm; }
+            .sign-line u { text-decoration:none; border-bottom:1px solid #000; display:inline-block; }
+            .note { font-size:6.5pt; color:#444; text-align:right; line-height:1.4; }
+        </style>
+        </head><body>${allPages}</body></html>`);
+        win.document.close();
+        win.focus();
+        setTimeout(() => win.print(), 800);
     };
 
     window.openOcrModal = function() {
@@ -431,10 +440,10 @@
         
         // Auto-generate deep mock data if empty bounds
         if(targetStudents.length === 0) {
-            targetStudents = Array.from({length: 20}, (_, i) => ({
+            targetStudents = Array.from({length: 40}, (_, i) => ({
                 id: Date.now() + i,
                 name: `Mock Student ${i+1}`,
-                roll: `ST-${clsValue.replace(/\s+/g, '')}-00${i+1}`,
+                roll: `ST-${clsValue.replace(/\s+/g, '')}-${String(i+1).padStart(3,'0')}`,
                 class: clsValue
             }));
         }

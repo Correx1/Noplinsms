@@ -73,10 +73,20 @@
 
             const avgs = _filtered.map(s => s.avg);
             const classAvg = Math.round(avgs.reduce((a,b)=>a+b,0)/avgs.length);
+
+            // Best & Least student
+            const sorted = [..._filtered].sort((a, b) => b.avg - a.avg);
+            const best   = sorted[0];
+            const least  = sorted[sorted.length - 1];
+            const passCount = avgs.filter(a => a >= 50).length;
+            const passRate  = Math.round((passCount / avgs.length) * 100);
+
             document.getElementById('cms-total').textContent = _filtered.length;
-            document.getElementById('cms-avg').textContent = classAvg + '%';
-            document.getElementById('cms-distinction').textContent = avgs.filter(a => a >= 70).length;
-            document.getElementById('cms-below').textContent = avgs.filter(a => a < 50).length;
+            document.getElementById('cms-best-score').textContent  = best  ? `${best.avg}%`  : '—';
+            document.getElementById('cms-best-name').textContent   = best  ? best.name        : '—';
+            document.getElementById('cms-least-score').textContent = least ? `${least.avg}%`  : '—';
+            document.getElementById('cms-least-name').textContent  = least ? least.name       : '—';
+            document.getElementById('cms-pass-rate').textContent   = `${passRate}%`;
             document.getElementById('cms-label').textContent = `${cls || 'All Classes'} — ${term || 'All Terms'} Term Master Sheet`;
 
             const subjectHeaders = SUBJECTS.map(s => `<th class="px-3 py-3 whitespace-nowrap">${s}</th>`).join('');
@@ -159,19 +169,90 @@
             if (_filtered.length === 0) { alert('Generate data first by selecting filters and clicking Retrieve.'); return; }
             const cls  = document.getElementById('cms-class')?.value  || 'All';
             const term = document.getElementById('cms-term')?.value   || 'All';
-            const headers = ['Pos','Adm No','Name', ...SUBJECTS,'Total','Average %','Grade','Remark'];
-            const rows = _filtered.map((s, i) => [
-                i+1, s.admissionNo||s.id, `"${s.name}"`, 
-                ...s.scores, s.total, s.avg, grade(s.avg).g, grade(s.avg).r
-            ]);
+
+            const headers = ['Pos', 'Adm No', 'Student Name', ...SUBJECTS, 'Total', 'Average %', 'Grade', 'Remark'];
+
+            const rows = _filtered.map((s, i) => {
+                const subjectCells = s.scores.map(sc => {
+                    const g = grade(sc);
+                    return `"${sc} (${g.g})"`;   // e.g. "83 (A1)"
+                });
+                return [
+                    i + 1,
+                    `"${s.admissionNo || s.id}"`,
+                    `"${s.name}"`,
+                    ...subjectCells,
+                    s.total,
+                    `${s.avg}%`,
+                    grade(s.avg).g,
+                    grade(s.avg).r
+                ];
+            });
+
             const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Termly_MasterSheet_${cls}_${term.replace(/\//g,'-') || 'All'}.csv`;
+            a.download = `Termly_MasterSheet_${cls}_${(term || 'All').replace(/\//g, '-')}.csv`;
             a.click();
             URL.revokeObjectURL(url);
+        },
+
+        printTable() {
+            if (_filtered.length === 0) { alert('Generate data first by selecting filters and clicking Retrieve.'); return; }
+            const cls  = document.getElementById('cms-class')?.value  || 'All Classes';
+            const term = document.getElementById('cms-term')?.value   || 'All Terms';
+            const label = `${cls} — ${term} Term Master Sheet`;
+
+            // Build plain table HTML (no Tailwind classes — just clean inline styles for print)
+            const subjectThs = SUBJECTS.map(s => `<th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">${s}</th>`).join('');
+
+            const bodyRows = _filtered.map((s, idx) => {
+                const scoreCells = s.scores.map(sc => {
+                    const g = grade(sc);
+                    const color = sc >= 70 ? '#15803d' : sc >= 50 ? '#1d4ed8' : sc >= 45 ? '#ca8a04' : '#dc2626';
+                    return `<td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;color:${color};font-weight:600;">${sc}<br><span style="font-size:9px;color:#666;">${g.g}</span></td>`;
+                }).join('');
+                const avg = s.avg;
+                const g   = grade(avg);
+                const color = avg >= 70 ? '#15803d' : avg >= 50 ? '#1d4ed8' : avg >= 45 ? '#ca8a04' : '#dc2626';
+                return `<tr style="background:${idx % 2 === 0 ? '#fff' : '#f9fafb'}">
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;font-weight:700;">${idx+1}</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;font-size:10px;color:#555;">${s.admissionNo||s.id}</td>
+                    <td style="border:1px solid #ccc;padding:5px 8px;font-size:12px;font-weight:600;white-space:nowrap;">${s.name}</td>
+                    ${scoreCells}
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:800;font-size:12px;">${s.total}</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:700;color:${color};font-size:12px;">${avg}%</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:700;color:${color};font-size:11px;">${g.g}</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;">${g.r}</td>
+                </tr>`;
+            }).join('');
+
+            const html = `<!DOCTYPE html><html><head><title>${label}</title>
+                <style>body{font-family:Arial,sans-serif;margin:15px;}h2{font-size:15px;margin-bottom:8px;}table{border-collapse:collapse;width:100%;}@media print{@page{size:landscape;}}</style>
+            </head><body>
+                <h2>${label}</h2>
+                <table>
+                    <thead><tr>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">#</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Adm No</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Student Name</th>
+                        ${subjectThs}
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Total</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Avg%</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Grade</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Remark</th>
+                    </tr></thead>
+                    <tbody>${bodyRows}</tbody>
+                </table>
+            </body></html>`;
+
+            const win = window.open('', '_blank', 'width=1200,height=800');
+            win.document.write(html);
+            win.document.close();
+            win.focus();
+            setTimeout(() => win.print(), 500);
         }
     };
 
