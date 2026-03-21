@@ -1,4 +1,8 @@
 {
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "installCommand": "echo 'No install needed'",
+  "framework": null,
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/login-staff", "destination": "/login-staff.html" },
