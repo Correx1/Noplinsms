@@ -1,0 +1,100 @@
+<div class="p-4 sm:p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Document Templates</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1"></i><span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Settings</span></div></li>
+                    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1"></i><span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Templates</span></div></li>
+                </ol>
+            </nav>
+        </div>
+        <button onclick="window.templatesApp.openAddModal()" class="mt-4 md:mt-0 flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white rounded-lg bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 transition-colors">
+            <i class="fas fa-plus"></i> Add Template
+        </button>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex flex-wrap gap-2 mb-6" id="template-tabs">
+        <button onclick="window.templatesApp.filterCategory('all')" data-cat="all" class="tpl-tab active-tab px-4 py-2 text-sm font-medium rounded-full bg-primary-600 text-white transition-colors">All</button>
+        <button onclick="window.templatesApp.filterCategory('result')" data-cat="result" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-file-alt mr-1"></i>Result / Report Card</button>
+        <button onclick="window.templatesApp.filterCategory('certificate')" data-cat="certificate" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-certificate mr-1"></i>Certificates</button>
+        <button onclick="window.templatesApp.filterCategory('letter')" data-cat="letter" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-envelope mr-1"></i>Letters</button>
+        <button onclick="window.templatesApp.filterCategory('receipt')" data-cat="receipt" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-receipt mr-1"></i>Receipts</button>
+        <button onclick="window.templatesApp.filterCategory('id')" data-cat="id" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-id-card mr-1"></i>ID Cards</button>
+        <button onclick="window.templatesApp.filterCategory('notice')" data-cat="notice" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-bullhorn mr-1"></i>Notices</button>
+        <button onclick="window.templatesApp.filterCategory('payslip')" data-cat="payslip" class="tpl-tab px-4 py-2 text-sm font-medium rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-white dark:border-gray-600 transition-colors"><i class="fas fa-money-check-alt mr-1"></i>Payslips</button>
+    </div>
+
+    <!-- Templates Grid -->
+    <div id="templates-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <!-- Rendered by JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="templates-empty" class="hidden p-10 text-center text-gray-500 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+        <i class="fas fa-file-alt text-5xl mb-4 text-gray-300"></i>
+        <p class="text-lg font-medium">No templates yet</p>
+        <p class="text-sm mt-1">Click "Add Template" to create one.</p>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="tplPreviewModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="preview-modal-title">Template Preview</h3>
+            <div class="flex gap-2">
+                <button onclick="window.print()" class="px-3 py-1.5 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700"><i class="fas fa-print mr-1"></i>Print</button>
+                <button onclick="window.templatesApp.closePreview()" class="px-3 py-1.5 text-sm font-medium bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="overflow-y-auto p-6" id="preview-modal-body">
+            <!-- Preview content rendered here -->
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Template Modal -->
+<div id="tplCrudModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg">
+        <div class="flex items-center justify-between px-6 py-4 border-b dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="tpl-modal-title">Add Template</h3>
+            <button onclick="window.templatesApp.closeCrudModal()" class="text-gray-400 hover:text-gray-900 dark:hover:text-white"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="tpl-form" onsubmit="event.preventDefault(); window.templatesApp.saveTemplate();" class="p-6 space-y-4">
+            <input type="hidden" id="tpl-id">
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Template Name <span class="text-red-500">*</span></label>
+                <input type="text" id="tpl-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="e.g. Term 1 Result Card" required>
+            </div>
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Category <span class="text-red-500">*</span></label>
+                <select id="tpl-category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                    <option value="">Select Category</option>
+                    <option value="result">Result / Report Card</option>
+                    <option value="certificate">Certificate</option>
+                    <option value="letter">Letter</option>
+                    <option value="receipt">Receipt</option>
+                    <option value="id">ID Card</option>
+                    <option value="notice">Notice</option>
+                    <option value="payslip">Payslip</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1.5 text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                <textarea id="tpl-desc" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Briefly describe this template..."></textarea>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="window.templatesApp.closeCrudModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600">Cancel</button>
+                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700">Save Template</button>
+            </div>
+        </form>
+    </div>
+</div>

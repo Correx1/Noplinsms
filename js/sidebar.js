@@ -221,6 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Reports': loadTeacherReports,        
 
                 // Settings
+                'Owner Profile': loadOwnerProfilePage,
                 'System Profile': loadSettingsProfilePage,
                 'User Management': loadSettingsUsersPage,
                 'Templates': loadTemplatesPage,
@@ -247,6 +248,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Helper: Standard Page Loader
 async function loadPage(url, scriptPath = null, scriptId = null) {
+    // ---- OWNER DASHBOARD ROUTING FIX ----
+    const path = window.location.pathname;
+    
+    // Explicit cross-directory catch for owner profile
+    if (url === 'settings/owner-profile.html' && path.includes('/admin/')) {
+        url = '../owner/settings/owner-profile.html';
+    }
+    // Explicit cross-directory catch for owner settings portal if loaded from admin
+    else if (url === 'settings/profile.html' && path.includes('owner-dashboard.html') && path.includes('/admin/')) {
+        url = '../owner/settings/profile.html';
+    }
+    // Standard owner-to-admin proxy
+    else if (path.includes('/owner/')) {
+        if (!url.startsWith('owner-dashboard.html') && !url.startsWith('branches.html') && !url.startsWith('settings/')) {
+            url = '../admin/' + url;
+        }
+    }
+    // -------------------------------------
+
     const mainContent = document.getElementById('main-content');
     mainContent.innerHTML = '<div class="flex justify-center p-10"><i class="fas fa-spinner fa-spin text-4xl text-primary-500"></i></div>';
     
@@ -444,6 +464,8 @@ window.loadHRDesignationsPage = () => loadPage('hr/designations.html', '../../js
 window.loadHRLeavePage = () => loadPage('hr/leave.html', '../../js/hr.js', 'hr-script');
 window.loadHRPayrollPage = () => loadPage('hr/payroll.html', '../../js/hr.js', 'hr-script');
 
+
+window.loadOwnerProfilePage = () => loadPage('settings/owner-profile.html', null, null);
 
 // ============================================
 // STANDALONE MODULES (Events, Notices, Library, etc.)

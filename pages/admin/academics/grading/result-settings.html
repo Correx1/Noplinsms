@@ -40,35 +40,23 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
                             <input type="radio" name="rs-template-sel" value="classic" class="w-4 h-4 text-primary-600" checked>
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Classic Style</span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Classic Style</span>
                         </label>
                         <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
                             <input type="radio" name="rs-template-sel" value="modern" class="w-4 h-4 text-primary-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Modern Aesthetic</span>
-                        </label>
-                        <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
-                            <input type="radio" name="rs-template-sel" value="minimalist" class="w-4 h-4 text-primary-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Minimalist Clean</span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Modern Aesthetic</span>
                         </label>
                         <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
                             <input type="radio" name="rs-template-sel" value="corporate" class="w-4 h-4 text-primary-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Corporate Form</span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Corporate Form</span>
                         </label>
                         <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
                             <input type="radio" name="rs-template-sel" value="elegant" class="w-4 h-4 text-primary-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Elegant Series</span>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Elegant Series</span>
                         </label>
-                        <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-green-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
-                            <input type="radio" name="rs-template-sel" value="radiant" class="w-4 h-4 text-green-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Radiant Profile</span>
-                        </label>
-                        <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-blue-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
-                            <input type="radio" name="rs-template-sel" value="chart" class="w-4 h-4 text-blue-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Visual Chart</span>
-                        </label>
-                        <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-purple-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
-                            <input type="radio" name="rs-template-sel" value="comprehensive" class="w-4 h-4 text-purple-600">
-                            <span class="text-sm font-bold text-gray-900 dark:text-white">Comprehensive</span>
+                        <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
+                            <input type="radio" name="rs-template-sel" value="chart" class="w-4 h-4 text-primary-600">
+                            <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Visual Chart</span>
                         </label>
                     </div>
                 </div>
@@ -135,6 +123,69 @@
             
             <div id="domains-container" class="space-y-3 max-w-2xl">
                 <!-- Dynamically populated via JS -->
+            </div>
+        </div>
+
+        <!-- SECTION: Dynamic Settings Container -->
+        <div id="dynamic-settings-container" class="space-y-8">
+            <!-- SECTION: Psychomotor Domains Setup (Hidden by default) -->
+            <div id="psychomotor-domains-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                        <i class="fas fa-running text-primary-600 mr-2"></i> Psychomotor Domains Setup
+                    </h2>
+                    <button type="button" onclick="addNewPsychomotorDomainField()" class="w-full sm:w-auto justify-center bg-primary-100 text-primary-700 hover:bg-primary-200 font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Domain
+                    </button>
+                </div>
+                
+                <p class="text-sm text-gray-500 mb-4 dark:text-gray-400">Define the physical skills and abilities graded on a 1-5 scale.</p>
+                
+                <div id="psychomotor-domains-container" class="space-y-3 max-w-2xl">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+
+            <!-- SECTION: School Bills Settings (Hidden by default) -->
+            <div id="school-bills-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-money-bill text-primary-600 mr-2"></i> Global School Bills Setup
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tuition Fee (₦)</label>
+                        <input type="number" id="rs-bill-tuition" placeholder="e.g. 50000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Equipment/Maintenance (₦)</label>
+                        <input type="number" id="rs-bill-equipment" placeholder="e.g. 5000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Library Fee (₦)</label>
+                        <input type="number" id="rs-bill-library" placeholder="e.g. 2000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sports/PTA Fee (₦)</label>
+                        <input type="number" id="rs-bill-sports" placeholder="e.g. 3000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Attendance Configuration (Hidden by default) -->
+            <div id="attendance-config-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-clipboard-check text-primary-600 mr-2"></i> Term/Session Attendance Setup
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Global Times Opened (School Days)</label>
+                        <input type="number" id="rs-times-opened" placeholder="e.g. 110" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Closing Date</label>
+                        <input type="text" id="rs-closing-date" placeholder="e.g. 25th July, 2024" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
             </div>
         </div>
 

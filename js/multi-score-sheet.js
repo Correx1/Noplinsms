@@ -82,19 +82,20 @@
         chunks.forEach((chunk, pageIndex) => {
             const pageDiv = document.createElement('div');
             pageDiv.className = 'html2pdf__page-break';
-            pageDiv.style.cssText = "width: 210mm; height: 296mm; padding: 15mm 20mm 25mm 20mm; box-sizing: border-box; background: white; position: relative;";
+            pageDiv.style.cssText = "width: 210mm; height: 292mm; overflow: hidden; padding: 5mm 15mm 15mm 15mm; box-sizing: border-box; background: white; position: relative;";
             
             let html = `
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
-                    <div style="flex: 1;">
-                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #1e3a8a;">${schoolName}</h1>
-                        <p style="margin: 5px 0 0 0; font-size: 12px; color: #4b5563;">${schoolAddr} | "${schoolMot}"</p>
-                        <h2 style="margin: 15px 0 0 0; font-size: 18px; text-transform: uppercase;">Official Multi-Score Sheet (Page ${pageIndex + 1} of ${chunks.length})</h2>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 10px;">
+                    <div style="flex: 1; color: #000;">
+                        <h1 style="margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">${schoolName}</h1>
+                        <p style="margin: 2px 0; font-size: 13px; font-style: italic; font-weight: 600;">"${schoolMot}"</p>
+                        <p style="margin: 2px 0 0 0; font-size: 12px;">${schoolAddr}</p>
+                        <h2 style="margin: 10px 0 0 0; font-size: 15px; font-weight: bold; text-transform: uppercase;">Official Score Sheet (Page ${pageIndex + 1} of ${chunks.length})</h2>
                     </div>
-                    <div id="qr-container-p${pageIndex}" style="width: 80px; height: 80px; border: 1px solid #ccc; padding: 2px;"></div>
+                    <div id="qr-container-p${pageIndex}" style="width: 70px; height: 70px; border: 1px solid #000; padding: 2px;"></div>
                 </div>
                 
-                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; font-size: 14px; background: #f9fafb; padding: 10px; border: 1px solid #e5e7eb;">
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 10px; font-size: 13px; background: #fff; padding: 8px; border: 1px solid #000; color: #000;">
                     <div><strong>Class:</strong> ${cls}</div>
                     <div><strong>Section:</strong> ${sec}</div>
                     <div><strong>Subject:</strong> ${sub}</div>
@@ -102,9 +103,9 @@
                     <div><strong>Term:</strong> ${trm}</div>
                 </div>
                 
-                <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #000;">
                     <thead>
-                        <tr style="background-color: #f3f4f6;">
+                        <tr style="background-color: #fff;">
                             <th style="border: 1px solid #000; padding: 4px; text-align: left; width: 30px;">S/N</th>
                             <th style="border: 1px solid #000; padding: 4px; text-align: left;">Student Name</th>
             `;
@@ -117,23 +118,23 @@
             
             chunk.forEach((student, localIndex) => {
                 const globalIndex = (pageIndex * STUDENTS_PER_PAGE) + localIndex + 1;
-                html += `<tr style="background-color: #ffffff;">
-                    <td style="border: 1px solid #94a3b8; padding: 4px; text-align: center; font-weight: bold;">${globalIndex}</td>
-                    <td style="border: 1px solid #94a3b8; padding: 4px; font-weight: 500;">${student.name} <br><small style="color:#64748b; font-size:10px;">${student.roll}</small></td>
+                html += `<tr style="background-color: #fff; color: #000;">
+                    <td style="border: 1px solid #000; padding: 4px; text-align: center; font-weight: bold;">${globalIndex}</td>
+                    <td style="border: 1px solid #000; padding: 4px; font-weight: 600;">${student.name} <br><small style="color:#000; font-size:10px; font-weight: normal;">${student.roll}</small></td>
                 `;
                 activeComponents.forEach(() => {
-                    html += `<td style="border: 1px solid #94a3b8; padding: 4px;"></td>`;
+                    html += `<td style="border: 1px solid #000; padding: 4px;"></td>`;
                 });
                 html += `</tr>`;
             });
             
-            html += `</tbody></table>
-                <div style="position: absolute; bottom: 15mm; left: 20mm; right: 20mm; display: flex; justify-content: space-between; font-size: 12px;">
+             html += `</tbody></table>
+                <div style="position: absolute; bottom: 15mm; left: 15mm; right: 15mm; display: flex; justify-content: space-between; font-size: 12px; color: #000;">
                     <div>
                         <p>Teacher's Name: _______________________</p>
                         <p>Signature & Date: _______________________</p>
                     </div>
-                    <div style="text-align: right; color: #6b7280;">
+                    <div style="text-align: right;">
                         <p>Please write scores clearly inside the boxes.</p>
                         <p>DO NOT write outside the borders.</p>
                     </div>

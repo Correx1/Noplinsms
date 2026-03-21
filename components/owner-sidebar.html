@@ -1,3 +1,4 @@
+
 <aside
   id="logo-sidebar"
   class="fixed top-0 left-0 z-40 w-64 h-screen pt-[4.5rem] transition-transform -translate-x-full bg-primary-800 border-r border-primary-800 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900"
@@ -22,6 +23,333 @@
             </a>
          </li>
          
+<!-- ══════════════ MANAGE USERS ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-manage" data-collapse-toggle="dropdown-manage">
+               <i class="fas fa-users-cog w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Manage Users</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-manage" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadStudentsList(); setActiveLink(this)" class="flex items-center w-full p-3 pl-11 text-white transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900">Students</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadTeachersPage(); setActiveLink(this)" class="flex items-center w-full p-3 pl-11 text-white transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900">Teachers</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadParentsPage(); setActiveLink(this)" class="flex items-center w-full p-3 pl-11 text-white transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900">Parents</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadAlumniPage(); setActiveLink(this)" class="flex items-center w-full p-3 pl-11 text-white transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900">Alumni</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadImportUsersPage(); setActiveLink(this)" class="flex items-center w-full p-3 pl-11 text-white transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900">Import Users</a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ ACADEMICS ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-academics" data-collapse-toggle="dropdown-academics">
+               <i class="fas fa-graduation-cap w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Academics</span>
+               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-academics" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadClassesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Classes</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadSubjectsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Subjects</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadSyllabusPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Syllabus</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadTimetablePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Timetable</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadAttendancePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Student Attendance</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadIDCardsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">ID Cards</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadDisciplinePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Discipline</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadAcademicConfigPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Academic Config</a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ EXAMINATIONS ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-examinations" data-collapse-toggle="dropdown-examinations">
+               <i class="fas fa-file-alt w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Examinations</span>
+               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-examinations" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadCreateExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Create Examination</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadAssessmentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Assessments</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadExamQuestionsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Exam Questions</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadOnlineExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Online Exams</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadCBTExamPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">CBT (Mock / Real)</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadMasterSheetPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">
+                     Master Sheet
+                  </a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadCumulativeMasterSheetPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">
+                     Cumulative Master Sheet
+                  </a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ GRADING & PROMOTION ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-grading" data-collapse-toggle="dropdown-grading">
+               <i class="fas fa-chart-bar w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Grading & Promotion</span>
+               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-grading" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadGradeBoundariesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Grade Boundaries</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadGradingComponentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Grading Components</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadScoreSheetsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Score Sheets</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadMultiScoreSheetPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Multi Score Sheet</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadMarksEntryPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Mark Register</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Results</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultSheetsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Result Sheets</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadResultSheetSettingsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Result Sheet Settings</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadSessionResultsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Session Results</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadPromoteStudentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Promote Students</a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ FINANCE ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-finance" data-collapse-toggle="dropdown-finance">
+               <i class="fas fa-dollar-sign w-5 h-5"></i>
+               <span class="flex-1 ms-3 text-left">Finance</span>
+               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-finance" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadIncomePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Income</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadExpensesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Expenses</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadFeeCollectionPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Fee Collection</a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ HUMAN RESOURCES ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-hr" data-collapse-toggle="dropdown-hr">
+               <i class="fas fa-briefcase w-5 h-5"></i>
+               <span class="flex-1 ms-3 text-left">Human Resources</span>
+               <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-hr" class="hidden bg-primary-600 dark:bg-primary-800">
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRStaffDirectoryPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Staff Directory</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRAddStaffPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Add Staff</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRDepartmentsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Departments</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRDesignationsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Designations</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRLeavePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Leave Management</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadHRPayrollPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Payroll</a>
+               </li>
+               <li class="border-t border-white/10">
+                  <a href="#" onclick="loadStaffAttendancePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Staff Attendance</a>
+               </li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ LIBRARY ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-library" data-collapse-toggle="dropdown-library">
+               <i class="fas fa-book-reader w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Library</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-library" class="hidden py-2 space-y-2">
+               <li class="border-t border-white/10"><a href="#" onclick="loadLibraryBooksPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Books</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadAddBookPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Add Book</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadIssueReturnPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Issue / Return</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadLibraryMembersPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Members</a></li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ TRANSPORTATION ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-transport" data-collapse-toggle="dropdown-transport">
+               <i class="fas fa-bus w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Transportation</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-transport" class="hidden py-2 space-y-2">
+               <li class="border-t border-white/10"><a href="#" onclick="loadTransVehiclesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Vehicles</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadTransRoutesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Routes</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadTransDriversPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Drivers</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadTransAllocationPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Allocations</a></li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ HOSTEL ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-hostel" data-collapse-toggle="dropdown-hostel">
+               <i class="fas fa-bed w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Hostel</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-hostel" class="hidden py-2 space-y-2">
+               <li class="border-t border-white/10"><a href="#" onclick="loadHostelBuildingsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Buildings</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadHostelRoomsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Rooms</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadHostelAllocationPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Allocations</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadHostelAttendancePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Attendance</a></li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ RECORD ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-record" data-collapse-toggle="dropdown-record">
+               <i class="fas fa-clipboard-list w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Record</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-record" class="hidden py-2 space-y-2">
+               <li class="border-t border-white/10"><a href="#" onclick="loadVisitorsLogPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Visitors Log</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadPhoneLogPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Phone Log</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadEmailLogsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Email Logs</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadSMSLogsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">SMS Logs</a></li>
+            </ul>
+         </li>
+
+         <!-- ══════════════ EVENTS ══════════════ -->
+         <li onclick="loadEventsPage(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+            <a href="#">
+               <i class="fas fa-calendar-alt w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="ms-3">Events</span>
+            </a>
+         </li>
+
+         <!-- ══════════════ NOTICES ══════════════ -->
+         <li onclick="loadNoticesList(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+            <a href="#">
+               <i class="fas fa-bullhorn w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="ms-3">Notices</span>
+            </a>
+         </li>
+
+         <!-- ══════════════ REPORTS ══════════════ -->
+         <li onclick="loadReportsPage(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+            <a href="#">
+               <i class="fas fa-chart-line w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="ms-3">Reports</span>
+            </a>
+         </li>
+
+         <!-- ══════════════ AI & AUTOMATIONS ══════════════ -->
+         <li onclick="loadAIPage(); setActiveLink(this)" class="border-b border-white/20 text-white flex items-center p-4 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-900">
+            <a href="#" class="flex items-center w-full">
+               <i class="fas fa-robot w-5 h-5 text-white"></i>
+               <span class="ms-3">AI &amp; Automations</span>
+               <span class="ms-auto text-xs bg-yellow-400 text-yellow-900 font-bold px-1.5 py-0.5 rounded">AI</span>
+            </a>
+         </li>
+
+         <!-- ══════════════ SETTINGS ══════════════ -->
+         <li class="border-b border-white/20 text-white">
+            <button type="button" class="flex items-center w-full p-4 transition duration-75 hover:bg-primary-700 dark:hover:bg-primary-900 group" aria-controls="dropdown-settings" data-collapse-toggle="dropdown-settings">
+               <i class="fas fa-cog w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+               <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Settings</span>
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+               </svg>
+            </button>
+            <ul id="dropdown-settings" class="hidden py-2 space-y-2">
+               <li class="border-t border-white/10"><a href="#" onclick="loadOwnerProfilePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Owner Profile</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadSettingsProfilePage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">System Profile</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadSettingsUsersPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">User Management</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadTemplatesPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Templates</a></li>
+               <li class="border-t border-white/10"><a href="#" onclick="loadThemeSettingsPage(); setActiveLink(this)" class="flex items-center p-3 pl-11 hover:bg-primary-700 dark:hover:bg-primary-900">Theme</a></li>
+            </ul>
+         </li>
+
       </ul>
+   </div>
+
+   <!-- Builder Credit: tiny, permanent, below all nav items -->
+   <div class="absolute bottom-0 left-0 right-0 py-2 px-4 flex items-center justify-center gap-1.5 bg-primary-800/80 ">
+       <img src="../../assets/images/logo.png" alt="Noplin" class="h-4 w-auto opacity-70">
+       <span class="text-[10px] text-white/50 font-medium">Powered by <span class="text-white/70">Noplin</span></span>
    </div>
 </aside>

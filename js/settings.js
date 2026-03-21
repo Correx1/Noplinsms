@@ -18,51 +18,6 @@
         document.getElementById(tabId).classList.remove('hidden');
     };
 
-    // === Grading Logic ===
-    let grades = [
-        { name: 'A', min: 90, max: 100 },
-        { name: 'B', min: 80, max: 89 },
-        { name: 'C', min: 70, max: 79 },
-        { name: 'D', min: 60, max: 69 },
-        { name: 'F', min: 0, max: 59 }
-    ];
-
-    function renderGrades() {
-        const tbody = document.getElementById('grade-table-body');
-        if(!tbody) return;
-        tbody.innerHTML = '';
-        grades.forEach((g, i) => {
-            tbody.innerHTML += `
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td class="px-6 py-4 font-bold text-gray-900 dark:text-white">${g.name}</td>
-                    <td class="px-6 py-4">${g.min}%</td>
-                    <td class="px-6 py-4">${g.max}%</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs dark:bg-green-900 dark:text-green-300">Active</span></td>
-                    <td class="px-6 py-4">
-                        <button onclick="deleteGrade(${i})" class="text-red-600 hover:underline">Delete</button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    window.addGradeRow = function() {
-        const name = prompt('Enter Grade Name (e.g. A+):');
-        if(!name) return;
-        const min = prompt('Min Percentage:');
-        const max = prompt('Max Percentage:');
-        if(name && min && max) {
-            grades.push({ name, min, max });
-            renderGrades();
-        }
-    };
-
-    window.deleteGrade = function(index) {
-        if(confirm('Delete this grade?')) {
-            grades.splice(index, 1);
-            renderGrades();
-        }
-    };
 
     // === Backup Logic ===
     window.createBackup = function() {
@@ -136,6 +91,5 @@
 
     // Init
     switchSettingsTab('general');
-    renderGrades();
 
 })();

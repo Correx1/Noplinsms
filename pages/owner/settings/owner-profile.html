@@ -1,0 +1,115 @@
+<div class="p-4 sm:p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Owner Profile</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadOwnerDashboard()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Settings</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Owner Profile</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+        <form class="space-y-6" onsubmit="event.preventDefault(); showToastSettings('Profile saved successfully!');">
+            
+            <!-- Photo Upload -->
+            <div class="flex items-center gap-6 p-4 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                <div class="relative">
+                    <div id="owner-photo-preview" class="w-24 h-24 rounded-full border-4 border-primary-200 dark:border-primary-700 bg-gray-50 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-user text-4xl text-gray-300 dark:text-gray-600"></i>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <label class="block mb-1 text-sm font-semibold text-gray-900 dark:text-white">Owner Photo</label>
+                    <p class="text-xs text-gray-500 mb-2">Upload a professional headshot. Recommended: square PNG/JPG/SVG.</p>
+                    <div class="flex items-center gap-2">
+                        <label for="owner-photo-upload" class="cursor-pointer text-xs px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-1 shadow">
+                            <i class="fas fa-upload"></i> Upload Photo
+                        </label>
+                        <input type="file" id="owner-photo-upload" accept="image/*" class="hidden">
+                        <button type="button" class="text-xs px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Fields -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full Name</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white" value="Administrator System">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Address</label>
+                    <input type="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white" value="admin@noplin.com">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Contact</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white" value="+234 800 123 4567">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role Title</label>
+                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white" value="System Executive Owner">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Residential / Office Address</label>
+                    <textarea rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white">Global Admin Center, 42 Main Avenue.</textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+                <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm px-8 py-3 dark:bg-primary-600 dark:hover:bg-primary-700 shadow-lg">Save Profile Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Toast Notice -->
+<div id="toast-settings" class="hidden fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 space-x-3 text-gray-500 bg-white rounded-lg shadow-xl dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <i class="fas fa-check"></i>
+    </div>
+    <div class="text-sm font-medium text-gray-900 dark:text-white" id="toast-msg">Success</div>
+</div>
+
+<script>
+    function showToastSettings(msg) {
+        const toast = document.getElementById('toast-settings');
+        document.getElementById('toast-msg').textContent = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+    
+    // Quick handle for local preview of owner image
+    const photoUpload = document.getElementById('owner-photo-upload');
+    if (photoUpload) {
+        photoUpload.addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('owner-photo-preview').innerHTML = `<img src="${event.target.result}" style="width:100%;height:100%;object-fit:cover;" alt="admin photo">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+</script>
