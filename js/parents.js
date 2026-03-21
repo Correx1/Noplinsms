@@ -36,6 +36,7 @@
             
             renderTable();
             setupFilters();
+            window.runParentFilters();
         })
         .catch(err => console.error('Error loading data:', err));
 
@@ -74,16 +75,14 @@
                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">${studentNames}</td>
                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">${parent.phone}</td>
                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <span class="${getStatusColor(parent.status)} text-xs font-medium px-2.5 py-0.5 rounded">
-                            ${parent.status}
-                        </span>
+                        <select onchange="window.updateParentStatus('${parent.id}', this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="Active" ${parent.status === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="Inactive" ${parent.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
                     </td>
                     <td class="p-4 space-x-2 whitespace-nowrap">
                         <button onclick="window.loadAddParentPage('${parent.id}')" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <i class="fas fa-edit mr-2"></i> Edit
-                        </button>
-                        <button onclick="window.deleteParent('${parent.id}')" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
-                            <i class="fas fa-trash-alt mr-2"></i> Delete
                         </button>
                     </td>
                 `;
@@ -98,11 +97,29 @@
         }
 
         function updatePagination(start, end, total) {
-            document.getElementById('showing-start').textContent = start;
+            document.getElementById('showing-start').textContent = total === 0 ? 0 : start;
             document.getElementById('showing-end').textContent = end;
             document.getElementById('total-records').textContent = total;
-            
-            // Logic to disable/enable buttons based on page could be added here
+
+            const totalPages = Math.ceil(total / itemsPerPage);
+            const container = document.getElementById('pagination-controls');
+            if (container) {
+                container.innerHTML = '';
+
+                // Prev
+                container.innerHTML += `
+                    <li>
+                        <a href="#" onclick="changeParentPage(${currentPage - 1})" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage === 1 ? 'pointer-events-none opacity-50' : ''}">Previous</a>
+                    </li>
+                `;
+
+                // Next
+                container.innerHTML += `
+                    <li>
+                        <a href="#" onclick="changeParentPage(${currentPage + 1})" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${currentPage === totalPages || total === 0 ? 'pointer-events-none opacity-50' : ''}">Next</a>
+                    </li>
+                `;
+            }
         }
 
         function setupFilters() {
@@ -110,41 +127,45 @@
             const relationFilter = document.getElementById('relation-filter');
             const statusFilter = document.getElementById('status-filter');
 
-            function applyFilters() {
-                const term = searchInput.value.toLowerCase();
-                const rel = relationFilter.value;
-                const stat = statusFilter.value;
+            window.runParentFilters = function() {
+                const term = searchInput ? searchInput.value.toLowerCase() : '';
+                const rel = relationFilter ? relationFilter.value : '';
+                const stat = statusFilter ? statusFilter.value || 'Active' : 'Active';
+
+                const pageTitleEl = document.getElementById('page-title');
+                if(pageTitleEl) {
+                    if (stat === 'Inactive') pageTitleEl.innerText = 'Past/Inactive Parents';
+                    else pageTitleEl.innerText = 'Parents Management';
+                }
 
                 filteredParents = allParents.filter(p => {
                     const matchesSearch = p.name.toLowerCase().includes(term) || p.phone.includes(term) || p.email.toLowerCase().includes(term);
                     const matchesRel = rel ? p.relation === rel : true;
-                    const matchesStat = stat ? p.status === stat : true;
+                    const matchesStat = p.status === stat;
                     return matchesSearch && matchesRel && matchesStat;
                 });
 
                 currentPage = 1;
                 renderTable();
-            }
+            };
 
-            if(searchInput) searchInput.addEventListener('input', applyFilters);
-            if(relationFilter) relationFilter.addEventListener('change', applyFilters);
-            if(statusFilter) statusFilter.addEventListener('change', applyFilters);
-            
-            document.getElementById('prev-btn').addEventListener('click', () => {
-                if (currentPage > 1) { currentPage--; renderTable(); }
-            });
-            document.getElementById('next-btn').addEventListener('click', () => {
-                if (currentPage * itemsPerPage < filteredParents.length) { currentPage++; renderTable(); }
-            });
+            if(searchInput) searchInput.addEventListener('input', window.runParentFilters);
+            if(relationFilter) relationFilter.addEventListener('change', window.runParentFilters);
+            if(statusFilter) statusFilter.addEventListener('change', window.runParentFilters);
         }
 
-        window.deleteParent = function(id) {
-            if(confirm('Are you sure you want to delete this parent?')) {
-                allParents = allParents.filter(p => p.id !== id);
+        window.changeParentPage = function(page) {
+            if (page < 1) return;
+            currentPage = page;
+            renderTable();
+        };
+
+        window.updateParentStatus = function(id, newStatus) {
+            const idx = allParents.findIndex(p => p.id === id);
+            if (idx > -1) {
+                allParents[idx].status = newStatus;
                 localStorage.setItem('parentsData', JSON.stringify(allParents));
-                // Re-apply filters to refresh view
-                // For simplicity, just reload or re-filter
-                location.reload(); // Or re-trigger filter logic
+                window.runParentFilters();
             }
         };
     }

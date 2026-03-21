@@ -109,6 +109,75 @@
         });
     }
 
+    // Build a custom checkbox-based multi-select dropdown
+    function buildMultiSelect(container, teachers, uniqueId) {
+        container.innerHTML = '';
+        container.setAttribute('data-multi-ids', '[]');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+
+        // Trigger button
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'multi-select-btn w-full text-left bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white flex justify-between items-center';
+        btn.innerHTML = '<span class="multi-select-label text-gray-400">Select teachers...</span><i class="fas fa-chevron-down text-xs"></i>';
+
+        // Dropdown panel
+        const panel = document.createElement('div');
+        panel.className = 'multi-select-panel hidden absolute z-30 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 max-h-48 overflow-y-auto';
+
+        teachers.forEach(t => {
+            const item = document.createElement('label');
+            item.className = 'flex items-center gap-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer';
+            item.innerHTML = `
+                <input type="checkbox" value="${t.id}" class="multi-check w-4 h-4 text-primary-600 rounded border-gray-300 focus:ring-primary-500">
+                <span class="text-sm text-gray-900 dark:text-white">${t.name}</span>
+            `;
+            const cb = item.querySelector('input');
+            cb.addEventListener('change', () => updateMultiSelectLabel(container, btn));
+            panel.appendChild(item);
+        });
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Close all other open panels
+            document.querySelectorAll('.multi-select-panel').forEach(p => {
+                if (p !== panel) p.classList.add('hidden');
+            });
+            panel.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => panel.classList.add('hidden'), { capture: false });
+
+        wrapper.appendChild(btn);
+        wrapper.appendChild(panel);
+        container.appendChild(wrapper);
+    }
+
+    function updateMultiSelectLabel(container, btn) {
+        const checked = container.querySelectorAll('.multi-check:checked');
+        const ids = Array.from(checked).map(cb => cb.value);
+        container.setAttribute('data-multi-ids', JSON.stringify(ids));
+
+        const label = btn.querySelector('.multi-select-label');
+        if (ids.length === 0) {
+            label.textContent = 'Select teachers...';
+            label.classList.add('text-gray-400');
+            label.classList.remove('text-gray-900', 'dark:text-white');
+        } else {
+            const names = Array.from(checked).map(cb => cb.closest('label').querySelector('span').textContent);
+            label.textContent = names.join(', ');
+            label.classList.remove('text-gray-400');
+            label.classList.add('text-gray-900', 'dark:text-white');
+        }
+    }
+
+    function getMultiSelectIds(container) {
+        try { return JSON.parse(container.getAttribute('data-multi-ids') || '[]'); }
+        catch { return []; }
+    }
+
     function generateSectionFields() {
         const count = document.getElementById('section-count').value;
         const container = document.getElementById('sections-container');
@@ -123,34 +192,25 @@
                     <label class="block mb-1 text-xs font-medium text-gray-500 uppercase">Section</label>
                     <input type="text" value="${letter}" class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 cursor-not-allowed" readonly>
                 </div>
-                 <div class="col-span-12 md:col-span-5">
-                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Section Teacher</label>
-                    <select class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white teacher-select">
-                        <option value="">Select Teacher</option>
-                    </select>
+                <div class="col-span-12 md:col-span-5">
+                    <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Section Teachers</label>
+                    <div class="teacher-multi-select"></div>
                 </div>
-                 <div class="col-span-12 md:col-span-3">
+                <div class="col-span-12 md:col-span-3">
                     <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Max Capacity</label>
                     <input type="number" value="30" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
                 </div>
-                 <div class="col-span-12 md:col-span-2">
+                <div class="col-span-12 md:col-span-2">
                     <label class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Room</label>
                     <input type="text" placeholder="Map..." class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:text-white">
                 </div>
             `;
             container.appendChild(row);
+
+            // Build multi-select for this row
+            const msContainer = row.querySelector('.teacher-multi-select');
+            buildMultiSelect(msContainer, teachersData, `section-teachers-${i}`);
         }
-        
-        // Populate new dropdowns
-        const newSelects = container.querySelectorAll('.teacher-select');
-        newSelects.forEach(sel => {
-             teachersData.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
-                opt.textContent = t.name;
-                sel.appendChild(opt);
-            });
-        });
     }
 
     // === 3. VIEW CLASS LOGIC ===
@@ -178,17 +238,24 @@
             document.getElementById('view-sections-list').textContent = cls.sections.map(s => s.name).join(', ');
             const overviewGrid = document.getElementById('overview-sections-grid');
             overviewGrid.innerHTML = cls.sections.map(s => {
-                 const sTeacher = tData.find(t => t.id === s.teacherId);
-                 return `
+                // Support both old `teacherId` string and new `teacherIds` array
+                const teacherIds = s.teacherIds || (s.teacherId ? [s.teacherId] : []);
+                const teachers = teacherIds.map(tid => tData.find(t => t.id === tid)).filter(Boolean);
+                const teacherDisplay = teachers.length > 0
+                    ? teachers.map(t => `<span class="inline-block bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">${t.name}</span>`).join(' ')
+                    : '<span class="text-gray-400">None</span>';
+
+                return `
                     <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-lg font-bold text-gray-900 dark:text-white">Section ${s.name}</span>
                             <span class="text-xs text-gray-500 bg-white border border-gray-200 rounded px-2 py-1">${s.room}</span>
                         </div>
                         <div class="text-sm text-gray-500 mb-1">Students: <span class="font-semibold text-gray-900 dark:text-white">${s.studentCount}/${s.capacity}</span></div>
-                        <div class="text-sm text-gray-500">Teacher: <span class="font-medium text-primary-600">${sTeacher ? sTeacher.name : 'None'}</span></div>
+                        <div class="text-sm text-gray-500 mb-1">Teachers:</div>
+                        <div class="flex flex-wrap gap-1">${teacherDisplay}</div>
                     </div>
-                 `;
+                `;
             }).join('');
         }
 
@@ -212,29 +279,25 @@
             const clonedForm = formAddSection.cloneNode(true);
             formAddSection.parentNode.replaceChild(clonedForm, formAddSection);
             
-            // Populate Dropdown Options
-            const select = clonedForm.querySelector('#newSectionTeacher');
-            if(select && select.options.length <= 1) {
-                tData.forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t.id;
-                    opt.textContent = t.name;
-                    select.appendChild(opt);
-                });
+            // Build multi-select for section teachers
+            const teacherContainer = clonedForm.querySelector('#newSectionTeacherContainer');
+            if(teacherContainer) {
+                buildMultiSelect(teacherContainer, tData, 'modal-section-teachers');
             }
 
             clonedForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const nameSelect = document.getElementById('newSectionName').value;
-                const teacherSelect = document.getElementById('newSectionTeacher').value;
-                const capacitySelect = document.getElementById('newSectionCapacity').value;
-                const roomSelect = document.getElementById('newSectionRoom').value;
+                const nameVal = document.getElementById('newSectionName').value;
+                const teacherContainer = clonedForm.querySelector('#newSectionTeacherContainer');
+                const selectedTeacherIds = getMultiSelectIds(teacherContainer);
+                const capacityVal = document.getElementById('newSectionCapacity').value;
+                const roomVal = document.getElementById('newSectionRoom').value;
                 
                 cls.sections.push({
-                    name: nameSelect,
-                    capacity: parseInt(capacitySelect),
-                    room: roomSelect,
-                    teacherId: teacherSelect,
+                    name: nameVal,
+                    capacity: parseInt(capacityVal),
+                    room: roomVal,
+                    teacherIds: selectedTeacherIds,
                     studentCount: 0
                 });
                 

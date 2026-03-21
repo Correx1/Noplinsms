@@ -89,6 +89,17 @@
 
     // === 2. ADD SUBJECT FORM LOGIC ===
     async function initAddSubjectForm() {
+        // Load teachers for the multi-select
+        let teachersData = [];
+        try {
+            const res = await fetch('../../data/teachers-data.json');
+            teachersData = await res.json();
+        } catch(e) { console.error('Could not load teachers:', e); }
+
+        // Build multi-select in the container
+        const container = document.getElementById('subjectTeachersContainer');
+        if (container) buildSubjectTeacherMultiSelect(container, teachersData);
+
         if (window.editingSubjectId) {
             const h1 = document.querySelector('h1');
             if(h1) h1.textContent = 'Edit Subject';
@@ -102,20 +113,30 @@
                 document.getElementById('subjectType').value = subject.type;
                 const deptSelect = document.getElementById('subjectDepartment');
                 if (deptSelect && subject.department) deptSelect.value = subject.department;
-                
-                const descEl = document.getElementById('subjectDescription');
-                if(descEl && subject.description) descEl.value = subject.description;
 
                 const checkboxes = document.querySelectorAll('#assignedClassesGroup input[type="checkbox"]');
                 checkboxes.forEach(cb => {
                     if (subject.classes.includes(cb.value)) cb.checked = true;
                 });
+
+                // Pre-select saved teachers
+                if (subject.teacherIds && container) {
+                    subject.teacherIds.forEach(tid => {
+                        const cb = container.querySelector(`input[value="${tid}"]`);
+                        if (cb) {
+                            cb.checked = true;
+                            const btn = container.querySelector('.multi-select-btn');
+                            updateSubjectTeacherLabel(container, btn);
+                        }
+                    });
+                }
             }
         }
 
         addSubjectForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('subjectName').value;
+            const teacherIds = getSubjectTeacherIds(container);
             
             if(name) {
                 alert(window.editingSubjectId ? 'Subject updated successfully! (Mock)' : 'Subject added successfully! (Mock)');
@@ -124,6 +145,65 @@
                 }
             }
         });
+    }
+
+    function buildSubjectTeacherMultiSelect(container, teachers) {
+        container.innerHTML = '';
+        container.setAttribute('data-multi-ids', '[]');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'multi-select-btn w-full text-left bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white flex justify-between items-center';
+        btn.innerHTML = '<span class="multi-select-label text-gray-400">Select teachers...</span><i class="fas fa-chevron-down text-xs"></i>';
+
+        const panel = document.createElement('div');
+        panel.className = 'multi-select-panel hidden absolute z-30 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 max-h-52 overflow-y-auto';
+
+        teachers.forEach(t => {
+            const item = document.createElement('label');
+            item.className = 'flex items-center gap-2 px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer';
+            item.innerHTML = `
+                <input type="checkbox" value="${t.id}" class="subject-teacher-check w-4 h-4 text-primary-600 rounded border-gray-300 focus:ring-primary-500">
+                <span class="text-sm text-gray-900 dark:text-white">${t.name}</span>
+            `;
+            const cb = item.querySelector('input');
+            cb.addEventListener('change', () => updateSubjectTeacherLabel(container, btn));
+            panel.appendChild(item);
+        });
+
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.multi-select-panel').forEach(p => { if (p !== panel) p.classList.add('hidden'); });
+            panel.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => panel.classList.add('hidden'));
+
+        wrapper.appendChild(btn);
+        wrapper.appendChild(panel);
+        container.appendChild(wrapper);
+    }
+
+    function updateSubjectTeacherLabel(container, btn) {
+        const checked = container.querySelectorAll('.subject-teacher-check:checked');
+        const ids = Array.from(checked).map(cb => cb.value);
+        container.setAttribute('data-multi-ids', JSON.stringify(ids));
+        const label = btn.querySelector('.multi-select-label');
+        if (ids.length === 0) {
+            label.textContent = 'Select teachers...';
+            label.className = 'multi-select-label text-gray-400';
+        } else {
+            label.textContent = Array.from(checked).map(cb => cb.closest('label').querySelector('span').textContent).join(', ');
+            label.className = 'multi-select-label text-gray-900 dark:text-white';
+        }
+    }
+
+    function getSubjectTeacherIds(container) {
+        if (!container) return [];
+        try { return JSON.parse(container.getAttribute('data-multi-ids') || '[]'); }
+        catch { return []; }
     }
 
     // Shared: Fetch Data

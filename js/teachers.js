@@ -17,8 +17,10 @@
             .then(data => {
                 allTeachers = data;
                 filteredTeachers = data;
-                renderTable();
+                allTeachers = data;
+                filteredTeachers = data;
                 setupFilters();
+                window.runTeacherFilters();
             })
             .catch(err => console.error('Error loading teachers:', err));
 
@@ -59,16 +61,15 @@
                     </td>
                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">${teacher.phone}</td>
                     <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <div class="flex items-center">
-                            <div class="h-2.5 w-2.5 rounded-full ${getStatusColor(teacher.status)} mr-2"></div> ${teacher.status}
-                        </div>
+                        <select onchange="window.updateTeacherStatus('${teacher.id}', this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="Active" ${teacher.status === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="On Leave" ${teacher.status === 'On Leave' ? 'selected' : ''}>On Leave</option>
+                            <option value="Inactive" ${teacher.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
                     </td>
                     <td class="p-4 space-x-2 whitespace-nowrap">
                         <button onclick="window.loadAddTeacherPage('${teacher.id}')" type="button" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <i class="fas fa-edit mr-2"></i> Edit
-                        </button>
-                        <button type="button" onclick="window.prepareDeleteTeacher('${teacher.id}')" data-modal-target="deleteTeacherModal" data-modal-toggle="deleteTeacherModal" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
-                            <i class="fas fa-trash-alt mr-2"></i> Delete
                         </button>
                     </td>
                 `;
@@ -113,25 +114,33 @@
             const subFilter = document.getElementById('filter-subject');
             const statusFilter = document.getElementById('filter-status');
 
-            function applyFilters() {
+            window.runTeacherFilters = function() {
                 const term = searchInput.value.toLowerCase();
                 const sub = subFilter.value;
-                const stat = statusFilter.value;
+                const stat = statusFilter.value || 'Active_OnLeave';
+
+                const pageTitleEl = document.getElementById('page-title');
+                if(pageTitleEl) {
+                    if (stat === 'Inactive') pageTitleEl.innerText = 'Past/Inactive Teachers';
+                    else pageTitleEl.innerText = 'All Teachers';
+                }
 
                 filteredTeachers = allTeachers.filter(t => {
                     const matchesSearch = t.name.toLowerCase().includes(term) || t.email.toLowerCase().includes(term);
                     const matchesSub = sub ? t.employment.specialization.includes(sub) : true;
-                    const matchesStat = stat ? t.status === stat : true;
+                    const matchesStat = stat === 'Active_OnLeave' 
+                        ? (t.status === 'Active' || t.status === 'On Leave')
+                        : t.status === stat;
                     return matchesSearch && matchesSub && matchesStat;
                 });
 
                 currentPage = 1;
                 renderTable();
-            }
+            };
 
-            searchInput.addEventListener('input', applyFilters);
-            subFilter.addEventListener('change', applyFilters);
-            statusFilter.addEventListener('change', applyFilters);
+            searchInput.addEventListener('input', window.runTeacherFilters);
+            subFilter.addEventListener('change', window.runTeacherFilters);
+            statusFilter.addEventListener('change', window.runTeacherFilters);
         }
 
         // Global Pagination Helper
@@ -141,14 +150,48 @@
             renderTable();
         };
 
-        window.prepareDeleteTeacher = function(id) {
-            const btn = document.getElementById('confirm-delete-teacher-btn');
-            btn.onclick = () => {
-                allTeachers = allTeachers.filter(t => t.id !== id);
-                filteredTeachers = filteredTeachers.filter(t => t.id !== id);
-                renderTable();
-                // Close modal programmatically if needed, or rely on flowbite
-            };
+        window.updateTeacherStatus = function(id, newStatus) {
+            const idx = allTeachers.findIndex(t => t.id === id);
+            if (idx > -1) {
+                allTeachers[idx].status = newStatus;
+                window.runTeacherFilters();
+            }
+        };
+
+        window.exportTeachersExcel = function() {
+            if (!filteredTeachers || filteredTeachers.length === 0) {
+                if(window.showToast) window.showToast('No teachers to export.', 'error');
+                else alert("No teachers to export based on current filters.");
+                return;
+            }
+
+            const headers = ["Name", "Teacher ID", "Subject", "Classes Handled", "Email", "Phone", "Status"];
+            
+            const rows = filteredTeachers.map(teacher => [
+                `"${teacher.name || ''}"`,
+                `"${teacher.id || ''}"`,
+                `"${(teacher.employment && teacher.employment.specialization) ? teacher.employment.specialization.join(', ') : ''}"`,
+                `"${(teacher.employment && teacher.employment.classes_assigned) ? teacher.employment.classes_assigned.join(', ') : ''}"`,
+                `"${teacher.email || ''}"`,
+                `"${teacher.phone || ''}"`,
+                `"${teacher.status || ''}"`
+            ]);
+
+            let csvContent = "data:text/csv;charset=utf-8," 
+                + headers.join(",") + "\n" 
+                + rows.map(e => e.join(",")).join("\n");
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            
+            const statusFilterEl = document.getElementById('filter-status');
+            const currentStatus = statusFilterEl ? (statusFilterEl.value || 'active') : 'active';
+            link.setAttribute("download", `teachers_export_${currentStatus.toLowerCase()}_${new Date().toISOString().slice(0,10)}.csv`);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         };
     }
 

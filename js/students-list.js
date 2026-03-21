@@ -1,6 +1,6 @@
-// Students List Logic
 (function() {
     let studentsData = [];
+    let filteredData = [];
     let currentPage = 1;
     let itemsPerPage = 10;
     let sortColumn = 'name';
@@ -54,25 +54,7 @@
             checkboxes.forEach(cb => cb.checked = this.checked);
         });
 
-        // Delete Modal Confirmation
-        if(deleteConfirmBtn) deleteConfirmBtn.addEventListener('click', () => {
-             if(deleteTargetId) {
-                 studentsData = studentsData.filter(student => student.id !== deleteTargetId);
-                 renderTable();
-                 
-                 // Hide Modal
-                 const modalEl = document.getElementById('deleteModal');
-                 const modal = new Modal(modalEl);
-                 modal.hide();
-                 
-                 // Manually hide backdrop if Flowbite doesn't handle it cleanly in this context
-                 document.body.classList.remove('overflow-hidden');
-                 const backdrops = document.querySelectorAll('[modal-backdrop]');
-                 backdrops.forEach(bd => bd.remove());
-                 
-                 deleteTargetId = null;
-             }
-        });
+        // Removed Delete Modal Confirmation per user request.
 
         // Sorting
         document.querySelectorAll('th[data-sort]').forEach(th => {
@@ -95,12 +77,12 @@
         if (!tbody) return;
 
         // Filter
-        let filteredData = studentsData.filter(student => {
+        filteredData = studentsData.filter(student => {
             const search = document.getElementById('student-search').value.toLowerCase();
             const fClass = document.getElementById('filter-class').value;
             const fSection = document.getElementById('filter-section').value;
             const fDepartment = document.getElementById('filter-department').value;
-            const fStatus = document.getElementById('filter-status').value;
+            const fStatus = document.getElementById('filter-status').value || 'Active'; // Default to Active if missing
 
             const matchesSearch = student.name.toLowerCase().includes(search) || 
                                   student.id.toLowerCase().includes(search) || 
@@ -108,10 +90,23 @@
             const matchesClass = fClass ? student.class === fClass : true;
             const matchesSection = fSection ? student.section === fSection : true;
             const matchesDepartment = fDepartment ? student.department === fDepartment : true;
-            const matchesStatus = fStatus ? student.status === fStatus : true;
+            const matchesStatus = fStatus === 'All' ? true : student.status === fStatus;
 
             return matchesSearch && matchesClass && matchesSection && matchesDepartment && matchesStatus;
         });
+
+        // Dynamic Page Header
+        const pageTitleEl = document.getElementById('page-title');
+        const fStatusVal = document.getElementById('filter-status').value;
+        if(pageTitleEl) {
+            if(fStatusVal === 'Inactive') {
+                pageTitleEl.innerText = 'Past/Inactive Students';
+            } else if(fStatusVal === 'All') {
+                pageTitleEl.innerText = 'All Students Records';
+            } else {
+                pageTitleEl.innerText = 'Students Management';
+            }
+        }
 
         // Sort Setup
         const groupBy = document.getElementById('group-by-field') ? document.getElementById('group-by-field').value : '';
@@ -196,20 +191,18 @@
                     <td class="px-6 py-4">${student.roll}</td>
                     <td class="px-6 py-4">${student.phone}</td>
                     <td class="px-6 py-4">
-                        <div class="flex items-center">
-                            <div class="h-2.5 w-2.5 rounded-full ${student.status === 'Active' ? 'bg-green-500' : 'bg-red-500'} mr-2"></div> ${student.status}
-                        </div>
+                        <select onchange="updateStudentStatus('${student.id}', this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="Active" ${student.status === 'Active' ? 'selected' : ''}>Active</option>
+                            <option value="Inactive" ${student.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
                     </td>
                     <td class="px-6 py-4">
-                        <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-3">
                             <button onclick="window.loadViewStudentPage('${student.id}')" class="font-medium text-gray-600 dark:text-gray-200 hover:underline" title="View Student">
                                 <i class="fas fa-eye"></i>
                             </button>
                             <button onclick="window.loadAddStudentPage('${student.id}')" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" title="Edit Student">
                                 <i class="fas fa-pen"></i>
-                            </button>
-                            <button onclick="window.prepareDelete('${student.id}')" data-modal-target="deleteModal" data-modal-toggle="deleteModal" class="font-medium text-red-600 dark:text-red-500 hover:underline" title="Delete Student">
-                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
@@ -257,7 +250,52 @@
         renderTable();
     };
 
-    window.prepareDelete = (id) => {
-        deleteTargetId = id;
+    window.updateStudentStatus = (id, newStatus) => {
+        const studentIndex = studentsData.findIndex(s => s.id === id);
+        if (studentIndex > -1) {
+            studentsData[studentIndex].status = newStatus;
+            renderTable();
+            if(window.showToast) {
+                window.showToast(`Student status updated to ${newStatus}`, 'success');
+            }
+        }
     };
+
+    window.exportStudentsExcel = function() {
+        if (!filteredData || filteredData.length === 0) {
+            if(window.showToast) window.showToast('No students to export based on current filters.', 'error');
+            else alert("No students to export based on current filters.");
+            return;
+        }
+
+        const headers = ["Name", "Student ID", "Class", "Department", "Section", "Roll No", "Phone", "Status"];
+        
+        const rows = filteredData.map(student => [
+            `"${student.name || ''}"`,
+            `"${student.id || ''}"`,
+            `"${student.class || ''}"`,
+            `"${student.department || 'General'}"`,
+            `"${student.section || ''}"`,
+            `"${student.roll || ''}"`,
+            `"${student.phone || ''}"`,
+            `"${student.status || ''}"`
+        ]);
+
+        let csvContent = "data:text/csv;charset=utf-8," 
+            + headers.join(",") + "\n" 
+            + rows.map(e => e.join(",")).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        
+        const currentStatus = document.getElementById('filter-status') ? (document.getElementById('filter-status').value || 'active') : 'active';
+        link.setAttribute("download", `students_export_${currentStatus.toLowerCase()}_${new Date().toISOString().slice(0,10)}.csv`);
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
 })();
+

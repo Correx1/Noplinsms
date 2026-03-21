@@ -1,17 +1,26 @@
 // ============================================================
-// ELEGANT TEMPLATE — Austica Memorial College Style
-// Red/blue accents, cognitive domain, affective & psychomotor
-// checkmark grids, result analysis with compulsory pass check
+// ELEGANT TEMPLATE — Austica Memorial College Replica
+// Perfect tracking, darker borders, dynamic subject rows
+// Bugfixes: Removed duplicate EXAM, robust domain fallbacks
 // ============================================================
 (function() {
+
+    function hexToRgbA(hex, alpha) {
+        let h = hex.replace('#', '');
+        if(h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+        let r = parseInt(h.substring(0,2), 16);
+        let g = parseInt(h.substring(2,4), 16);
+        let b = parseInt(h.substring(4,6), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+    }
 
     window.TEMPLATE_REGISTRY.elegant = {
         id: 'elegant',
         name: 'Elegant Series',
-        description: 'Refined report with cognitive domain table, separate affective & psychomotor checkmark grids, and result analysis.',
+        description: 'Austica-style double-border report with sharp dark borders and exact font layout.',
 
         capabilities: {
-            studentPhoto:       false,
+            studentPhoto:       true,
             dateOfBirth:        false,
             attendance:         false,
             closingDate:        true,
@@ -23,232 +32,240 @@
             keysToRating:       false,
             teacherRemark:      true,
             headTeacherRemark:  false,
-            principalRemark:    false,
+            principalRemark:    true,
             signatures:         false,
             subjectPosition:    true,
             subjectHighLow:     false
         },
 
         renderTerm: function(p) {
-            const tc = p.school.themeColor || '#1a237e';
+            const tc = p.school.themeColor || '#0a195c';
+            const lightTc = tc !== '#000000' ? hexToRgbA(tc, 0.1) : '#f0f0f0';
+            const tableBorder = '1px solid #000'; 
 
-            // Academic Table — Cognitive Domain
-            let thCols = `<th style="border:1px solid #000;padding:3px;text-align:left;font-size:9px;font-weight:700;background:#fff;">Subjects</th>`;
-            p.structure.components.forEach(c => {
-                thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:7px;font-weight:700;">${c.name.toUpperCase()}</th>`;
+            // Header mapping for Academic Table
+            let thColsTop = `<th rowspan="2" style="border:${tableBorder};padding:5px 4px;text-align:left;font-size:10px;font-weight:900;">Subjects</th>`;
+            let thColsBottom = `<td style="border:${tableBorder};padding:4px;text-align:right;font-size:9px;color:#555;">Marks Obtainable</td>`;
+            
+            p.structure.components.forEach((c) => {
+                let colName = c.name;
+                if(colName.length > 5 && colName.toLowerCase() !== 'exam') colName = colName.split(' ').map(w=>w[0]).join(''); 
+                thColsTop += `<th style="border:${tableBorder};padding:5px 2px;text-align:center;font-size:9px;font-weight:800;color:#333;">${c.name}</th>`;
+                thColsBottom += `<td style="border:${tableBorder};padding:4px 2px;text-align:center;font-size:9px;font-weight:700;color:#333;">${c.weight}</td>`;
             });
-            thCols += `
-                <th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Total</th>
-                <th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Grade</th>
-                <th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:7px;font-weight:700;">Subject<br>Position</th>
-                <th style="border:1px solid #000;padding:3px 2px;text-align:left;font-size:7px;font-weight:700;">Teacher's<br>Remarks</th>`;
+            
+            // NOTE: Removed the manual EXAM column here. Noplin CMS passes properties dynamically including Exam inside p.structure.components
 
-            let tbRows = '';
-            // Marks obtainable row
-            let moRow = `<td style="border:1px solid #000;padding:3px;font-size:8px;font-weight:700;font-style:italic;">Marks Obtainable</td>`;
-            p.structure.components.forEach(c => {
-                moRow += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:9px;font-weight:600;">${c.weight}</td>`;
-            });
-            moRow += `<td style="border:1px solid #000;text-align:center;font-size:9px;font-weight:700;">100</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td>`;
-            tbRows += `<tr>${moRow}</tr>`;
+            thColsTop += `
+                <th style="border:${tableBorder};padding:5px 2px;text-align:center;font-size:9px;font-weight:800;color:#333;">Total</th>
+                <th style="border:${tableBorder};padding:5px 2px;text-align:center;font-size:9px;font-weight:800;color:#333;">Grade</th>
+                <th rowspan="2" style="border:${tableBorder};padding:5px 2px;text-align:center;font-size:9px;font-weight:800;color:#333;">Subject<br>Position</th>
+                <th rowspan="2" style="border:${tableBorder};padding:5px 4px;text-align:center;font-size:9px;font-weight:800;color:#333;">Teacher's<br>Remarks</th>`;
+            thColsBottom += `
+                             <td style="border:${tableBorder};padding:4px 2px;text-align:center;font-size:9px;font-weight:700;color:#333;">100</td>
+                             <td style="border:${tableBorder};padding:4px 2px;text-align:center;font-size:9px;font-weight:700;color:#333;"></td>`;
 
+            let tbRows = `<tr>${thColsBottom}</tr>`;
             p.subjects.forEach(sub => {
-                let tr = `<td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:9px;font-weight:600;">${sub.subject}</td>`;
+                let tr = `<td style="border:${tableBorder};padding:6px 4px;text-align:left;font-size:10px;font-weight:900;color:${tc};text-transform:uppercase;">${sub.subject}</td>`;
                 p.structure.components.forEach(c => {
-                    const sc = sub.components && sub.components[c.name] ? sub.components[c.name].score : '';
-                    tr += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;">${sc}</td>`;
+                    const sc = sub.components && sub.components[c.name] ? sub.components[c.name].score : '-';
+                    tr += `<td style="border:${tableBorder};padding:6px 2px;text-align:center;font-size:10px;font-weight:600;color:#000;">${sc}</td>`;
                 });
-                tr += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:800;">${sub.total}</td>`;
-                tr += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:700;color:${tc};">${sub.grade}</td>`;
-                tr += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:9px;">${sub.position || ''}</td>`;
-                tr += `<td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:8px;font-style:italic;">${sub.remark || ''}</td>`;
+                // NOTE: Removed sub.summary.exam_score td here 
+                tr += `<td style="border:${tableBorder};padding:6px 2px;text-align:center;font-size:10px;font-weight:900;color:#000;">${sub.total}</td>`;
+                tr += `<td style="border:${tableBorder};padding:6px 2px;text-align:center;font-size:10px;font-weight:800;color:#444;">${sub.grade}</td>`;
+                tr += `<td style="border:${tableBorder};padding:6px 2px;text-align:center;font-size:10px;font-weight:600;color:#000;">${sub.position || '-'}</td>`;
+                
+                let rmColor = '#4caf50'; 
+                if(sub.remark && (sub.remark.toLowerCase().includes('fail') || sub.remark.toLowerCase().includes('poor'))) rmColor = '#d32f2f';
+                
+                tr += `<td style="border:${tableBorder};padding:6px 4px;text-align:center;font-size:10px;font-weight:700;color:${rmColor};">${sub.remark || ''}</td>`;
                 tbRows += `<tr>${tr}</tr>`;
             });
 
-            // --- Affective Domain checkmark grid ---
-            const affective = Object.keys(p.evaluation.affectiveDomains).length > 0
-                ? Object.entries(p.evaluation.affectiveDomains)
-                : p.domainsList.map(d => [d, '']);
+            const getCheck = (val, target) => {
+                const v = parseInt(val) || 0;
+                return (v === target) ? '&#10003;' : '-';
+            };
+
+            // SAFE DOMAINS LIST RETRIEVAL
+            const defAff = ['Neatness', 'Honesty', 'Punctuality', 'Attentiveness', 'Politeness'];
+            const safeAffList = (p.domainsList && p.domainsList.length > 0) ? p.domainsList : defAff;
+            
+            const defPsy = ['Sports', 'Handwriting', 'Musical Skills', 'Fluency', 'Artworks'];
+            const safePsyList = (p.psychomotorList && p.psychomotorList.length > 0) ? p.psychomotorList : ((p.psychomotorsList && p.psychomotorsList.length > 0) ? p.psychomotorsList : defPsy);
+
+            const domKeys = Object.keys(p.evaluation.affectiveDomains || {});
+            const domList = domKeys.length > 0 ? domKeys : safeAffList.slice(0, 5);
             let affRows = '';
-            affective.forEach(([name, val]) => {
-                const v = parseInt(val) || 0;
+            domList.forEach(d => {
+                const val = (p.evaluation.affectiveDomains || {})[d] || '';
                 affRows += `<tr>
-                    <td style="border:1px solid #000;padding:2px 4px;font-size:8px;font-weight:600;text-align:left;">${name}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v >= 5 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 4 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 3 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 2 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v <= 1 && v > 0 ? '✓' : '-'}</td>
+                    <td style="border:${tableBorder};padding:4px 6px;text-align:left;font-size:10px;font-weight:700;color:#4caf50;">${d}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 5)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 4)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 3)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 2)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 1)}</td>
                 </tr>`;
             });
 
-            // --- Psychomotor Domain checkmark grid ---
-            const psycho = Object.keys(p.evaluation.psychomotorDomains).length > 0
-                ? Object.entries(p.evaluation.psychomotorDomains)
-                : p.psychomotorList.map(d => [d, '']);
+            const psyKeys = Object.keys(p.evaluation.psychomotorDomains || {});
+            const psyList = psyKeys.length > 0 ? psyKeys : safePsyList.slice(0, 5);
             let psyRows = '';
-            psycho.forEach(([name, val]) => {
-                const v = parseInt(val) || 0;
+            psyList.forEach(d => {
+                const val = (p.evaluation.psychomotorDomains || {})[d] || '';
                 psyRows += `<tr>
-                    <td style="border:1px solid #000;padding:2px 4px;font-size:8px;font-weight:600;text-align:left;">${name}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v >= 5 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 4 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 3 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v === 2 ? '✓' : '-'}</td>
-                    <td style="border:1px solid #000;text-align:center;font-size:9px;">${v <= 1 && v > 0 ? '✓' : '-'}</td>
+                    <td style="border:${tableBorder};padding:4px 6px;text-align:left;font-size:10px;font-weight:700;color:#4caf50;">${d}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 5)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 4)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 3)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 2)}</td>
+                    <td style="border:${tableBorder};text-align:center;font-size:10px;font-weight:900;color:#000;">${getCheck(val, 1)}</td>
                 </tr>`;
             });
 
-            // --- Grading Keys ---
             let gradingLine = '';
             p.gradingKeys.forEach(g => {
-                gradingLine += `${g.min} - ${g.max} : ${g.grade} (${g.remark.toUpperCase()})${g.min > 0 ? ' | ' : ''}`;
+                gradingLine += `${g.min} - ${g.max} : ${g.grade} (${g.remark.toUpperCase()}) | `;
             });
+            gradingLine = gradingLine.replace(/ \| $/, ''); 
 
             return `
-            <div style="font-family:'Times New Roman',Georgia,serif;width:100%;height:100%;color:#000;background:#fff;display:flex;flex-direction:column;">
-
-                <!-- HEADER -->
-                <div style="display:flex;align-items:center;margin-bottom:2px;">
-                    <div style="width:80px;height:85px;flex-shrink:0;">
-                        <img src="${p.school.logo}" style="width:100%;height:100%;object-fit:contain;">
-                    </div>
-                    <div style="flex:1;text-align:center;padding:0 8px;">
-                        <div style="font-size:22px;font-weight:900;text-transform:uppercase;color:${tc};letter-spacing:1px;">${p.school.name}</div>
-                        <div style="font-size:10px;font-weight:600;color:#444;">${p.school.address}</div>
-                        <div style="font-size:10px;font-weight:700;font-style:italic;color:${tc};margin-top:2px;">${p.school.motto}</div>
-                    </div>
-                </div>
-
-                <!-- TERMINAL REPORT BANNER -->
-                <div style="background:${tc};color:#fff;text-align:center;padding:4px 0;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;">TERMINAL REPORT</div>
-
-                <!-- INFO -->
-                <div style="font-size:9px;font-weight:700;margin-bottom:6px;">
-                    <div style="display:flex;gap:6px;margin-bottom:3px;">
-                        <span>NAME OF STUDENT: <span style="font-weight:400;text-transform:uppercase;border-bottom:1px solid #000;padding:0 12px;">${p.student.name}</span></span>
-                        <span>ADMISSION NO.: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.student.roll}</span></span>
-                        <span>CLASS: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.student.class}</span></span>
-                    </div>
-                    <div style="display:flex;gap:6px;margin-bottom:3px;">
-                        <span>NUMBER IN CLASS: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.context.noInClass}</span></span>
-                        <span>TERM: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.context.term}</span></span>
-                        <span>SESSION: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.context.session}</span></span>
-                        <span>STATUS: <span style="font-weight:400;border-bottom:1px solid #000;padding:0 8px;">${p.summary.isPromoted ? 'Passed' : 'Failed'}</span></span>
-                    </div>
-                    <div style="display:flex;gap:6px;">
-                        <span>TOTAL MARKS OBTAINABLE: <span style="font-weight:900;border-bottom:1px solid #000;padding:0 6px;">${p.subjects.length * 100}</span></span>
-                        <span>TOTAL MARKS OBTAINED: <span style="font-weight:900;border-bottom:1px solid #000;padding:0 6px;">${p.summary.grandTotal}</span></span>
-                        <span>AVERAGE: <span style="font-weight:900;border-bottom:1px solid #000;padding:0 6px;">${p.summary.average}</span></span>
-                        <span>POSITION: <span style="font-weight:900;border-bottom:1px solid #000;padding:0 6px;">${p.summary.position}</span></span>
-                    </div>
-                </div>
-
-                <!-- COGNITIVE DOMAIN TABLE -->
-                <div style="text-align:center;font-size:10px;font-weight:700;color:#fff;background:${tc};padding:2px 0;text-transform:uppercase;margin-bottom:0;">COGNITIVE DOMAIN</div>
-                <table style="border-collapse:collapse;width:100%;margin-bottom:6px;">
-                    <thead><tr>${thCols}</tr></thead>
-                    <tbody>${tbRows}</tbody>
-                </table>
-
-                <!-- BOTTOM SECTION: 2 COLUMNS -->
-                <div style="display:flex;gap:8px;margin-top:auto;">
-                    <!-- LEFT: Remarks + Dates + Analysis + Grading -->
-                    <div style="width:50%;font-size:8px;font-weight:700;">
-                        <div style="background:${tc};color:#fff;text-align:center;padding:2px 0;font-size:9px;font-weight:700;text-transform:uppercase;">REMARKS, AFFECTIVE AND PSYCHOMOTOR DOMAINS</div>
-                        <div style="margin:4px 0;">Class Teacher Remarks: <span style="font-weight:400;font-style:italic;">${p.evaluation.teacherRemark}</span></div>
-                        <div>Vacation Date: <span style="font-weight:400;">${p.dates.closingDate}</span></div>
-                        <div>Resumption Date: <span style="font-weight:400;">${p.dates.resumptionDate}</span></div>
-                        <div style="margin-top:4px;border-top:1px solid #000;padding-top:3px;">
-                            <div style="font-weight:700;">Result Analysis</div>
-                            <div style="font-weight:400;font-size:7px;line-height:1.5;">
-                                • Pass mark is 50<br>
-                                • Promotion score is ${parseInt(localStorage.getItem('sms_promotion_rule') || 50)}, you scored ${p.summary.average}
-                            </div>
+            <div style="font-family: Arial, Tahoma, sans-serif;width:100%;height:100%;color:#000;background:#fff;padding:10px;box-sizing:border-box;">
+                
+                <div style="border:1px solid ${tc}; padding:2px; box-sizing:border-box;">
+                    <div style="border:3px solid ${tc}; padding:4px; display:flex; flex-direction:column; box-sizing:border-box;">
+                    
+                    <div style="display:flex;justify-content:space-between;align-items:stretch;margin-bottom:4px;">
+                        <div style="width:85px;height:90px;border:1px solid ${tc};padding:2px;flex-shrink:0;">
+                            <img src="${p.school.logo}" style="width:100%;height:100%;object-fit:contain;">
                         </div>
-                        <div style="margin-top:4px;font-size:7px;">GRADING: ${gradingLine}</div>
+                        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;background:-webkit-linear-gradient(top, ${lightTc}, #fff);padding:6px 15px;margin:0 8px;border-bottom:2px solid #333;">
+                            <div style="font-size:26px;font-weight:900;text-transform:uppercase;color:${tc};font-family:'Times New Roman', Georgia, serif;line-height:1.1;letter-spacing:1px;text-align:center;text-shadow:1px 1px 0px rgba(255,255,255,0.8);">${p.school.name}</div>
+                            <div style="font-size:13px;font-weight:600;color:#222;font-style:italic;margin-top:4px;">${p.school.motto}</div>
+                        </div>
+                        <div style="width:80px;height:90px;border:1px solid #ccc;padding:2px;flex-shrink:0;">
+                            ${p.student.photo ? `<img src="${p.student.photo}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="width:100%;height:100%;background:#eee;display:flex;align-items:center;justify-content:center;color:#999;font-size:8px;">PHOTO</div>'}
+                        </div>
                     </div>
 
-                    <!-- RIGHT: Affective + Psychomotor -->
-                    <div style="width:50%;display:flex;flex-direction:column;gap:4px;">
-                        <!-- Affective -->
-                        <table style="border-collapse:collapse;width:100%;font-size:8px;">
-                            <thead><tr>
-                                <th style="border:1px solid #000;padding:2px 4px;text-align:left;font-weight:700;">AFFECTIVE DOMAIN</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Excel.</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">V.Good</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Good</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Poor</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">V.Poor</th>
-                            </tr></thead>
-                            <tbody>${affRows}</tbody>
-                        </table>
-                        <!-- Psychomotor -->
-                        <table style="border-collapse:collapse;width:100%;font-size:8px;">
-                            <thead><tr>
-                                <th style="border:1px solid #000;padding:2px 4px;text-align:left;font-weight:700;">PSYCHOMOTOR DOMAIN</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Excel.</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">V.Good</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Good</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">Poor</th>
-                                <th style="border:1px solid #000;padding:2px;text-align:center;font-size:7px;">V.Poor</th>
-                            </tr></thead>
-                            <tbody>${psyRows}</tbody>
-                        </table>
+                    <div style="text-align:center;color:#d32f2f;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;margin-top:2px;">
+                        ${p.context.term} REPORT
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:10px; color:#000; margin-bottom:0; border:${tableBorder};border-bottom:none;">
+                        <tr>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:55%;font-weight:800;color:${tc};line-height:1.3;">NAME OF STUDENT: &nbsp;&nbsp;<span style="font-weight:900;color:#000;text-transform:uppercase;">${p.student.name}</span></td>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:30%;font-weight:800;color:${tc};">ADMISSION NO.: &nbsp;&nbsp;<span style="font-weight:900;color:#000;">${p.student.roll}</span></td>
+                            <td style="padding:5px 6px;width:15%;font-weight:800;color:${tc};">CLASS: &nbsp;&nbsp;<span style="font-weight:900;color:#000;">${p.student.class}</span></td>
+                        </tr>
+                    </table>
+                    <table style="width:100%; border-collapse:collapse; font-size:10px; color:#000; margin-bottom:0; border:${tableBorder}; border-bottom:none;">
+                        <tr>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:25%;font-weight:800;color:${tc};">NUMBER IN CLASS:&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.context.noInClass}</span></td>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:25%;font-weight:800;color:${tc};">TERM :&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.context.term}</span></td>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:25%;font-weight:800;color:${tc};">SESSION :&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.context.session}</span></td>
+                            <td style="padding:5px 6px;width:25%;font-weight:800;color:${tc};">STATUS :&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#2e7d32;">${p.summary.isPromoted ? 'Passed' : 'Failed'}</span></td>
+                        </tr>
+                    </table>
+                    <table style="width:100%; border-collapse:collapse; font-size:10px; color:#000; margin-bottom:6px; border:${tableBorder};">
+                        <tr>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:30%;font-weight:800;color:${tc};">TOTAL MARKS OBTAINABLE:&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.subjects.length * 100}</span></td>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:30%;font-weight:800;color:${tc};">TOTAL MARKS OBTAINED:&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.summary.grandTotal}</span></td>
+                            <td style="border-right:${tableBorder};padding:5px 6px;width:20%;font-weight:800;color:${tc};">AVERAGE :&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.summary.average}</span></td>
+                            <td style="padding:5px 6px;width:20%;font-weight:800;color:${tc};">POSITION :&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight:900;color:#000;">${p.summary.position}</span></td>
+                        </tr>
+                    </table>
+
+                    <div style="background:#4caf50;color:#fff;text-align:center;padding:4px 0;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:0;">
+                        COGNITIVE DOMAIN
+                    </div>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:6px; border:${tableBorder};">
+                        <thead>
+                            <tr>${thColsTop}</tr>
+                        </thead>
+                        <tbody>
+                            ${tbRows}
+                        </tbody>
+                    </table>
+
+                    <div style="background:#4caf50;color:#fff;text-align:center;padding:4px 0;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:0;">
+                        REMARKS, AFFECTIVE AND PSYCHOMOTOR DOMAINS
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:8px; border:${tableBorder};">
+                        <tr>
+                            <!-- LEFT PANEL (Remarks & Analysis) -->
+                            <td style="border:${tableBorder};vertical-align:top;padding:0;width:50%;">
+                                <table style="width:100%; border-collapse:collapse; font-size:10px;">
+                                    <tr>
+                                        <td style="border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;width:35%;color:#444;">Class Teacher Remarks:</td>
+                                        <td style="border-bottom:${tableBorder};padding:5px 6px;font-weight:700;color:#111;">${p.evaluation.teacherRemark}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;color:#444;">Vacation Date:</td>
+                                        <td style="border-bottom:${tableBorder};padding:5px 6px;font-weight:700;color:#111;">${p.dates.closingDate || '-'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;color:#444;">Resumption Date:</td>
+                                        <td style="border-bottom:${tableBorder};padding:5px 6px;font-weight:700;color:#111;">${p.dates.resumptionDate || '-'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;color:#444;vertical-align:top;">
+                                            Result<br>Analysis:<br>(Criteria<br>for<br>passing)
+                                        </td>
+                                        <td style="border-bottom:${tableBorder};padding:5px 6px;color:#4caf50;font-weight:600;line-height:1.5;vertical-align:top;">
+                                            • Promotion score is ${parseInt(localStorage.getItem('sms_promotion_rule') || 50)}, you scored ${p.summary.average}.<br>
+                                            • You ${p.summary.isPromoted ? 'passed' : 'failed'} the promotion criteria.<br>
+                                            ${p.evaluation.principalRemark ? `• Minimum subject to offer is ${p.subjects.length}.<br>• ${p.evaluation.principalRemark}` : `• Minimum subject to offer is ${p.subjects.length}.`}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border-right:${tableBorder};padding:5px 6px;color:#444;">GRADING:</td>
+                                        <td style="padding:5px 6px;color:#333;font-weight:700;line-height:1.4;">
+                                            • ${gradingLine}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                            <!-- RIGHT PANEL (Checkmark Domains) -->
+                            <td style="border:${tableBorder};vertical-align:top;padding:0;width:50%;">
+                                <table style="width:100%; border-collapse:collapse; font-size:10px;">
+                                    <tr>
+                                        <th style="border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;text-align:left;color:#d32f2f;font-weight:900;width:40%;">AFFECTIVE DOMAIN</th>
+                                        <th style="border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;width:12%;text-align:center;">Excel.</th>
+                                        <th style="border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;width:12%;text-align:center;">V.Good</th>
+                                        <th style="border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;width:12%;text-align:center;">Good</th>
+                                        <th style="border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;width:12%;text-align:center;">Poor</th>
+                                        <th style="border-bottom:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;width:12%;text-align:center;">V.Poor</th>
+                                    </tr>
+                                    ${affRows}
+                                    <tr>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};border-right:${tableBorder};padding:5px 6px;text-align:left;color:#d32f2f;font-weight:900;">PSYCHOMOTOR<br>DOMAIN</th>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;text-align:center;vertical-align:bottom;">Excel.</th>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;text-align:center;vertical-align:bottom;">V.Good</th>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;text-align:center;vertical-align:bottom;">Good</th>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};border-right:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;text-align:center;vertical-align:bottom;">Poor</th>
+                                        <th style="border-top:${tableBorder};border-bottom:${tableBorder};padding:3px;color:#d32f2f;font-weight:800;font-size:9px;text-align:center;vertical-align:bottom;">V.Poor</th>
+                                    </tr>
+                                    ${psyRows}
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="text-align:center;font-size:10px;font-weight:800;color:#555;font-style:italic;margin-top:auto;padding-bottom:2px;padding-top:4px;">
+                        © ${p.school.name} (${p.school.website || p.school.email || ''}) - powered by Noplin SMS.
+                    </div>
                     </div>
                 </div>
             </div>`;
         },
 
-        renderSession: function(p) {
-            const tc = p.school.themeColor || '#1a237e';
-            let thCols = `<th style="border:1px solid #000;padding:3px;text-align:left;font-size:9px;font-weight:700;">Subjects</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Term 1</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Term 2</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Term 3</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Annual</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:8px;font-weight:700;">Grade</th>`;
-            thCols += `<th style="border:1px solid #000;padding:3px 2px;text-align:left;font-size:7px;font-weight:700;">Remarks</th>`;
-
-            let tbRows = '';
-            p.subjects.forEach(sub => {
-                tbRows += `<tr>
-                    <td style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:600;">${sub.subject}</td>
-                    <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;">${sub.t1 || ''}</td>
-                    <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;">${sub.t2 || ''}</td>
-                    <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;">${sub.t3 || ''}</td>
-                    <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:800;">${sub.annual || sub.total || ''}</td>
-                    <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:700;color:${tc};">${sub.grade || ''}</td>
-                    <td style="border:1px solid #000;padding:3px 4px;font-size:8px;font-style:italic;">${sub.remark || ''}</td>
-                </tr>`;
-            });
-
-            return `
-            <div style="font-family:'Times New Roman',Georgia,serif;width:100%;height:100%;color:#000;background:#fff;display:flex;flex-direction:column;">
-                <div style="display:flex;align-items:center;margin-bottom:2px;">
-                    <div style="width:80px;height:85px;flex-shrink:0;"><img src="${p.school.logo}" style="width:100%;height:100%;object-fit:contain;"></div>
-                    <div style="flex:1;text-align:center;padding:0 8px;">
-                        <div style="font-size:22px;font-weight:900;text-transform:uppercase;color:${tc};">${p.school.name}</div>
-                        <div style="font-size:10px;font-weight:600;color:#444;">${p.school.address}</div>
-                        <div style="font-size:10px;font-weight:700;font-style:italic;color:${tc};margin-top:2px;">${p.school.motto}</div>
-                    </div>
-                </div>
-                <div style="background:${tc};color:#fff;text-align:center;padding:4px 0;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:3px;margin-bottom:6px;">ANNUAL PERFORMANCE REPORT</div>
-                <div style="font-size:9px;font-weight:700;margin-bottom:6px;">
-                    <div>NAME: <span style="font-weight:400;text-transform:uppercase;">${p.student.name}</span> &nbsp; CLASS: <span style="font-weight:400;">${p.student.class}</span> &nbsp; SESSION: <span style="font-weight:400;">${p.context.session}</span></div>
-                    <div>TOTAL: <span style="font-weight:900;">${p.summary.grandTotal}</span> &nbsp; AVERAGE: <span style="font-weight:900;">${p.summary.average}</span> &nbsp; POSITION: <span style="font-weight:900;">${p.summary.position}</span></div>
-                </div>
-                <table style="border-collapse:collapse;width:100%;margin-bottom:6px;">
-                    <thead><tr>${thCols}</tr></thead>
-                    <tbody>${tbRows}</tbody>
-                </table>
-                <div style="margin-top:auto;font-size:9px;font-weight:700;line-height:1.8;">
-                    <div>Class Teacher Remarks: <span style="font-weight:400;font-style:italic;">${p.evaluation.teacherRemark}</span></div>
-                    <div>Resumption Date: <span style="font-weight:400;">${p.dates.resumptionDate}</span></div>
-                </div>
-            </div>`;
-        }
+        renderSession: function(p) { return this.renderTerm(p); } 
     };
 
-    console.log('Elegant template registered.');
 })();

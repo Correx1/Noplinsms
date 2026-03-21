@@ -370,7 +370,7 @@ window.loadAddSyllabusPage = (syllabusId = null) => {
 // Academic Configuration
 window.loadAcademicConfigPage = () => loadPage('academics/config/academic-config.html', '../../js/academic-config.js', 'acad-config-script');
 
-window.loadPromoteStudentsPage = () => loadPage('academics/promote-students.html', '../../js/promote-students.js', 'promote-script');
+window.loadPromoteStudentsPage = () => loadPage('academics/classes/promote-students.html', '../../js/promote-students.js', 'promote-script');
 
 window.loadAssessmentsPage = () => loadPage('academics/assessments/assessments.html', '../../js/assessments.js', 'assessments-script');
 window.loadCreateAssessmentPage = () => loadPage('academics/assessments/create-assessment.html', '../../js/assessments.js', 'assessments-script');
@@ -388,9 +388,7 @@ window.loadCBTExamPage = () => loadPage('academics/examinations/cbt-exams.html',
 window.loadPhysicalExamPage = () => loadPage('academics/examinations/physical-exams.html', '../../js/physical-exams.js', 'physical-exams-script');
 window.loadCumulativeMasterSheetPage = () => loadPage('academics/examinations/cumulative-master-sheet.html', '../../js/cumulative-master-sheet.js', 'cms-script');
 window.loadMasterSheetPage = () => loadPage('academics/examinations/master-sheet.html', '../../js/master-sheet.js', 'ms-script');
-window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
-
-window.loadExamResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
+window.loadExamResultsPage = () => loadPage('academics/grading/results.html', '../../js/results.js', 'results-script');
 
 window.loadExamQuestionsPage = () => loadPage('academics/examinations/exam-questions.html', '../../js/exam-questions.js', 'exam-questions-script');
 window.loadGradeBoundariesPage = () => loadPage('academics/grading/grade-boundaries.html', '../../js/grade-boundaries.js', 'grade-bounds-script');
@@ -401,7 +399,7 @@ window.loadResultSheetSettingsPage = () => loadPage('academics/grading/result-se
 window.loadSessionResultsPage = () => loadPage('academics/grading/session-results.html', '../../js/session-results.js', 'session-results-script');
 window.loadScoreSheetsPage = () => loadPage('academics/grading/score-sheets.html', '../../js/score-sheets.js', 'scores-script');
 window.loadMarksEntryPage = () => loadPage('academics/marks/marks.html', '../../js/marks.js', 'marks-script');
-window.loadResultsPage = () => loadPage('academics/results.html', '../../js/results.js', 'results-script');
+window.loadResultsPage = () => loadPage('academics/grading/results.html', '../../js/results.js', 'results-script');
 
 window.loadTimetablePage = () => loadPage('academics/timetable/create-timetable.html', '../../js/timetable.js', 'timetable-script');
 window.loadIDCardsPage = () => loadPage('academics/id-cards.html', '../../js/id-cards.js', 'id-cards-script');
