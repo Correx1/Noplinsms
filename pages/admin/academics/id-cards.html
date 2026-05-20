@@ -1,4 +1,4 @@
-<!-- ID Cards Page: Table View + Generate/Print -->
+<!-- ID Cards Page: Tab View (Student Directory vs ID Card Template Studio) -->
 <div class="p-4 sm:p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
@@ -7,100 +7,267 @@
                 <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadAcademicsPage?.()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Academics</a></li>
                 <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">ID Cards</span></li>
             </ol></nav>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Student ID Card Generator</h1>
-            <p class="text-sm text-gray-500 mt-0.5">View students, select them, then generate and print their ID cards.</p>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Smart ID Cards Hub</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Configure template designs, print physical card sheets, and manage student bindings.</p>
         </div>
         <div class="flex gap-2 flex-wrap">
-            <button onclick="window.idCardApp.openModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg">
+            <button onclick="window.idCardApp.openModal()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all">
                 <i class="fas fa-user-plus"></i> Add Student
             </button>
-            <button onclick="window.idCardApp.generateSelected()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg">
-                <i class="fas fa-id-card"></i> Generate Selected
-            </button>
-            <button onclick="window.idCardApp.printSelected()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gray-800 hover:bg-gray-900 rounded-lg">
-                <i class="fas fa-print"></i> Print Selected
+            <button onclick="window.idCardApp.printSelected()" class="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-all shadow-sm">
+                <i class="fas fa-print"></i> Print Selected Cards
             </button>
         </div>
     </div>
 </div>
 
-<!-- Filters -->
-<div class="p-4 sm:px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
-    <div class="flex flex-wrap gap-3 items-end">
-        <div>
-            <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Class</label>
-            <select id="idc-filter-class" onchange="window.idCardApp.filter()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
-                <option value="">All Classes</option>
-                <option>JSS1A</option><option>JSS1B</option><option>JSS2A</option><option>JSS2B</option>
-                <option>JSS3A</option><option>JSS3B</option><option>SSS1A</option><option>SSS1B</option>
-                <option>SSS2A</option><option>SSS2B</option><option>SSS3A</option><option>SSS3B</option>
-            </select>
+<!-- Tabs Bar -->
+<div class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-4 sm:px-6">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="idc-tabs" role="tablist">
+        <li class="mr-2" role="presentation">
+            <button onclick="window.idCardApp.switchTab('directory')" id="tab-directory-btn" class="inline-block p-4 border-b-2 border-primary-600 text-primary-600 font-semibold" type="button">
+                <i class="fas fa-folder-open mr-2"></i>Student Directory
+            </button>
+        </li>
+        <li class="mr-2" role="presentation">
+            <button onclick="window.idCardApp.switchTab('studio')" id="tab-studio-btn" class="inline-block p-4 border-b-2 border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:text-gray-300 transition-all" type="button">
+                <i class="fas fa-palette mr-2"></i>Card Design Studio
+            </button>
+        </li>
+    </ul>
+</div>
+
+<!-- CONTAINER A: Student Directory List -->
+<div id="idc-tab-directory" class="block">
+    <!-- Filters -->
+    <div class="p-4 sm:px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+        <div class="flex flex-wrap gap-3 items-end">
+            <div>
+                <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Class Filter</label>
+                <select id="idc-filter-class" onchange="window.idCardApp.filter()" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                    <option value="">All Classes</option>
+                    <option>JSS1A</option><option>JSS1B</option><option>JSS2A</option><option>JSS2B</option>
+                    <option>JSS3A</option><option>JSS3B</option><option>SSS1A</option><option>SSS1B</option>
+                    <option>SSS2A</option><option>SSS2B</option><option>SSS3A</option><option>SSS3B</option>
+                </select>
+            </div>
+            <div>
+                <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Session</label>
+                <select id="idc-filter-year" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
+                    <option>2024/2025</option><option>2023/2024</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[200px]">
+                <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Quick Search</label>
+                <input type="search" id="idc-search" oninput="window.idCardApp.filter()" placeholder="Search by name, ID, or card UID…"
+                    class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white px-3 py-2.5">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.idCardApp.selectAll()" class="text-xs px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">Select All</button>
+                <button onclick="window.idCardApp.clearAll()" class="text-xs px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">Clear Selected</button>
+            </div>
         </div>
-        <div>
-            <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Session</label>
-            <select id="idc-filter-year" class="text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5">
-                <option>2024/2025</option><option>2023/2024</option>
-            </select>
-        </div>
-        <div class="flex-1 min-w-[180px]">
-            <label class="block mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">Search</label>
-            <input type="search" id="idc-search" oninput="window.idCardApp.filter()" placeholder="Search by name or ID…"
-                class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white px-3 py-2.5">
-        </div>
-        <div class="flex gap-2">
-            <button onclick="window.idCardApp.selectAll()" class="text-xs px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Select All</button>
-            <button onclick="window.idCardApp.clearAll()" class="text-xs px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Clear</button>
+    </div>
+
+    <!-- Stats summary banner -->
+    <div class="px-4 sm:px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-b dark:border-gray-700 flex items-center justify-between text-sm">
+        <span class="text-gray-600 dark:text-gray-300">Displaying <strong id="idc-count">0</strong> students</span>
+        <span class="text-gray-500 font-medium"><strong id="idc-selected" class="text-primary-600 dark:text-primary-400">0</strong> students checked for batch printing</span>
+    </div>
+
+    <!-- Table Directory -->
+    <div class="px-4 sm:px-6 py-4 pb-8">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 sticky top-0">
+                    <tr>
+                        <th class="px-4 py-3.5 w-10">
+                            <input type="checkbox" id="idc-check-all" onchange="window.idCardApp.toggleAll(this.checked)" class="rounded w-4 h-4 cursor-pointer">
+                        </th>
+                        <th class="px-4 py-3.5">Photo</th>
+                        <th class="px-4 py-3.5">Student ID</th>
+                        <th class="px-4 py-3.5">Full Name</th>
+                        <th class="px-4 py-3.5">Class</th>
+                        <th class="px-4 py-3.5">NFC Card ID</th>
+                        <th class="px-4 py-3.5">Phone / Guardian</th>
+                        <th class="px-4 py-3.5">Blood</th>
+                        <th class="px-4 py-3.5 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="idc-tbody">
+                    <tr><td colspan="9" class="px-4 py-12 text-center text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>Loading records…</td></tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<!-- Stats -->
-<div class="px-4 sm:px-6 py-3 bg-gray-50 dark:bg-gray-700/50 border-b dark:border-gray-700 flex items-center justify-between text-sm">
-    <span class="text-gray-600 dark:text-gray-300">Showing <strong id="idc-count">0</strong> students</span>
-    <span class="text-gray-500"><strong id="idc-selected">0</strong> selected for printing</span>
-</div>
+<!-- CONTAINER B: ID Card Design Studio -->
+<div id="idc-tab-studio" class="hidden p-4 sm:p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Pane: Configuration Sidebar -->
+        <div class="lg:col-span-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-5 shadow-sm">
+            <h3 class="font-bold text-gray-900 dark:text-white text-base border-b pb-2 flex items-center gap-2">
+                <i class="fas fa-sliders-h text-primary-500"></i> Card Configuration
+            </h3>
+            
+            <!-- Orientation Toggle -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Orientation</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="window.idCardApp.changeStudioConfig('orientation', 'portrait')" id="studio-btn-portrait" class="px-4 py-2.5 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-primary-50 dark:bg-primary-900/30 border-primary-300 text-primary-700 dark:text-primary-300">
+                        <i class="fas fa-portrait"></i> Vertical (Portrait)
+                    </button>
+                    <button onclick="window.idCardApp.changeStudioConfig('orientation', 'landscape')" id="studio-btn-landscape" class="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 transition-all hover:bg-gray-50">
+                        <i class="fas fa-landscape"></i> Horizontal (Landscape)
+                    </button>
+                </div>
+            </div>
 
-<!-- Table -->
-<div class="px-4 sm:px-6 py-4 pb-8">
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
-            <thead class="text-xs uppercase bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 sticky top-0">
-                <tr>
-                    <th class="px-4 py-3 w-10">
-                        <input type="checkbox" id="idc-check-all" onchange="window.idCardApp.toggleAll(this.checked)" class="rounded w-4 h-4 cursor-pointer">
-                    </th>
-                    <th class="px-4 py-3">Photo</th>
-                    <th class="px-4 py-3">Student ID</th>
-                    <th class="px-4 py-3">Full Name</th>
-                    <th class="px-4 py-3">Class</th>
-                    <th class="px-4 py-3">Gender</th>
-                    <th class="px-4 py-3">DOB</th>
-                    <th class="px-4 py-3">Blood Group</th>
-                    <th class="px-4 py-3">Session</th>
-                    <th class="px-4 py-3 text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="idc-tbody">
-                <tr><td colspan="10" class="px-4 py-12 text-center text-gray-400"><i class="fas fa-spinner fa-spin text-2xl mb-2 block"></i>Loading…</td></tr>
-            </tbody>
-        </table>
+            <!-- Card Template Design Selection -->
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Select Card Template Design</label>
+                <select id="studio-template-id" onchange="window.idCardApp.changeStudioConfig('templateId', parseInt(this.value))" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 font-semibold">
+                    <option value="1">Template 1: Modern Corporate</option>
+                    <option value="2">Template 2: Clean Elegant</option>
+                    <option value="3">Template 3: School Crest Banner (Delhi Public)</option>
+                    <option value="4">Template 4: Block Header Title (Tarahara)</option>
+                    <option value="5">Template 5: Wavy Fluid Accent</option>
+                    <option value="6">Template 6: Elegant Stripes</option>
+                    <option value="7">Template 7: Minimalist Border Accent</option>
+                    <option value="8">Template 8: Book Badge Traditional (Umair Hassan)</option>
+                    <option value="9">Template 9: Executive Dark Modern</option>
+                    <option value="10">Template 10: Tech Glow Grid</option>
+                </select>
+            </div>
+
+            <!-- Field Toggles -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Display Details</label>
+                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-300 mb-4 border-b dark:border-gray-700 pb-3" id="idc-base-fields-toggles">
+                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                        <input type="checkbox" id="studio-show-photo" onchange="window.idCardApp.toggleStudioField('showPhoto')" checked class="rounded text-primary-600 focus:ring-primary-500">
+                        <span>Photo</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                        <input type="checkbox" id="studio-show-dob" onchange="window.idCardApp.toggleStudioField('showDob')" checked class="rounded text-primary-600 focus:ring-primary-500">
+                        <span>Date of Birth</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                        <input type="checkbox" id="studio-show-blood" onchange="window.idCardApp.toggleStudioField('showBlood')" checked class="rounded text-primary-600 focus:ring-primary-500">
+                        <span>Blood Group</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                        <input type="checkbox" id="studio-show-phone" onchange="window.idCardApp.toggleStudioField('showPhone')" checked class="rounded text-primary-600 focus:ring-primary-500">
+                        <span>Parent Phone</span>
+                    </label>
+                </div>
+
+                <!-- Custom Fields Section -->
+                <div class="mb-3">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Custom Card Fields</label>
+                    <div id="studio-custom-fields-list" class="space-y-2 mb-3">
+                        <!-- Dynamic Custom field list and toggles injected here -->
+                    </div>
+
+                    <!-- Custom Field Creator Form -->
+                    <div class="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-xl border-2 border-primary-500 shadow-lg mt-4">
+                        <span class="block text-sm font-extrabold text-primary-700 dark:text-primary-300 uppercase tracking-wider mb-4"><i class="fas fa-plus-circle mr-1"></i> Add Custom Card Field</span>
+                        <div class="grid grid-cols-2 gap-3 mb-3">
+                            <input type="text" id="studio-new-field-label" placeholder="e.g. Bus Route" class="text-sm rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 p-2.5 dark:text-white font-bold focus:border-primary-500 focus:ring-primary-500">
+                            <input type="text" id="studio-new-field-value" placeholder="e.g. Route A" class="text-sm rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 p-2.5 dark:text-white focus:border-primary-500 focus:ring-primary-500">
+                        </div>
+                        <button onclick="window.idCardApp.addCustomField()" class="w-full py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all transform hover:scale-[1.02]">
+                            <i class="fas fa-plus"></i> Create Field
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backside Settings -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">ID Card Terms & Conditions (Backside)</label>
+                <textarea id="studio-back-rules" oninput="window.idCardApp.updateStudioBackRules(this.value)" rows="3" class="w-full text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2" placeholder="e.g. This card remains the property of the school. If found, please return to the school administration desk."></textarea>
+            </div>
+
+            <button onclick="window.idCardApp.saveTemplateConfig()" class="w-full py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all flex items-center justify-center gap-2">
+                <i class="fas fa-save"></i> Save Template Design
+            </button>
+        </div>
+
+        <!-- Right Pane: Real-Time Live Preview Workspace -->
+        <div class="lg:col-span-7 flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-6 min-h-[480px]">
+            <h4 class="text-xs uppercase text-gray-400 font-bold tracking-wider mb-2">Live CR80 Print Preview</h4>
+            
+            <div id="studio-preview-cards-container" class="flex flex-col md:flex-row gap-8 justify-center items-center w-full">
+                <!-- Front Side Card Container -->
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500 mb-2">Front Side</span>
+                    <div id="studio-preview-card-front"></div>
+                </div>
+
+                <!-- Back Side Card Container -->
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500 mb-2">Back Side</span>
+                    <div id="studio-preview-card-back"></div>
+                </div>
+            </div>
+            
+            <div class="text-center text-xs text-gray-400 pt-4 border-t dark:border-gray-700 w-full">
+                <i class="fas fa-info-circle mr-1"></i> Dimensions strictly locked at standard **CR80** metrics (`85.6mm x 54mm`) for standard lamination & printing layouts.
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Preview Modal -->
+<!-- Unified Preview Modal (Students list preview) -->
 <div id="idc-preview-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-fade-in">
         <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
-            <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2"><i class="fas fa-id-card text-primary-600"></i> ID Card Preview</h3>
+            <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2"><i class="fas fa-id-card text-primary-600"></i> Double-Sided ID Card Preview</h3>
             <button onclick="document.getElementById('idc-preview-modal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
         </div>
-        <div class="p-6 flex flex-col items-center gap-4">
-            <div id="idc-preview-card" class="w-[340px]"></div>
+        <div class="p-6 flex flex-col items-center gap-6">
+            <div id="idc-preview-card" class="flex flex-col md:flex-row gap-6 justify-center items-center"></div>
             <div class="flex gap-3">
-                <button onclick="window.idCardApp.printPreview()" class="px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-900 flex items-center gap-2">
+                <button onclick="window.idCardApp.printPreview()" class="px-4 py-2.5 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-900 flex items-center gap-2 transition-all">
                     <i class="fas fa-print"></i> Print This Card
                 </button>
-                <button onclick="document.getElementById('idc-preview-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">Close</button>
+                <button onclick="document.getElementById('idc-preview-modal').classList.add('hidden')" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Card Binding NFC Modal -->
+<div id="idc-nfc-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden p-6 text-center">
+        <div class="flex justify-between items-center mb-4 border-b dark:border-gray-700 pb-2">
+            <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2"><i class="fas fa-satellite-dish text-primary-500"></i> Register Student Smart Card</h3>
+            <button onclick="window.idCardApp.closeNfcModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <div class="py-8 flex flex-col items-center justify-center space-y-4">
+            <!-- Pulsing NFC graphic icon -->
+            <div id="nfc-pulse-indicator" class="w-24 h-24 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center relative">
+                <div class="absolute inset-0 rounded-full bg-primary-400/20 animate-ping"></div>
+                <i class="fas fa-wave-square text-primary-600 dark:text-primary-400 text-4xl"></i>
+            </div>
+            
+            <div class="space-y-1">
+                <h4 class="font-bold text-gray-900 dark:text-white text-lg" id="nfc-modal-title">Ready to Scan</h4>
+                <p class="text-sm text-gray-500" id="nfc-modal-desc">Please tap a blank NFC card against the reader.</p>
+            </div>
+
+            <!-- Invisible focus input for keyboard wedge simulators -->
+            <input type="text" id="nfc-wedge-input" class="opacity-0 w-0 h-0 absolute pointer-events-none">
+            
+            <!-- Manual key helper for test demo mock scans -->
+            <div class="pt-4 w-full">
+                <button onclick="window.idCardApp.simulateScan()" class="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded text-gray-500 dark:text-gray-300 border transition-all">
+                    Simulate NFC Tap (For Testing)
+                </button>
             </div>
         </div>
     </div>
@@ -120,7 +287,6 @@
 
         <!-- Body -->
         <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <!-- Hidden ID for editing -->
             <input type="hidden" id="idc-edit-id">
 
             <!-- Full Name -->

@@ -1,16 +1,38 @@
-// ID Cards Module — table view, settings-aware school name/logo, full CRUD
+// Smart ID Cards Module — 10 High-Fidelity Radically Unique Templates (Dynamic Custom Fields, Variable Photo Positions & Custom Back-sides)
 (function() {
     const CLASSES = ['JSS1A','JSS1B','JSS2A','JSS2B','JSS3A','JSS3B','SSS1A','SSS1B','SSS2A','SSS2B','SSS3A','SSS3B'];
     const FIRST_NAMES = ['Ada','Emeka','Chidi','Ngozi','Yemi','Tunde','Fatima','Ibrahim','Amara','Kelechi','Zainab','Seun','Biodun','Chiamaka','Okoro'];
     const LAST_NAMES = ['Okafor','Adeyemi','Nwachukwu','Bello','Eze','Adeleke','Musa','Ajibade','Okonkwo','Abubakar','Oluwole','Ihejirika','Osei','Afolabi','Nduka'];
     const PHOTOS = ['👧','👦','👩','👨','🧒'];
 
-    function loadFromStorage() {
+    // Default Card Design Settings (Now extremely robust & customizable)
+    const DEFAULT_CONFIG = {
+        orientation: 'portrait',
+        templateId: 1, 
+        showPhoto: true,
+        showDob: true,
+        showBlood: true,
+        showPhone: true,
+
+        customFields: [],
+        rules: "This card is the official property of the school. If found, please return to the administration desk immediately. A replacement fee will be charged for lost cards."
+    };
+
+    // Load Design settings from Storage
+    let studioConfig = JSON.parse(localStorage.getItem('sms_id_card_config') || JSON.stringify(DEFAULT_CONFIG));
+    // Ensure all standard defaults exist
+    if (!studioConfig.customFields) studioConfig.customFields = [...DEFAULT_CONFIG.customFields];
+    // Remove old legacy default custom fields if they exist in user's localStorage
+    if (studioConfig.customFields.some(f => f.label === 'Bus Route' || f.label === 'Hostel')) {
+        studioConfig.customFields = studioConfig.customFields.filter(f => f.label !== 'Bus Route' && f.label !== 'Hostel');
+    }
+
+    function loadStudents() {
         let sts = JSON.parse(localStorage.getItem('sms_students') || '[]');
         if (sts.length === 0) {
             let id = 1;
             CLASSES.forEach(cls => {
-                const count = 15 + Math.floor(Math.random() * 10);
+                const count = 10 + Math.floor(Math.random() * 5);
                 for (let i = 0; i < count; i++) {
                     const fn = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
                     const ln = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
@@ -23,7 +45,8 @@
                         gender: Math.random() > 0.5 ? 'Male' : 'Female',
                         bloodGroup: ['A+','B+','O+','AB+','A-','O-'][Math.floor(Math.random()*6)],
                         emoji: PHOTOS[Math.floor(Math.random() * PHOTOS.length)],
-                        phone: `080${String(Math.floor(Math.random()*9e7+1e7))}`
+                        phone: `080${String(Math.floor(Math.random()*9e7+1e7))}`,
+                        nfc_uid: Math.random() > 0.5 ? `NFC${Math.floor(Math.random()*89999+10000)}` : null
                     });
                     id++;
                 }
@@ -33,115 +56,508 @@
         return sts;
     }
 
-    function saveToStorage() {
+    function saveStudents() {
         localStorage.setItem('sms_students', JSON.stringify(allStudents));
-    }
-
-    function nextId() {
-        if (allStudents.length === 0) return 'STU0001';
-        const nums = allStudents.map(s => parseInt((s.id || '0').replace(/\D/g, ''), 10) || 0);
-        return `STU${String(Math.max(...nums) + 1).padStart(4, '0')}`;
     }
 
     function getSchoolInfo() {
         const p = JSON.parse(localStorage.getItem('sms_school_profile') || '{}');
         return {
-            name:    p.name    || p['school-name']    || 'No School',
-            address: p.address || p['school-address'] || '',
-            phone:   p.phone   || p['school-phone']   || '',
+            name:    p.name    || p['school-name']    || 'Noplin Academy',
+            address: p.address || p['school-address'] || '12 School Lane, Ikeja, Lagos',
+            phone:   p.phone   || p['school-phone']   || '+234 801 234 5678',
             logo:    p.logo    || ''
         };
     }
 
-    // ── ID Card visual (used for print + preview) ────────────────────────
-    function buildCardHtml(s, school) {
-        const logoHtml = school.logo
-            ? `<img src="${school.logo}" style="height:32px;width:auto;object-fit:contain;" alt="logo">`
-            : `<div style="width:32px;height:32px;border-radius:50%;background:#1e3a8a;display:flex;align-items:center;justify-content:center;color:#fde047;font-weight:bold;font-size:14px;">${(school.name || 'N')[0]}</div>`;
-        return `
-        <div style="width:320px;border-radius:12px;overflow:hidden;border:2px solid #1e3a8a;font-family:Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.15);display:inline-block;vertical-align:top;">
-            <div style="background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:10px 12px;display:flex;align-items:center;gap:10px;">
-                ${logoHtml}
-                <div style="flex:1;text-align:center;">
-                    <div style="color:#fde047;font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:.8px;">${school.name}</div>
-                    <div style="color:#bfdbfe;font-size:8.5px;">${school.address}</div>
-                </div>
-                <div style="background:#fde047;color:#1e3a8a;font-size:8px;font-weight:bold;padding:2px 5px;border-radius:4px;">STUDENT</div>
-            </div>
-            <div style="background:#fff;display:flex;gap:10px;padding:10px 12px;">
-                <div style="width:60px;height:72px;background:#eff6ff;border:2px solid #bfdbfe;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden;">
-                    ${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">` : s.emoji || '👤'}
-                </div>
-                <div style="flex:1;min-width:0;">
-                    <div style="font-weight:bold;font-size:11px;color:#111;margin-bottom:1px;">${s.name}</div>
-                    <div style="color:#2563eb;font-size:9px;font-weight:700;margin-bottom:5px;">${s.id}</div>
-                    <table style="font-size:8.5px;color:#444;border-collapse:collapse;width:100%;">
-                        <tr><td style="padding:1px 0;color:#999;width:50px;">Class</td><td style="font-weight:600;color:#111;">${s.className}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">DOB</td><td style="font-weight:600;color:#111;">${s.dob}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">Gender</td><td style="font-weight:600;color:#111;">${s.gender || '—'}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">Blood</td><td style="font-weight:600;color:#111;">${s.bloodGroup || '—'}</td></tr>
-                        <tr><td style="padding:1px 0;color:#999;">Session</td><td style="font-weight:600;color:#111;">${s.session}</td></tr>
-                    </table>
-                </div>
-            </div>
-            <div style="background:#f8fafc;border-top:1px dashed #e2e8f0;padding:4px 12px;display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-family:monospace;font-size:8px;letter-spacing:2px;color:#94a3b8;">||||| ${s.id} |||||</span>
-                <span style="font-size:7px;color:#94a3b8;">Valid 1 Year</span>
-            </div>
-            <div style="background:linear-gradient(90deg,#1e3a5f,#2563eb);padding:4px;text-align:center;">
-                <span style="color:#bfdbfe;font-size:7.5px;">${school.phone ? '☎ ' + school.phone : 'STUDENT IDENTITY CARD'}</span>
-            </div>
-        </div>`;
+    // Dynamic color picker fetching from global Theme settings
+    function getThemeColor() {
+        // Fetch current active theme name
+        const activeTheme = localStorage.getItem('selectedTheme') || 'blue';
+        
+        // Custom HSL calculation check
+        if (activeTheme === 'custom') {
+            return localStorage.getItem('customThemeColor') || '#3b82f6';
+        }
+
+        // Standard theme mapping
+        const themeColors = {
+            'blue': '#0284c7',
+            'green': '#059669',
+            'purple': '#9333ea',
+            'red': '#e11d48',
+            'teal': '#0d9488',
+            'gold': '#d97706',
+            'navy-blue': '#202B5D',
+            'forest': '#043927',
+            'ruby': '#C32644',
+            'slate': '#475569'
+        };
+        return themeColors[activeTheme] || '#0284c7';
     }
 
-    let allStudents = loadFromStorage();
+    function getCardDates() {
+        const now = new Date();
+        const expiry = new Date();
+        expiry.setFullYear(now.getFullYear() + 3);
+
+        const options = { month: 'short', year: 'numeric' };
+        return {
+            issued: now.toLocaleDateString('en-US', options),
+            expires: expiry.toLocaleDateString('en-US', options)
+        };
+    }
+
+    // ── Generate 10 High-Fidelity printable templates with custom photo positions & match
+    function renderSingleCard(s, school, side = 'front', config = studioConfig) {
+        const isPortrait = config.orientation === 'portrait';
+        const color = getThemeColor(); 
+        const dates = getCardDates();
+        
+        const width = isPortrait ? '230px' : '348px';
+        const height = isPortrait ? '348px' : '230px';
+        
+        const logoHtml = school.logo
+            ? `<img src="${school.logo}" style="height:36px; width:auto; max-width:45px; object-fit:contain; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.15)); flex-shrink:0;">`
+            : `<div style="width:36px; height:36px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; color:${color}; font-weight:900; font-size:18px; box-shadow:0 2px 5px rgba(0,0,0,0.15); flex-shrink:0;">${(school.name || 'N')[0]}</div>`;
+
+        const makePhoto = (styleStr = '') => {
+            if (!config.showPhoto) return '';
+            return `<div style="width:75px; height:90px; border-radius:8px; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; background:#f8fafc; box-shadow:0 4px 12px rgba(0,0,0,0.1); ${styleStr}">
+                ${s.photo ? `<img src="${s.photo}" style="width:100%; height:100%; object-fit:cover;">` : s.emoji || '👤'}
+            </div>`;
+        };
+        const makeSquarePhoto = (size = '75px', styleStr = '') => {
+            if (!config.showPhoto) return '';
+            return `<div style="width:${size}; height:${size}; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; background:#f8fafc; box-shadow:0 4px 12px rgba(0,0,0,0.1); ${styleStr}">
+                ${s.photo ? `<img src="${s.photo}" style="width:100%; height:100%; object-fit:cover;">` : s.emoji || '👤'}
+            </div>`;
+        };
+        const makeCirclePhoto = (size = '75px', styleStr = '') => {
+            if (!config.showPhoto) return '';
+            return `<div style="width:${size}; height:${size}; border-radius:50%; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:36px; background:#f8fafc; box-shadow:0 4px 12px rgba(0,0,0,0.1); ${styleStr}">
+                ${s.photo ? `<img src="${s.photo}" style="width:100%; height:100%; object-fit:cover;">` : s.emoji || '👤'}
+            </div>`;
+        };
+
+        let trHtml = '';
+        const addRow = (label, value) => {
+            if (value) trHtml += `<tr><td style="font-weight:700; padding:1.5px 4px 1.5px 0; white-space:nowrap;">${label}</td><td style="padding:1.5px 0;">: ${value}</td></tr>`;
+        };
+        addRow('Reg No', s.id);
+        addRow('Student ID', s.id);
+        addRow('Student Name', s.name);
+        if (config.showDob) addRow('D.O.B', s.dob);
+        if (config.showBlood) addRow('Blood Grp', s.bloodGroup);
+        addRow('Gender', s.gender);
+        if (config.showPhone) addRow('Emrg. Call', s.phone);
+        
+        if (config.customFields && Array.isArray(config.customFields)) {
+            config.customFields.forEach(f => {
+                if (f.enabled) addRow(f.label, f.value);
+            });
+        }
+
+        const templateId = config.templateId || 1;
+        const flexDir = isPortrait ? 'column' : 'row';
+
+        const frontCard = (content, style, bgOverride = `${color}0D`, isDark = false) => {
+            const safeSchoolName = (school.name || 'School').replace(/[<>&"']/g, '');
+            const svgWatermark = encodeURIComponent(`<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="900" fill="${isDark ? '#ffffff' : color}" transform="rotate(-30, 90, 90)" opacity="${isDark ? '0.03' : '0.07'}">${safeSchoolName}</text></svg>`);
+            return `<div class="cr80-card" style="width:${width}; height:${height}; border-radius:12px; overflow:hidden; font-family:system-ui,sans-serif; background-color:${bgOverride}; background-image:url('data:image/svg+xml,${svgWatermark}'); box-shadow:0 8px 24px rgba(0,0,0,0.08); display:flex; flex-direction:column; box-sizing:border-box; position:relative; ${style}">
+                <div style="position:relative; z-index:2; display:flex; flex-direction:column; height:100%;">
+                    ${content}
+                </div>
+            </div>`;
+        };
+
+        const getHeader = (bg, titleColor, subColor, extraStyles = '') => `
+            <div style="background:${bg}; padding:8px; display:flex; flex-direction:column; align-items:center; text-align:center; position:relative; z-index:3; ${extraStyles}">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                    ${logoHtml}
+                    <div style="font-size:12px; font-weight:900; color:${titleColor}; text-transform:uppercase; line-height:1.1;">${school.name}</div>
+                </div>
+                <div style="font-size:6.5px; font-weight:600; color:${subColor}; margin-top:4px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px;">
+                    ${school.address ? `<span>📍 ${school.address}</span>` : ''}
+                    ${school.phone ? `<span>📞 ${school.phone}</span>` : ''}
+                    ${school.email ? `<span>✉️ ${school.email}</span>` : ''}
+                </div>
+            </div>
+        `;
+
+        const getHeaderLeft = (bg, titleColor, subColor, extraStyles = '') => `
+            <div style="background:${bg}; padding:8px 12px; display:flex; align-items:center; gap:10px; position:relative; z-index:3; ${extraStyles}">
+                ${logoHtml}
+                <div style="flex:1;">
+                    <div style="font-size:12px; font-weight:900; color:${titleColor}; text-transform:uppercase; line-height:1.1; margin-bottom:2px;">${school.name}</div>
+                    <div style="font-size:6.5px; font-weight:600; color:${subColor}; display:flex; flex-wrap:wrap; gap:4px;">
+                        ${school.address ? `<span>📍 ${school.address}</span>` : ''}
+                        ${school.phone ? `<span>📞 ${school.phone}</span>` : ''}
+                        ${school.email ? `<span>✉️ ${school.email}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        if (side === 'front') {
+            switch(templateId) {
+                case 1:
+                    return frontCard(`
+                        ${getHeaderLeft(color, '#fff', 'rgba(255,255,255,0.9)')}
+                        <div style="flex:1; padding:12px; display:flex; flex-direction:${flexDir}; gap:12px; align-items:center;">
+                            ${makeSquarePhoto('80px', `border:2px solid ${color};`)}
+                            <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px; line-height:1.3;">${trHtml}</table></div>
+                        </div>
+                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center;">
+                            <div style="text-align:center;">
+                                <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
+                                <div style="border-top:1px solid rgba(255,255,255,0.5); padding-top:2px; font-size:7px; font-weight:700;">Principal</div>
+                            </div>
+                        </div>
+                    `, `border:2px solid ${color}30;`);
+
+                case 2:
+                    return frontCard(`
+                        ${getHeaderLeft(color, '#fff', 'rgba(255,255,255,0.9)', `
+                            <div style="position:absolute; bottom:-10px; right:20px; width:40px; height:20px; background:${color}; transform:skewX(-30deg); z-index:1;"></div>
+                            <div style="position:absolute; bottom:-20px; right:40px; width:30px; height:20px; background:${color}; transform:skewX(30deg); opacity:0.8; z-index:1;"></div>
+                        `)}
+                        <div style="flex:1; padding:16px 12px; display:flex; flex-direction:${flexDir}; gap:12px; align-items:center;">
+                            ${makeSquarePhoto('80px', `border:2px solid ${color};`)}
+                            <div style="flex:1; width:100%; position:relative; z-index:2;"><table style="width:100%; font-size:8.5px;">${trHtml}</table></div>
+                        </div>
+                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center; position:relative;">
+                            <div style="position:absolute; top:-10px; left:10px; width:30px; height:20px; background:${color}; transform:skewX(30deg); opacity:0.9;"></div>
+                            <div style="text-align:center; z-index:2;">
+                                <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
+                                <div style="font-size:7px; font-weight:700;">Principal</div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 3:
+                    return frontCard(`
+                        <div style="position:relative; width:100%; height:${isPortrait ? '135px' : '100px'}; z-index:3;">
+                            <div style="position:absolute; top:0; left:0; right:0; height:100%; background:${color}; clip-path:polygon(0 0, 100% 0, 100% 40%, 50% 100%, 0 40%); display:flex; flex-direction:column; align-items:center;">
+                                ${getHeader('transparent', '#fff', 'rgba(255,255,255,0.9)', 'width:100%;')}
+                            </div>
+                            <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); z-index:4;">
+                                ${makeCirclePhoto(isPortrait ? '70px' : '60px', `border:3px solid #fff; box-shadow:0 4px 10px rgba(0,0,0,0.15);`)}
+                            </div>
+                        </div>
+                        <div style="flex:1; padding:10px 16px; display:flex; justify-content:center;">
+                            <table style="width:100%; max-width:200px; font-size:8.5px; margin:0 auto; position:relative; z-index:2;">${trHtml}</table>
+                        </div>
+                        <div style="background:${color}; color:#fff; padding:4px; text-align:center; font-size:7px; font-weight:700; text-transform:uppercase;">Student Identity Card</div>
+                    `, ``);
+
+                case 4:
+                    return frontCard(`
+                        ${getHeader(color, '#fff', 'rgba(255,255,255,0.9)')}
+                        <div style="position:relative; width:100%; height:80px; display:flex; justify-content:center; align-items:center; z-index:3;">
+                            <div style="position:absolute; top:0; left:0; right:0; height:40px; background:${color}; clip-path:polygon(0 0, 100% 0, 50% 100%); z-index:1;"></div>
+                            <div style="position:absolute; top:10px; left:0; right:0; height:40px; background:#1e293b; clip-path:polygon(0 0, 100% 0, 50% 100%); z-index:0;"></div>
+                            <div style="z-index:2; margin-top:20px;">${makeSquarePhoto('65px', `border:2px solid #1e293b;`)}</div>
+                        </div>
+                        <div style="flex:1; padding:16px; display:flex; justify-content:center;">
+                            <table style="width:100%; max-width:180px; font-size:8.5px; position:relative; z-index:2;">${trHtml}</table>
+                        </div>
+                    `, `border:1px solid #e2e8f0;`);
+
+                case 5:
+                    return frontCard(`
+                        <div style="position:absolute; top:0; left:0; width:40%; height:20px; background:${color}; z-index:1;"></div>
+                        <div style="position:absolute; top:20px; left:0; width:20px; height:40px; background:${color}; z-index:1;"></div>
+                        <div style="position:absolute; bottom:0; right:0; width:40%; height:20px; background:${color}; z-index:1;"></div>
+                        <div style="position:absolute; bottom:20px; right:0; width:20px; height:40px; background:${color}; z-index:1;"></div>
+                        
+                        ${getHeader('transparent', '#1e293b', '#64748b', 'padding-top:16px; padding-left:36px; padding-right:24px; text-align:right; align-items:flex-end;')}
+                        <div style="flex:1; padding:10px 24px; display:flex; flex-direction:${flexDir}; gap:20px; align-items:center; justify-content:center; position:relative; z-index:2;">
+                            ${makeSquarePhoto('80px', `border:4px solid ${color};`)}
+                            <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px;">${trHtml}</table></div>
+                        </div>
+                    `, ``);
+
+                case 6:
+                    return frontCard(`
+                        <div style="display:flex; flex-direction:${flexDir}; height:100%;">
+                            <div style="${isPortrait ? 'height:auto; min-height:40%;' : 'width:45%;'} background:${color}; color:#fff; display:flex; flex-direction:column; justify-content:center; padding:12px; z-index:3;">
+                                ${getHeader('transparent', '#fff', 'rgba(255,255,255,0.9)', 'padding:0;')}
+                            </div>
+                            <div style="flex:1; padding:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:2;">
+                                <div style="position:absolute; ${isPortrait ? 'top:-40px' : 'left:-40px; top:50%; transform:translateY(-50%)'}; z-index:4;">
+                                    ${makeCirclePhoto('80px', `border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.15);`)}
+                                </div>
+                                <div style="margin-top:${isPortrait ? '45px' : '0'}; margin-left:${isPortrait ? '0' : '50px'}; width:100%;">
+                                    <table style="width:100%; max-width:200px; margin:0 auto; font-size:8.5px;">${trHtml}</table>
+                                </div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 7:
+                    return frontCard(`
+                        <div style="position:relative; z-index:3;">
+                            ${getHeader(`linear-gradient(135deg, ${color}, ${color}dd)`, '#fff', 'rgba(255,255,255,0.9)', 'padding-bottom:20px;')}
+                            <svg style="position:absolute; bottom:-1px; left:0; width:100%; height:30px;" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="#0f172a" fill-opacity="1" d="M0,160L48,170.7C96,181,192,203,288,192C384,181,480,139,576,133.3C672,128,768,160,864,176C960,192,1056,192,1152,176C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+                        </div>
+                        <div style="flex:1; display:flex; flex-direction:${flexDir}; gap:12px; padding:12px; align-items:center; margin-top:-25px; z-index:4;">
+                            ${makeCirclePhoto('80px', `border:3px solid #fff; box-shadow:0 6px 16px rgba(0,0,0,0.1);`)}
+                            <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px;">${trHtml.replace(/#334155/g, '#94a3b8').replace(/#0f172a/g, '#f8fafc')}</table></div>
+                        </div>
+                    `, `background:#0f172a;`, `#0f172a`, true);
+
+                case 8:
+                    return frontCard(`
+                        ${getHeaderLeft('transparent', '#0f172a', '#475569', `border-bottom:2px solid ${color};`)}
+                        <div style="flex:1; display:flex; flex-direction:${flexDir};">
+                            <div style="${isPortrait ? 'width:100%; padding:12px; display:flex; justify-content:center; border-bottom:1px solid #e2e8f0;' : 'width:40%; padding:12px; display:flex; justify-content:center; border-right:1px solid #e2e8f0;'} position:relative; z-index:2;">
+                                ${makeSquarePhoto('85px', `border-radius:12px;`)}
+                            </div>
+                            <div style="flex:1; padding:12px; position:relative; z-index:2;"><table style="width:100%; font-size:8.5px;">${trHtml}</table></div>
+                        </div>
+                    `, `border:1px solid #cbd5e1;`);
+
+                case 9:
+                    return frontCard(`
+                        <div style="display:flex; height:100%;">
+                            <div style="width:8px; background:${color}; height:100%; position:relative; z-index:3;"></div>
+                            <div style="flex:1; display:flex; flex-direction:column;">
+                                ${getHeaderLeft('transparent', '#0f172a', '#475569', 'border-bottom:1px solid #f1f5f9;')}
+                                <div style="flex:1; padding:12px; display:flex; flex-direction:${flexDir}; gap:12px; align-items:center; position:relative; z-index:2;">
+                                    ${makePhoto(`border-radius:6px;`)}
+                                    <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px;">${trHtml}</table></div>
+                                </div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 10:
+                    return frontCard(`
+                        ${getHeaderLeft('#0f172a', '#fbbf24', '#cbd5e1', 'border-bottom:2px solid #fbbf24;')}
+                        <div style="flex:1; padding:12px; display:flex; flex-direction:${flexDir}; gap:12px; align-items:center; position:relative; z-index:2;">
+                            ${makePhoto(`border:2px solid #fbbf24; border-radius:4px; box-shadow:0 4px 10px rgba(0,0,0,0.1);`)}
+                            <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px;">${trHtml.replace(/#334155/g, '#94a3b8').replace(/#0f172a/g, '#f8fafc')}</table></div>
+                        </div>
+                    `, `background:linear-gradient(135deg, #1e293b, #0f172a); border:1px solid #cbd5e1;`, `#0f172a`, true);
+            }
+        } else {
+            const rulesBlock = `<div style="font-size:8px; color:#475569; line-height:1.5; text-align:justify; margin-top:4px;">${config.rules}</div>`;
+            const datesBlock = `<div style="display:flex; justify-content:space-between; font-size:7.5px; font-weight:700; color:#334155; margin-top:10px;">
+                <span>Joined Date : ${dates.issued}</span>
+                <span>Expire Date : ${dates.expires}</span>
+            </div>`;
+
+            switch(templateId) {
+                case 1:
+                    return frontCard(`
+                        <div style="background:${color}; color:#fff; padding:10px 12px; font-size:11px; font-weight:900; text-transform:uppercase;">Terms and Conditions</div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            ${datesBlock}
+                        </div>
+                        <div style="background:${color}; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="font-size:7px; line-height:1.4;">
+                                <div>Phone : ${school.phone || '---'}</div>
+                                <div>Address : ${school.address || '---'}</div>
+                            </div>
+                            ${logoHtml}
+                        </div>
+                    `, `border:2px solid ${color}30;`);
+
+                case 2:
+                    return frontCard(`
+                        <div style="background:${color}; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; color:#fff; position:relative; z-index:2;">
+                            <div style="font-size:11px; font-weight:900; text-transform:uppercase;">Terms and Conditions</div>
+                            <div style="position:absolute; bottom:-10px; right:40px; width:40px; height:20px; background:${color}; transform:skewX(-30deg); z-index:1;"></div>
+                        </div>
+                        <div style="flex:1; padding:16px 12px; display:flex; flex-direction:column; justify-content:center;">
+                            ${rulesBlock}
+                            ${datesBlock}
+                        </div>
+                        <div style="background:${color}; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; position:relative;">
+                            <div style="position:absolute; top:-10px; left:20px; width:30px; height:20px; background:${color}; transform:skewX(30deg); opacity:0.9;"></div>
+                            <div style="font-size:7px; z-index:2;">
+                                <div>${school.phone || ''}</div>
+                                <div>${school.address || ''}</div>
+                            </div>
+                            <div style="z-index:2; text-align:center;">
+                                <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
+                                <div style="font-size:7px; font-weight:700;">Principal</div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 3:
+                    return frontCard(`
+                        <div style="background:${color}; color:#fff; padding:16px; text-align:center;">
+                            <div style="font-size:11px; font-weight:900; text-transform:uppercase;">Terms and Conditions</div>
+                        </div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            ${datesBlock}
+                        </div>
+                        <div style="background:${color}; padding:8px; display:flex; justify-content:center;">
+                            ${logoHtml}
+                        </div>
+                    `, ``);
+
+                case 4:
+                    return frontCard(`
+                        <div style="background:${color}; padding:10px; text-align:center; color:#fff;">
+                            <div style="font-size:12px; font-weight:900; text-transform:uppercase;">Terms and Conditions</div>
+                        </div>
+                        <div style="position:relative; width:100%; height:30px;">
+                            <div style="position:absolute; top:0; left:0; right:0; height:30px; background:${color}; clip-path:polygon(0 0, 100% 0, 50% 100%);"></div>
+                        </div>
+                        <div style="flex:1; padding:12px 16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            ${datesBlock}
+                        </div>
+                    `, `border:1px solid #e2e8f0;`);
+
+                case 5:
+                    return frontCard(`
+                        <div style="position:absolute; top:0; left:0; width:40%; height:20px; background:${color};"></div>
+                        <div style="position:absolute; top:20px; left:0; width:20px; height:40px; background:${color};"></div>
+                        <div style="position:absolute; bottom:0; right:0; width:40%; height:20px; background:${color};"></div>
+                        <div style="position:absolute; bottom:20px; right:0; width:20px; height:40px; background:${color};"></div>
+                        <div style="padding:16px 24px; display:flex; flex-direction:column; height:100%; justify-content:space-between; position:relative; z-index:2;">
+                            <div>
+                                <div style="background:${color}; color:#fff; display:inline-block; padding:4px 8px; font-size:10px; font-weight:900; text-transform:uppercase; margin-bottom:8px;">Terms and Conditions</div>
+                                ${rulesBlock}
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                                <div style="font-size:7px; color:#475569; line-height:1.4;">${datesBlock}</div>
+                                <div style="text-align:center;">
+                                    <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
+                                    <div style="border-top:1px solid #cbd5e1; padding-top:2px; font-size:7px; font-weight:700;">Principal</div>
+                                </div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 6:
+                    return frontCard(`
+                        <div style="background:${color}; color:#fff; padding:12px; text-align:center; font-size:11px; font-weight:900; text-transform:uppercase;">Terms & Conditions</div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px;">${datesBlock}</div>
+                        </div>
+                    `, ``);
+
+                case 7:
+                    return frontCard(`
+                        <div style="height:60px; background:linear-gradient(135deg, ${color}, ${color}dd); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:900; text-transform:uppercase;">
+                            Terms & Conditions
+                        </div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            <div style="border-top:2px solid ${color}40; padding-top:8px;">${datesBlock}</div>
+                        </div>
+                    `, ``);
+
+                case 8:
+                    return frontCard(`
+                        <div style="padding:12px; border-bottom:2px solid ${color};">
+                            <div style="font-size:11px; font-weight:900; color:#0f172a; text-transform:uppercase;">Terms & Conditions</div>
+                        </div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                            ${rulesBlock}
+                            ${datesBlock}
+                        </div>
+                    `, `border:1px solid #cbd5e1; background:#fafaf9;`);
+
+                case 9:
+                    return frontCard(`
+                        <div style="display:flex; height:100%;">
+                            <div style="width:8px; background:${color}; height:100%;"></div>
+                            <div style="flex:1; display:flex; flex-direction:column;">
+                                <div style="padding:12px; border-bottom:1px solid #f1f5f9; font-size:11px; font-weight:900; color:#0f172a; text-transform:uppercase;">Terms & Conditions</div>
+                                <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between;">
+                                    ${rulesBlock}
+                                    ${datesBlock}
+                                </div>
+                            </div>
+                        </div>
+                    `, ``);
+
+                case 10:
+                    return frontCard(`
+                        <div style="background:#0f172a; border-bottom:2px solid #fbbf24; padding:12px; text-align:center; color:#fbbf24; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1px;">
+                            Terms & Conditions
+                        </div>
+                        <div style="flex:1; padding:16px; display:flex; flex-direction:column; justify-content:space-between; background:#f8fafc;">
+                            ${rulesBlock}
+                            <div style="background:#0f172a; color:#fbbf24; padding:8px; border-radius:4px; font-size:7px; display:flex; justify-content:space-between;">
+                                <span>ISS: ${dates.issued}</span>
+                                <span>EXP: ${dates.expires}</span>
+                            </div>
+                        </div>
+                    `, `border:1px solid #cbd5e1;`);
+                
+                default:
+                    return frontCard(`<div style="padding:16px;">${rulesBlock}</div>`, ``);
+            }
+        }
+    }
+
+    let allStudents = loadStudents();
     let filtered = [...allStudents];
     let selected = new Set();
-    let _previewStudent = null;
-    let _pendingPhoto = null;
+    
+    // Binding flow state
+    let nfcBindingStudentId = null;
+    let nfcScanBuffer = "";
+    let nfcScanTimeout = null;
 
-    // ── Table row ─────────────────────────────────────────────────────────
+    // ── Table Builder ──────────────────────────────────────────────────────
     function buildRow(s) {
         const isChecked = selected.has(s.id);
+        const cardBadge = s.nfc_uid 
+            ? `<span class="inline-flex items-center gap-1 text-xs bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-2 py-0.5 rounded-full font-semibold font-mono"><i class="fas fa-microchip"></i> ${s.nfc_uid}</span>`
+            : `<span class="inline-flex items-center gap-1 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-400 px-2 py-0.5 rounded-full font-medium">No Card Link</span>`;
+
         return `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors ${isChecked ? 'bg-primary-50 dark:bg-primary-900/20' : ''}">
-            <td class="px-4 py-3">
-                <input type="checkbox" onchange="window.idCardApp.toggle('${s.id}',this.checked)" ${isChecked ? 'checked' : ''} class="rounded w-4 h-4 cursor-pointer">
+            <td class="px-4 py-3.5">
+                <input type="checkbox" onchange="window.idCardApp.toggle('${s.id}', this.checked)" ${isChecked ? 'checked' : ''} class="rounded w-4 h-4 cursor-pointer text-primary-600 focus:ring-primary-500">
             </td>
-            <td class="px-4 py-3">
-                <div class="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-lg overflow-hidden">
+            <td class="px-4 py-3.5">
+                <div class="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-lg overflow-hidden flex-shrink-0">
                     ${s.photo ? `<img src="${s.photo}" class="w-full h-full object-cover rounded-full">` : s.emoji || '👤'}
                 </div>
             </td>
-            <td class="px-4 py-3 font-mono text-xs text-primary-700 dark:text-primary-400 font-semibold">${s.id}</td>
-            <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">${s.name}</td>
-            <td class="px-4 py-3"><span class="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded font-semibold">${s.className}</span></td>
-            <td class="px-4 py-3 text-sm">${s.gender || '—'}</td>
-            <td class="px-4 py-3 text-sm">${s.dob}</td>
-            <td class="px-4 py-3"><span class="text-xs font-bold text-red-600 dark:text-red-400">${s.bloodGroup || '—'}</span></td>
-            <td class="px-4 py-3 text-xs text-gray-500">${s.session}</td>
-            <td class="px-4 py-3 text-center whitespace-nowrap">
-                <button onclick="window.idCardApp.openModal('${s.id}')" class="text-xs px-2.5 py-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-700 rounded hover:bg-yellow-100 mr-1" title="Edit student">
+            <td class="px-4 py-3.5 font-mono text-xs text-primary-700 dark:text-primary-400 font-semibold">${s.id}</td>
+            <td class="px-4 py-3.5 font-medium text-gray-900 dark:text-white">${s.name}</td>
+            <td class="px-4 py-3.5"><span class="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded font-semibold">${s.className}</span></td>
+            <td class="px-4 py-3.5">${cardBadge}</td>
+            <td class="px-4 py-3.5 text-xs text-gray-600 dark:text-gray-400">${s.phone || '—'}</td>
+            <td class="px-4 py-3.5"><span class="text-xs font-bold text-red-600 dark:text-red-400">${s.bloodGroup || '—'}</span></td>
+            <td class="px-4 py-3.5 text-center whitespace-nowrap">
+                <button onclick="window.idCardApp.openNfcModal('${s.id}')" class="text-xs px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800 rounded hover:bg-primary-100 mr-1 transition-all" title="Link/Bind Smart Card">
+                    <i class="fas fa-satellite-dish"></i> Bind Card
+                </button>
+                <button onclick="window.idCardApp.openModal('${s.id}')" class="text-xs px-2.5 py-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-700 rounded hover:bg-yellow-100 mr-1 transition-all" title="Edit Student">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button onclick="window.idCardApp.preview('${s.id}')" class="text-xs px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-700 rounded hover:bg-primary-100 mr-1" title="Preview ID Card">
+                <button onclick="window.idCardApp.preview('${s.id}')" class="text-xs px-2.5 py-1 bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-100 dark:hover:bg-gray-600 mr-1 transition-all" title="Card Double-Sided Preview">
                     <i class="fas fa-eye"></i>
-                </button>
-                <button onclick="window.idCardApp.printOne('${s.id}')" class="text-xs px-2.5 py-1 bg-gray-700 text-white rounded hover:bg-gray-800" title="Print card">
-                    <i class="fas fa-print"></i>
                 </button>
             </td>
         </tr>`;
     }
 
-    function render() {
-        const tbody   = document.getElementById('idc-tbody');
+    function renderTable() {
+        const tbody = document.getElementById('idc-tbody');
         const countEl = document.getElementById('idc-count');
-        const selEl   = document.getElementById('idc-selected');
+        const selEl = document.getElementById('idc-selected');
+        
         if (countEl) countEl.textContent = filtered.length;
-        if (selEl)   selEl.textContent   = selected.size;
+        if (selEl) selEl.textContent = selected.size;
         if (!tbody) return;
+
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="10" class="px-4 py-16 text-center text-gray-400"><i class="fas fa-id-card text-4xl mb-3 block opacity-20"></i>No students found. Click <strong>Add Student</strong> to create the first record.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" class="px-4 py-16 text-center text-gray-400"><i class="fas fa-id-card text-4xl mb-3 block opacity-25"></i>No matching student records found.</td></tr>';
             return;
         }
         tbody.innerHTML = filtered.map(s => buildRow(s)).join('');
@@ -149,29 +565,287 @@
         if (hdr) hdr.checked = filtered.length > 0 && filtered.every(s => selected.has(s.id));
     }
 
-    function printCards(students) {
+    // ── Design Studio Live Render Preview ───────────────────────────────────
+    function renderStudioPreview() {
+        const frontContainer = document.getElementById('studio-preview-card-front');
+        const backContainer = document.getElementById('studio-preview-card-back');
+        if (!frontContainer || !backContainer) return;
+
+        // Visual preview dummy student
+        const dummyPreviewStudent = {
+            id: 'STU0099',
+            name: 'Emeka Okafor',
+            className: 'JSS1A',
+            dob: '2010-04-12',
+            gender: 'Male',
+            bloodGroup: 'O+',
+            emoji: '👦',
+            session: '2024/2025',
+            phone: '08032128912',
+            nfc_uid: 'NFC88123'
+        };
+
         const school = getSchoolInfo();
-        const html = students.map(s => buildCardHtml(s, school)).join('<div style="display:inline-block;width:8mm;"></div>');
-        const win = window.open('', '_blank', 'width=900,height=700');
-        win.document.write(`<!DOCTYPE html><html><head><title>ID Cards — ${school.name}</title>
-            <style>body{background:#e5e7eb;padding:10mm;}@media print{body{background:#fff;padding:5mm;}@page{margin:5mm;}}</style>
-            </head><body>${html}</body></html>`);
+        frontContainer.innerHTML = renderSingleCard(dummyPreviewStudent, school, 'front', studioConfig);
+        backContainer.innerHTML = renderSingleCard(dummyPreviewStudent, school, 'back', studioConfig);
+    }
+
+    // ── Render custom field lists dynamically inside Sidebar UI ──────────────
+    function drawCustomFieldsList() {
+        const container = document.getElementById('studio-custom-fields-list');
+        if (!container) return;
+
+        if (!studioConfig.customFields || studioConfig.customFields.length === 0) {
+            container.innerHTML = `<span class="block text-xs text-gray-400 italic">No custom fields created yet.</span>`;
+            return;
+        }
+
+        container.innerHTML = studioConfig.customFields.map(f => {
+            return `
+            <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-900/60 border dark:border-gray-700 p-2 rounded-lg text-xs">
+                <label class="flex items-center gap-2 cursor-pointer font-medium text-gray-700 dark:text-gray-300">
+                    <input type="checkbox" onchange="window.idCardApp.toggleCustomField('${f.id}', this.checked)" ${f.enabled?'checked':''} class="rounded text-primary-600 focus:ring-primary-500 w-3.5 h-3.5">
+                    <span class="font-bold text-gray-900 dark:text-white">${f.label}:</span>
+                    <span class="text-gray-500 truncate max-w-[100px]">${f.value}</span>
+                </label>
+                <button onclick="window.idCardApp.deleteCustomField('${f.id}')" class="text-red-500 hover:text-red-700 px-1"><i class="fas fa-trash-alt"></i></button>
+            </div>`;
+        }).join('');
+    }
+
+    // ── Dual Sided Batch Printing Window ──────────────────────────────────
+    function printSelectedCards(students) {
+        const school = getSchoolInfo();
+        const cardsHtml = students.map(s => `
+            <div class="print-card-pair" style="display:inline-flex; gap:10px; margin-bottom:12mm; page-break-inside:avoid;">
+                ${renderSingleCard(s, school, 'front', studioConfig)}
+                ${renderSingleCard(s, school, 'back', studioConfig)}
+            </div>
+        `).join('');
+
+        const win = window.open('', '_blank', 'width=1000,height=800');
+        win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Print ID Cards — ${school.name}</title>
+            <style>
+                body { background: #f3f4f6; margin: 0; padding: 15mm; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+                .cr80-card { box-shadow: none !important; }
+                @media print {
+                    body { background: #fff; padding: 0; }
+                    .print-card-pair { page-break-inside: avoid; }
+                    @page { margin: 10mm; }
+                }
+            </style>
+        </head>
+        <body>
+            <div style="max-width: 800px; width:100%; text-align:left; margin-bottom: 20px; font-size: 13px; color: #4b5563;" class="no-print">
+                <h3 style="margin:0 0 5px 0; color:#111;">Batch Print Mode</h3>
+                <p style="margin:0;">Layout formatted directly in **CR80 standard metrics** (Landscape/Portrait). Ready to print to standard card cutters or card trays. Press **Ctrl + P** if the print menu doesn't open automatically.</p>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                ${cardsHtml}
+            </div>
+        </body>
+        </html>`);
         win.document.close();
-        setTimeout(() => win.print(), 500);
+        setTimeout(() => win.print(), 800);
     }
 
     function setField(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
     function getField(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
     window.idCardApp = {
+        switchTab(tabId) {
+            const dirTab = document.getElementById('idc-tab-directory');
+            const studioTab = document.getElementById('idc-tab-studio');
+            const dirBtn = document.getElementById('tab-directory-btn');
+            const studioBtn = document.getElementById('tab-studio-btn');
+
+            if (tabId === 'directory') {
+                dirTab.classList.remove('hidden');
+                dirTab.classList.add('block');
+                studioTab.classList.remove('block');
+                studioTab.classList.add('hidden');
+
+                dirBtn.className = "inline-block p-4 border-b-2 border-primary-600 text-primary-600 font-semibold";
+                studioBtn.className = "inline-block p-4 border-b-2 border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:text-gray-300 transition-all";
+            } else {
+                dirTab.classList.remove('block');
+                dirTab.classList.add('hidden');
+                studioTab.classList.remove('hidden');
+                studioTab.classList.add('block');
+
+                studioBtn.className = "inline-block p-4 border-b-2 border-primary-600 text-primary-600 font-semibold";
+                dirBtn.className = "inline-block p-4 border-b-2 border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:text-gray-300 transition-all";
+
+                // Initialize configurations UI in studio
+                document.getElementById('studio-back-rules').value = studioConfig.rules;
+                document.getElementById('studio-show-photo').checked = studioConfig.showPhoto;
+                document.getElementById('studio-show-dob').checked = studioConfig.showDob;
+                document.getElementById('studio-show-blood').checked = studioConfig.showBlood;
+                document.getElementById('studio-show-phone').checked = studioConfig.showPhone;
+                
+                const addressChk = document.getElementById('studio-show-address');
+                const schPhoneChk = document.getElementById('studio-show-schphone');
+
+
+                const templateSelect = document.getElementById('studio-template-id');
+                if (templateSelect) {
+                    templateSelect.value = studioConfig.templateId || 1;
+                }
+
+                this.updateStudioOrientationButtons();
+                drawCustomFieldsList();
+                renderStudioPreview();
+            }
+        },
+
+        changeStudioConfig(key, val) {
+            studioConfig[key] = val;
+            this.updateStudioOrientationButtons();
+            renderStudioPreview();
+        },
+
+        updateStudioOrientationButtons() {
+            const portBtn = document.getElementById('studio-btn-portrait');
+            const landBtn = document.getElementById('studio-btn-landscape');
+            if (!portBtn || !landBtn) return;
+
+            if (studioConfig.orientation === 'portrait') {
+                portBtn.className = "px-4 py-2.5 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-primary-50 dark:bg-primary-900/30 border-primary-300 text-primary-700 dark:text-primary-300";
+                landBtn.className = "px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 transition-all hover:bg-gray-50";
+            } else {
+                landBtn.className = "px-4 py-2.5 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-primary-50 dark:bg-primary-900/30 border-primary-300 text-primary-700 dark:text-primary-300";
+                portBtn.className = "px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 transition-all hover:bg-gray-50";
+            }
+        },
+
+        toggleStudioField(key) {
+            studioConfig[key] = !studioConfig[key];
+            renderStudioPreview();
+        },
+
+        updateStudioBackRules(text) {
+            studioConfig.rules = text;
+            renderStudioPreview();
+        },
+
+        // ── Custom Dynamic Fields Handler ───────────────────────────────────────
+        addCustomField() {
+            const label = getField('studio-new-field-label');
+            const value = getField('studio-new-field-value');
+            if (!label || !value) { alert('Please enter both a Field Name and Value.'); return; }
+
+            const newField = {
+                id: `cf_${Date.now()}`,
+                label,
+                value,
+                enabled: true
+            };
+
+            if (!studioConfig.customFields) studioConfig.customFields = [];
+            studioConfig.customFields.push(newField);
+            
+            // Clear creator forms
+            setField('studio-new-field-label', '');
+            setField('studio-new-field-value', '');
+
+            drawCustomFieldsList();
+            renderStudioPreview();
+        },
+
+        toggleCustomField(fieldId, isChecked) {
+            const idx = studioConfig.customFields.findIndex(f => f.id === fieldId);
+            if (idx !== -1) {
+                studioConfig.customFields[idx].enabled = isChecked;
+                renderStudioPreview();
+            }
+        },
+
+        deleteCustomField(fieldId) {
+            studioConfig.customFields = studioConfig.customFields.filter(f => f.id !== fieldId);
+            drawCustomFieldsList();
+            renderStudioPreview();
+        },
+
+        saveTemplateConfig() {
+            localStorage.setItem('sms_id_card_config', JSON.stringify(studioConfig));
+            alert('Smart Card template config saved successfully!');
+        },
+
+        // ── Card Binding NFC Modal ──────────────────────────────────────────
+        openNfcModal(studentId) {
+            nfcBindingStudentId = studentId;
+            nfcScanBuffer = "";
+
+            const student = allStudents.find(s => s.id === studentId);
+            document.getElementById('nfc-modal-title').textContent = `Linking: ${student.name}`;
+            document.getElementById('nfc-modal-desc').textContent = `Ready to register card. Tap an NFC card against the scanner.`;
+            
+            const pulse = document.getElementById('nfc-pulse-indicator');
+            pulse.className = "w-24 h-24 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center relative";
+            pulse.innerHTML = `<div class="absolute inset-0 rounded-full bg-primary-400/20 animate-ping"></div><i class="fas fa-wave-square text-primary-600 dark:text-primary-400 text-4xl"></i>`;
+
+            document.getElementById('idc-nfc-modal').classList.remove('hidden');
+
+            const inp = document.getElementById('nfc-wedge-input');
+            if (inp) {
+                inp.value = "";
+                setTimeout(() => inp.focus(), 100);
+            }
+        },
+
+        closeNfcModal() {
+            document.getElementById('idc-nfc-modal').classList.add('hidden');
+            nfcBindingStudentId = null;
+            nfcScanBuffer = "";
+        },
+
+        simulateScan() {
+            if (!nfcBindingStudentId) return;
+            const randomUid = `NFC${Math.floor(Math.random() * 89999 + 10000)}`;
+            this.processCardBinding(randomUid);
+        },
+
+        processCardBinding(cardUid) {
+            const studentIdx = allStudents.findIndex(s => s.id === nfcBindingStudentId);
+            if (studentIdx === -1) return;
+
+            const dup = allStudents.find(s => s.nfc_uid === cardUid && s.id !== nfcBindingStudentId);
+            if (dup) {
+                alert(`Error: This card UID (${cardUid}) is already bound to another student: ${dup.name} (${dup.id}).`);
+                return;
+            }
+
+            allStudents[studentIdx].nfc_uid = cardUid;
+            saveStudents();
+
+            const pulse = document.getElementById('nfc-pulse-indicator');
+            pulse.className = "w-24 h-24 rounded-full bg-green-100 dark:bg-green-950 flex items-center justify-center relative";
+            pulse.innerHTML = `<i class="fas fa-check text-green-600 dark:text-green-400 text-4xl"></i>`;
+
+            document.getElementById('nfc-modal-title').textContent = "Binding Success!";
+            document.getElementById('nfc-modal-desc').textContent = `Card UID (${cardUid}) linked to student profile.`;
+
+            filtered = [...allStudents];
+            renderTable();
+
+            setTimeout(() => {
+                this.closeNfcModal();
+            }, 1200);
+        },
+
+        // ── Standard Directory Controls ───────────────────────────────────────
         filter() {
             const cls = document.getElementById('idc-filter-class')?.value || '';
-            const q   = (document.getElementById('idc-search')?.value || '').toLowerCase();
+            const q = (document.getElementById('idc-search')?.value || '').toLowerCase();
             filtered = allStudents.filter(s =>
                 (!cls || s.className === cls) &&
-                (!q || s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q))
+                (!q || s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q) || (s.nfc_uid || '').toLowerCase().includes(q))
             );
-            render();
+            renderTable();
         },
 
         toggle(id, checked) {
@@ -185,47 +859,48 @@
         toggleAll(checked) {
             if (checked) filtered.forEach(s => selected.add(s.id));
             else filtered.forEach(s => selected.delete(s.id));
-            render();
+            renderTable();
         },
 
-        selectAll() { filtered.forEach(s => selected.add(s.id)); render(); },
-        clearAll()  { selected.clear(); render(); },
+        selectAll() { filtered.forEach(s => selected.add(s.id)); renderTable(); },
+        clearAll()  { selected.clear(); renderTable(); },
 
         preview(id) {
             const s = allStudents.find(x => x.id === id);
             if (!s) return;
             _previewStudent = s;
-            document.getElementById('idc-preview-card').innerHTML = buildCardHtml(s, getSchoolInfo());
+
+            const school = getSchoolInfo();
+            const container = document.getElementById('idc-preview-card');
+            container.innerHTML = `
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500 mb-2">Card Front</span>
+                    ${renderSingleCard(s, school, 'front', studioConfig)}
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-xs font-semibold text-gray-500 mb-2">Card Back</span>
+                    ${renderSingleCard(s, school, 'back', studioConfig)}
+                </div>
+            `;
             document.getElementById('idc-preview-modal').classList.remove('hidden');
         },
 
-        printPreview() { if (_previewStudent) printCards([_previewStudent]); },
-
-        printOne(id) {
-            const s = allStudents.find(x => x.id === id);
-            if (s) printCards([s]);
-        },
-
-        generateSelected() {
-            const list = filtered.filter(s => selected.has(s.id));
-            if (!list.length) { alert('Select at least one student to generate cards for.'); return; }
-            printCards(list);
-        },
+        printPreview() { if (_previewStudent) printSelectedCards([_previewStudent]); },
 
         printSelected() {
             const list = filtered.filter(s => selected.has(s.id));
-            if (!list.length) { alert('Select at least one student card to print.'); return; }
-            printCards(list);
+            if (!list.length) { alert('Select at least one student card checkbox to print.'); return; }
+            printSelectedCards(list);
         },
 
-        // ── Add / Edit Modal ──────────────────────────────────────────────
+        // ── Profile CRUD Modals ─────────────────────────────────────────────
         openModal(editId) {
             _pendingPhoto = null;
             const isEdit = !!editId;
             const s = isEdit ? allStudents.find(x => x.id === editId) : null;
 
-            document.getElementById('idc-modal-title').textContent = isEdit ? 'Edit Student' : 'Add New Student';
-            document.getElementById('idc-save-label').textContent  = isEdit ? 'Save Changes' : 'Add Student';
+            document.getElementById('idc-modal-title').textContent = isEdit ? 'Edit Student Details' : 'Add New Student Record';
+            document.getElementById('idc-save-label').textContent  = isEdit ? 'Save Settings' : 'Add Student';
 
             const delBtn = document.getElementById('idc-delete-btn');
             if (delBtn) delBtn.classList.toggle('hidden', !isEdit);
@@ -278,8 +953,14 @@
             const existing = editId ? allStudents.find(s => s.id === editId) : null;
             const customId = getField('idc-field-id');
 
+            const nextIdGen = () => {
+                if (allStudents.length === 0) return 'STU0001';
+                const nums = allStudents.map(s => parseInt((s.id || '0').replace(/\D/g, ''), 10) || 0);
+                return `STU${String(Math.max(...nums) + 1).padStart(4, '0')}`;
+            };
+
             const student = {
-                id:         existing ? existing.id : (customId || nextId()),
+                id:         existing ? existing.id : (customId || nextIdGen()),
                 name,
                 className:  cls,
                 gender:     getField('idc-field-gender'),
@@ -288,7 +969,8 @@
                 session:    getField('idc-field-session') || '2024/2025',
                 phone:      getField('idc-field-phone'),
                 emoji:      existing ? existing.emoji : PHOTOS[Math.floor(Math.random() * PHOTOS.length)],
-                photo:      _pendingPhoto !== null ? _pendingPhoto : (existing ? existing.photo : null)
+                photo:      _pendingPhoto !== null ? _pendingPhoto : (existing ? existing.photo : null),
+                nfc_uid:    existing ? existing.nfc_uid : null
             };
 
             if (existing) {
@@ -296,7 +978,7 @@
             } else {
                 allStudents.unshift(student);
             }
-            saveToStorage();
+            saveStudents();
             filtered = [...allStudents];
             this.filter();
             this.closeModal();
@@ -305,18 +987,18 @@
 
         saveAndPrint() {
             const s = this.saveStudent();
-            if (s) printCards([s]);
+            if (s) printSelectedCards([s]);
         },
 
         deleteStudent() {
             const editId = getField('idc-edit-id');
             if (!editId) return;
-            if (!confirm(`Delete student ${editId}? This cannot be undone.`)) return;
+            if (!confirm(`Delete student record ${editId}? This cannot be undone.`)) return;
             const idx = allStudents.findIndex(s => s.id === editId);
             if (idx !== -1) {
                 allStudents.splice(idx, 1);
                 selected.delete(editId);
-                saveToStorage();
+                saveStudents();
                 filtered = [...allStudents];
                 this.filter();
                 this.closeModal();
@@ -324,5 +1006,35 @@
         }
     };
 
-    render();
+    // ── Global USB keyboard wedge scanner listener for Binding Modal ───────
+    document.addEventListener('keydown', (e) => {
+        if (!nfcBindingStudentId) return;
+
+        const currentTime = Date.now();
+        if (currentTime - nfcScanTimeout > 50) {
+            nfcScanBuffer = "";
+        }
+        nfcScanTimeout = currentTime;
+
+        if (e.key.length === 1) {
+            nfcScanBuffer += e.key;
+        }
+
+        if (e.key === 'Enter') {
+            if (nfcScanBuffer.length >= 6) {
+                e.preventDefault();
+                console.log("USB Wedge Bind Reader Detected:", nfcScanBuffer);
+                window.idCardApp.processCardBinding(nfcScanBuffer);
+                nfcScanBuffer = "";
+            }
+        }
+    });
+
+    // Listen for global theme color shifts to live update the Design Studio preview canvas
+    window.addEventListener('themeChanged', () => {
+        renderStudioPreview();
+    });
+
+    // Initial table and preview draws
+    renderTable();
 })();

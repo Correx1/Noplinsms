@@ -1,0 +1,113 @@
+<!-- NFC Multi-Use Attendance, Library, and Bursary Scanner Page -->
+<div class="p-4 sm:p-6 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <nav class="flex mb-2"><ol class="inline-flex items-center space-x-1 text-sm font-medium">
+                <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300"><i class="fas fa-home mr-1"></i>Dashboard</a></li>
+                <li><span class="mx-2 text-gray-400">/</span><a href="#" onclick="loadAttendancePage?.()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Attendance</a></li>
+                <li><span class="mx-2 text-gray-400">/</span><span class="text-gray-500">NFC Smart Scanner</span></li>
+            </ol></nav>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fas fa-satellite-dish text-primary-600 animate-pulse"></i> NFC Unified Scanner Portal
+            </h1>
+            <p class="text-sm text-gray-500 mt-0.5">Place your cursor anywhere and tap a card, or use mobile Web NFC scanning.</p>
+        </div>
+        
+        <!-- Web NFC Mobile Status Badge -->
+        <div id="nfc-mobile-badge" class="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300 border flex items-center gap-2 transition-all">
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span> Mobile Web NFC Inactive
+        </div>
+    </div>
+</div>
+
+<!-- Core Container: Layout Grid -->
+<div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900/50 min-h-[calc(100vh-12rem)]">
+    
+    <!-- Mode Segment Toggle Selector Card -->
+    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 shadow-sm mb-6">
+        <label class="block text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 text-center">Active Scanner Desk Mode</label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 max-w-3xl mx-auto">
+            <!-- Mode 1: Gate -->
+            <button onclick="window.nfcScannerApp.switchMode('gate')" id="scanner-mode-btn-gate" class="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border-2 transition-all font-bold text-sm bg-primary-50 dark:bg-primary-950 border-primary-500 text-primary-800 dark:text-primary-200 shadow-sm">
+                <i class="fas fa-door-open text-base"></i>
+                <div class="text-left">
+                    <div class="leading-none">Gate Entrance</div>
+                    <span class="text-[9px] text-primary-500 font-medium">Logs check-ins & check-outs</span>
+                </div>
+            </button>
+
+            <!-- Mode 2: Library -->
+            <button onclick="window.nfcScannerApp.switchMode('library')" id="scanner-mode-btn-library" class="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-700 transition-all font-bold text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-50">
+                <i class="fas fa-book-reader text-base"></i>
+                <div class="text-left">
+                    <div class="leading-none">Library Desk</div>
+                    <span class="text-[9px] text-gray-400 font-medium">Borrows / returns catalog</span>
+                </div>
+            </button>
+
+            <!-- Mode 3: Bursar -->
+            <button onclick="window.nfcScannerApp.switchMode('bursar')" id="scanner-mode-btn-bursar" class="flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-gray-200 dark:border-gray-700 transition-all font-bold text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-50">
+                <i class="fas fa-wallet text-base"></i>
+                <div class="text-left">
+                    <div class="leading-none">Bursary Office</div>
+                    <span class="text-[9px] text-gray-400 font-medium">School fees invoice ledger</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Workspace Split Pane -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+        
+        <!-- Left Pane (col-4): Test Tap Simulator Sidebar -->
+        <div class="xl:col-span-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm space-y-4">
+            <div class="flex justify-between items-center border-b pb-2 dark:border-gray-700">
+                <h3 class="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-2">
+                    <i class="fas fa-laptop-code text-gray-500"></i> Local Tap Simulator
+                </h3>
+                <span class="text-[10px] uppercase font-bold text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded">Admin Sandbox</span>
+            </div>
+            
+            <p class="text-xs text-gray-500">Select any student below to simulate placing their physical smart card against the reader chip.</p>
+            
+            <div class="space-y-1 max-h-[360px] overflow-y-auto pr-1" id="sim-students-list">
+                <!-- Loaded dynamically by JS -->
+                <div class="text-center py-6 text-gray-400 text-xs"><i class="fas fa-spinner fa-spin mr-1"></i>Loading sandbox users…</div>
+            </div>
+        </div>
+
+        <!-- Center Pane (col-8): Active Scan radar & profile display -->
+        <div class="xl:col-span-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- Radar scan target (col-5) -->
+            <div class="md:col-span-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center space-y-5">
+                <div class="w-32 h-32 rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center relative shadow-inner" id="scanner-radar-ring">
+                    <!-- Radial glowing expanding pings -->
+                    <div class="absolute inset-0 rounded-full bg-primary-400/20 animate-ping"></div>
+                    <div class="absolute inset-4 rounded-full bg-primary-400/10 animate-pulse"></div>
+                    <i class="fas fa-circle-notch text-primary-500 text-5xl animate-spin"></i>
+                </div>
+                
+                <div class="space-y-1">
+                    <h3 class="font-bold text-gray-900 dark:text-white text-base">Scan Reader Active</h3>
+                    <p class="text-xs text-gray-500" id="scanner-focus-prompt">Auto-focused. Tap card directly now.</p>
+                </div>
+
+                <!-- Hidden Input for keyboard-wedge readers (keeps focus globally) -->
+                <input type="text" id="scanner-focus-field" class="w-1 h-1 opacity-0 absolute pointer-events-none" autocomplete="off">
+            </div>
+
+            <!-- Profile Slide-In Panel (col-7) -->
+            <div class="md:col-span-7 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center text-center min-h-[300px]" id="scanner-result-panel">
+                <div class="space-y-4 text-gray-400 dark:text-gray-500 py-12">
+                    <i class="fas fa-id-badge text-6xl opacity-20 block"></i>
+                    <div>
+                        <h4 class="font-bold text-gray-700 dark:text-gray-300 text-sm">No Active Scan</h4>
+                        <p class="text-xs mt-0.5">Scanned student details will render here instantly.</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

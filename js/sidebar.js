@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Attendance Section
                 'Staff Attendance': loadStaffAttendancePage,
                 'Student Attendance': loadAttendancePage,
+                'NFC Scanner': loadNfcScannerPage,
     
                 // Finance Section
                 'Income': loadIncomePage,
@@ -411,6 +412,7 @@ window.loadAIPage = () => loadPage('ai-automations.html', '../../js/ai-automatio
 // ============================================
 window.loadStaffAttendancePage = () => loadPage('attendance/staff-attendance.html', '../../js/staff-attendance.js', 'staff-attendance-script');
 window.loadAttendancePage = () => loadPage('attendance/student-attendance.html', '../../js/attendance.js', 'attendance-script');
+window.loadNfcScannerPage = () => loadPage('attendance/scanner.html', '../../js/attendance-scanner.js', 'attendance-scanner-script');
 
 
 // ============================================
