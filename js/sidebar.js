@@ -70,11 +70,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         sidebarTemplate = '../../components/owner-sidebar.html';
     }
 
+    // Restore sidebar collapse state from localStorage immediately on load
+    const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
+    if (isCollapsed && window.innerWidth >= 640) {
+        document.body.classList.add('sidebar-collapsed');
+    }
+
     // Load components with relative paths
     await Promise.all([
         loadComponent('navbar-container', '../../components/navbar.html'),
         loadComponent('sidebar-container', sidebarTemplate)
     ]);
+
+    // Setup Sidebar Toggle Listener
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            if (window.innerWidth >= 640) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.body.classList.toggle('sidebar-collapsed');
+                const nowCollapsed = document.body.classList.contains('sidebar-collapsed');
+                localStorage.setItem('sidebar_collapsed', nowCollapsed ? 'true' : 'false');
+            } else {
+                const sidebar = document.getElementById('logo-sidebar');
+                if (sidebar) {
+                    sidebar.classList.toggle('-translate-x-full');
+                    sidebar.classList.toggle('translate-x-0');
+                }
+            }
+        });
+    }
 
     // Update User Info in Navbar
     setTimeout(() => {
@@ -159,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Attendance Section
                 'Staff Attendance': loadStaffAttendancePage,
                 'Student Attendance': loadAttendancePage,
-                'NFC Scanner': loadNfcScannerPage,
+                'Card Scanner': loadNfcScannerPage,
     
                 // Finance Section
                 'Income': loadIncomePage,

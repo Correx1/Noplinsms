@@ -5,7 +5,6 @@
     const LAST_NAMES = ['Okafor','Adeyemi','Nwachukwu','Bello','Eze','Adeleke','Musa','Ajibade','Okonkwo','Abubakar','Oluwole','Ihejirika','Osei','Afolabi','Nduka'];
     const PHOTOS = ['👧','👦','👩','👨','🧒'];
 
-    // Default Card Design Settings (Now extremely robust & customizable)
     const DEFAULT_CONFIG = {
         orientation: 'portrait',
         templateId: 1, 
@@ -13,7 +12,13 @@
         showDob: true,
         showBlood: true,
         showPhone: true,
-
+        colorMode: 'global',       // 'global' | 'custom'
+        cardCustomColor: '#0284c7',// used when colorMode === 'custom'
+        showBarcode: false,
+        customBackground: null,
+        signatures: [
+            { id: 'sig_default', name: '', title: 'School Principal' }
+        ],
         customFields: [],
         rules: "This card is the official property of the school. If found, please return to the administration desk immediately. A replacement fee will be charged for lost cards."
     };
@@ -22,6 +27,11 @@
     let studioConfig = JSON.parse(localStorage.getItem('sms_id_card_config') || JSON.stringify(DEFAULT_CONFIG));
     // Ensure all standard defaults exist
     if (!studioConfig.customFields) studioConfig.customFields = [...DEFAULT_CONFIG.customFields];
+    if (!studioConfig.signatures) studioConfig.signatures = [...DEFAULT_CONFIG.signatures];
+    if (!studioConfig.colorMode) studioConfig.colorMode = 'global';
+    if (!studioConfig.cardCustomColor) studioConfig.cardCustomColor = '#0284c7';
+    if (typeof studioConfig.showBarcode === 'undefined') studioConfig.showBarcode = false;
+    if (typeof studioConfig.customBackground === 'undefined') studioConfig.customBackground = null;
     // Remove old legacy default custom fields if they exist in user's localStorage
     if (studioConfig.customFields.some(f => f.label === 'Bus Route' || f.label === 'Hostel')) {
         studioConfig.customFields = studioConfig.customFields.filter(f => f.label !== 'Bus Route' && f.label !== 'Hostel');
@@ -72,6 +82,11 @@
 
     // Dynamic color picker fetching from global Theme settings
     function getThemeColor() {
+        // If studio has custom color override active, use that
+        if (studioConfig.colorMode === 'custom' && studioConfig.cardCustomColor) {
+            return studioConfig.cardCustomColor;
+        }
+
         // Fetch current active theme name
         const activeTheme = localStorage.getItem('selectedTheme') || 'blue';
         
@@ -161,10 +176,64 @@
         const templateId = config.templateId || 1;
         const flexDir = isPortrait ? 'column' : 'row';
 
+        // ── Dynamic Signature Block Builder ─────────────────────────────────────
+        const getSignaturesHtml = (textColor = '#fff', lineColor = 'rgba(255,255,255,0.5)') => {
+            const sigs = (config.signatures || []).filter(s => s.title || s.name);
+            if (sigs.length === 0) {
+                return `<div style="text-align:center;">
+                    <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1; color:${textColor};">Signed</div>
+                    <div style="border-top:1px solid ${lineColor}; padding-top:2px; font-size:7px; font-weight:700; color:${textColor};">Principal</div>
+                </div>`;
+            }
+            return sigs.map(sig => `
+                <div style="text-align:center; margin:0 6px;">
+                    <div style="height:20px; display:flex; align-items:flex-end; justify-content:center; margin-bottom:2px;">
+                        ${sig.image ? `<img src="${sig.image}" style="max-height:20px; max-width:60px; object-fit:contain; filter: drop-shadow(0 0 1px rgba(255,255,255,0.5));">` : `<span style="color:${textColor};">___________</span>`}
+                    </div>
+                    <div style="border-top:1px solid ${lineColor}; padding-top:2px; font-size:6.5px; font-weight:700; color:${textColor}; white-space:nowrap;">${sig.title}</div>
+                </div>
+            `).join('');
+        };
+
+        const generateCSSBarcode = (text) => {
+            const svgData = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Top Left Marker -->
+                <rect x="5" y="5" width="25" height="25" fill="none" stroke="#000" stroke-width="5"/>
+                <rect x="12" y="12" width="11" height="11" fill="#000"/>
+                <!-- Top Right Marker -->
+                <rect x="70" y="5" width="25" height="25" fill="none" stroke="#000" stroke-width="5"/>
+                <rect x="77" y="12" width="11" height="11" fill="#000"/>
+                <!-- Bottom Left Marker -->
+                <rect x="5" y="70" width="25" height="25" fill="none" stroke="#000" stroke-width="5"/>
+                <rect x="12" y="77" width="11" height="11" fill="#000"/>
+                <!-- Data blocks (pseudo-random) -->
+                <rect x="35" y="5" width="10" height="10" fill="#000"/>
+                <rect x="50" y="15" width="10" height="10" fill="#000"/>
+                <rect x="5" y="35" width="20" height="10" fill="#000"/>
+                <rect x="35" y="35" width="30" height="10" fill="#000"/>
+                <rect x="75" y="45" width="20" height="10" fill="#000"/>
+                <rect x="45" y="55" width="20" height="20" fill="#000"/>
+                <rect x="35" y="75" width="10" height="20" fill="#000"/>
+                <rect x="60" y="75" width="35" height="10" fill="#000"/>
+                <rect x="80" y="85" width="15" height="10" fill="#000"/>
+            </svg>`;
+            return `<div style="width:36px; height:36px; background:#fff; padding:3px; margin-top:8px; border-radius:4px; box-sizing:border-box; margin-right:auto; box-shadow:0 1px 3px rgba(0,0,0,0.2);">
+                        <img src="data:image/svg+xml;utf8,${encodeURIComponent(svgData)}" style="width:100%; height:100%; display:block;" />
+                    </div>`;
+        };
+
         const frontCard = (content, style, bgOverride = `${color}0D`, isDark = false) => {
             const safeSchoolName = (school.name || 'School').replace(/[<>&"']/g, '');
-            const svgWatermark = encodeURIComponent(`<svg width="180" height="180" xmlns="http://www.w3.org/2000/svg"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="900" fill="${isDark ? '#ffffff' : color}" transform="rotate(-30, 90, 90)" opacity="${isDark ? '0.03' : '0.07'}">${safeSchoolName}</text></svg>`);
-            return `<div class="cr80-card" style="width:${width}; height:${height}; border-radius:12px; overflow:hidden; font-family:system-ui,sans-serif; background-color:${bgOverride}; background-image:url('data:image/svg+xml,${svgWatermark}'); box-shadow:0 8px 24px rgba(0,0,0,0.08); display:flex; flex-direction:column; box-sizing:border-box; position:relative; ${style}">
+            const patternWidth = Math.max(50, safeSchoolName.length * 3.8);
+            const patternHeight = 10;
+            const svgWatermark = encodeURIComponent(`<svg width="${patternWidth}" height="${patternHeight}" xmlns="http://www.w3.org/2000/svg"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="system-ui, sans-serif" font-size="4.8px" font-weight="900" fill="${isDark ? '#ffffff' : color}" transform="rotate(-8, ${patternWidth / 2}, ${patternHeight / 2})" opacity="${isDark ? '0.025' : '0.06'}">${safeSchoolName}</text></svg>`);
+            
+            let backgroundStyle = `background-color:${bgOverride}; background-image:url('data:image/svg+xml,${svgWatermark}'); background-repeat:repeat;`;
+            if (config.customBackground) {
+                backgroundStyle = `background-image:url('${config.customBackground}'); background-size:cover; background-position:center;`;
+            }
+
+            return `<div class="cr80-card" style="width:${width}; height:${height}; border-radius:12px; overflow:hidden; font-family:system-ui,sans-serif; ${backgroundStyle} box-shadow:0 8px 24px rgba(0,0,0,0.08); display:flex; flex-direction:column; box-sizing:border-box; position:relative; ${style}">
                 <div style="position:relative; z-index:2; display:flex; flex-direction:column; height:100%;">
                     ${content}
                 </div>
@@ -208,11 +277,8 @@
                             ${makeSquarePhoto('80px', `border:2px solid ${color};`)}
                             <div style="flex:1; width:100%;"><table style="width:100%; font-size:8.5px; line-height:1.3;">${trHtml}</table></div>
                         </div>
-                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center;">
-                            <div style="text-align:center;">
-                                <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
-                                <div style="border-top:1px solid rgba(255,255,255,0.5); padding-top:2px; font-size:7px; font-weight:700;">Principal</div>
-                            </div>
+                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center; gap:12px;">
+                            ${getSignaturesHtml('#fff', 'rgba(255,255,255,0.5)')}
                         </div>
                     `, `border:2px solid ${color}30;`);
 
@@ -226,12 +292,9 @@
                             ${makeSquarePhoto('80px', `border:2px solid ${color};`)}
                             <div style="flex:1; width:100%; position:relative; z-index:2;"><table style="width:100%; font-size:8.5px;">${trHtml}</table></div>
                         </div>
-                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center; position:relative;">
+                        <div style="background:${color}; color:#fff; padding:6px 12px; display:flex; justify-content:flex-end; align-items:center; gap:12px; position:relative;">
                             <div style="position:absolute; top:-10px; left:10px; width:30px; height:20px; background:${color}; transform:skewX(30deg); opacity:0.9;"></div>
-                            <div style="text-align:center; z-index:2;">
-                                <div style="font-family:'Brush Script MT',cursive; font-size:14px; line-height:1;">Signed</div>
-                                <div style="font-size:7px; font-weight:700;">Principal</div>
-                            </div>
+                            <div style="display:flex; gap:12px; align-items:center; z-index:2;">${getSignaturesHtml('#fff', 'rgba(255,255,255,0.5)')}</div>
                         </div>
                     `, ``);
 
@@ -342,7 +405,8 @@
                     `, `background:linear-gradient(135deg, #1e293b, #0f172a); border:1px solid #cbd5e1;`, `#0f172a`, true);
             }
         } else {
-            const rulesBlock = `<div style="font-size:8px; color:#475569; line-height:1.5; text-align:justify; margin-top:4px;">${config.rules}</div>`;
+            const barcodeHtml = config.showBarcode ? generateCSSBarcode(s.id) : '';
+            const rulesBlock = `<div style="font-size:8px; color:#475569; line-height:1.5; text-align:justify; margin-top:4px;">${config.rules}</div>${barcodeHtml}`;
             const datesBlock = `<div style="display:flex; justify-content:space-between; font-size:7.5px; font-weight:700; color:#334155; margin-top:10px;">
                 <span>Joined Date : ${dates.issued}</span>
                 <span>Expire Date : ${dates.expires}</span>
@@ -687,6 +751,16 @@
                 document.getElementById('studio-show-blood').checked = studioConfig.showBlood;
                 document.getElementById('studio-show-phone').checked = studioConfig.showPhone;
                 
+                const magBtn = document.getElementById('studio-show-magstripe');
+                if (magBtn) magBtn.checked = studioConfig.showMagStripe;
+                const bcBtn = document.getElementById('studio-show-barcode');
+                if (bcBtn) bcBtn.checked = studioConfig.showBarcode;
+
+                const bgClearBtn = document.getElementById('studio-clear-bg-btn');
+                if (bgClearBtn) {
+                    bgClearBtn.style.display = studioConfig.customBackground ? 'inline-block' : 'none';
+                }
+                
                 const addressChk = document.getElementById('studio-show-address');
                 const schPhoneChk = document.getElementById('studio-show-schphone');
 
@@ -698,6 +772,8 @@
 
                 this.updateStudioOrientationButtons();
                 drawCustomFieldsList();
+                this.drawSignaturesList();
+                this.initColorUI();
                 renderStudioPreview();
             }
         },
@@ -768,6 +844,202 @@
             studioConfig.customFields = studioConfig.customFields.filter(f => f.id !== fieldId);
             drawCustomFieldsList();
             renderStudioPreview();
+        },
+
+        editingSignatureId: null,
+
+        handleBgUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    studioConfig.customBackground = e.target.result;
+                    const bgClearBtn = document.getElementById('studio-clear-bg-btn');
+                    if (bgClearBtn) bgClearBtn.style.display = 'inline-block';
+                    renderStudioPreview();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        },
+
+        clearCustomBg() {
+            studioConfig.customBackground = null;
+            const fileInput = document.getElementById('studio-bg-upload');
+            if (fileInput) fileInput.value = '';
+            const bgClearBtn = document.getElementById('studio-clear-bg-btn');
+            if (bgClearBtn) bgClearBtn.style.display = 'none';
+            renderStudioPreview();
+        },
+
+        generateBatchPrintLayout() {
+            const classSelect = document.getElementById('idc-class-select');
+            let className = '';
+            if (classSelect && classSelect.value) {
+                className = classSelect.value;
+            } else {
+                // Default to first class if not on directory tab
+                className = CLASSES[0];
+            }
+            const students = JSON.parse(localStorage.getItem('sms_students') || '[]').filter(s => s.className === className);
+            
+            if (students.length === 0) {
+                alert('No students found in ' + className + '.');
+                return;
+            }
+            
+            // Limit to a reasonable batch size for browser printing to avoid hanging
+            const batch = students.slice(0, 20); 
+
+            // Call the internal printSelectedCards function
+            printSelectedCards(batch);
+        },
+
+        handleSignatureUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const hiddenInput = document.getElementById('studio-sig-image-base64');
+                    if (hiddenInput) hiddenInput.value = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        },
+
+        addSignature() {
+            const imageBase64 = getField('studio-sig-image-base64');
+            const title = getField('studio-sig-title');
+            if (!title) { alert('Please enter a title for the signatory (e.g. School Principal).'); return; }
+
+            if (!studioConfig.signatures) studioConfig.signatures = [];
+            
+            if (this.editingSignatureId) {
+                const sig = studioConfig.signatures.find(s => s.id === this.editingSignatureId);
+                if (sig) {
+                    sig.image = imageBase64 || sig.image;
+                    sig.title = title;
+                }
+                this.editingSignatureId = null;
+                const btn = document.getElementById('studio-sig-submit-btn');
+                if (btn) btn.innerHTML = 'Add to Card';
+            } else {
+                studioConfig.signatures.push({
+                    id: `sig_${Date.now()}`,
+                    image: imageBase64,
+                    title
+                });
+            }
+
+            setField('studio-sig-image-base64', '');
+            const fileInput = document.getElementById('studio-sig-image');
+            if (fileInput) fileInput.value = '';
+            setField('studio-sig-title', '');
+            this.drawSignaturesList();
+            renderStudioPreview();
+        },
+
+        editSignature(sigId) {
+            const sig = studioConfig.signatures.find(s => s.id === sigId);
+            if (!sig) return;
+            
+            setField('studio-sig-image-base64', sig.image || '');
+            setField('studio-sig-title', sig.title || '');
+            // We cannot set file input value programmatically for security reasons, so it stays empty
+            this.editingSignatureId = sigId;
+            
+            const btn = document.getElementById('studio-sig-submit-btn');
+            if (btn) btn.innerHTML = 'Update Signature';
+        },
+
+        deleteSignature(sigId) {
+            studioConfig.signatures = studioConfig.signatures.filter(s => s.id !== sigId);
+            this.drawSignaturesList();
+            renderStudioPreview();
+        },
+
+        drawSignaturesList() {
+            const container = document.getElementById('studio-signatures-list');
+            if (!container) return;
+            const sigs = studioConfig.signatures || [];
+            if (sigs.length === 0) {
+                container.innerHTML = `<span class="block text-xs text-gray-400 italic">No signatories added. Cards will show default "Principal" line.</span>`;
+                return;
+            }
+            container.innerHTML = sigs.map(sig => `
+                <div class="flex items-center justify-between bg-primary-50 dark:bg-primary-950/20 border border-primary-200 dark:border-primary-800 p-2.5 rounded-lg text-xs">
+                    <div>
+                        <div class="font-bold text-gray-900 dark:text-white">${sig.image ? `<img src="${sig.image}" class="h-6 object-contain rounded bg-white/50 p-0.5">` : '<em class="font-normal text-gray-400">No Image</em>'}</div>
+                        <div class="text-primary-600 dark:text-primary-400 font-semibold">${sig.title}</div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="window.idCardApp.editSignature('${sig.id}')" title="Edit" class="text-blue-500 hover:text-blue-700 p-1"><i class="fas fa-edit"></i></button>
+                        <button onclick="window.idCardApp.deleteSignature('${sig.id}')" title="Delete" class="text-red-500 hover:text-red-700 p-1 ml-1"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        },
+
+        // ── Color Customizer ───────────────────────────────────────────────────
+        setColorMode(mode) {
+            studioConfig.colorMode = mode;
+            const customInput = document.getElementById('studio-custom-color');
+            if (mode === 'custom' && customInput) {
+                studioConfig.cardCustomColor = customInput.value;
+                const hexInput = document.getElementById('studio-custom-hex');
+                if (hexInput) hexInput.value = customInput.value;
+            }
+            renderStudioPreview();
+        },
+
+        applyCustomColor(hexColor) {
+            studioConfig.colorMode = 'custom';
+            studioConfig.cardCustomColor = hexColor;
+            const radioCustom = document.getElementById('card-color-custom');
+            if (radioCustom) radioCustom.checked = true;
+            const hexInput = document.getElementById('studio-custom-hex');
+            if (hexInput && hexInput.value !== hexColor) hexInput.value = hexColor;
+            renderStudioPreview();
+        },
+
+        applyHexInput(hexColor) {
+            // Check if hex is valid 3 or 6 digit color
+            if (/^#[0-9A-F]{6}$/i.test(hexColor) || /^#[0-9A-F]{3}$/i.test(hexColor)) {
+                studioConfig.colorMode = 'custom';
+                studioConfig.cardCustomColor = hexColor;
+                const radioCustom = document.getElementById('card-color-custom');
+                if (radioCustom) radioCustom.checked = true;
+                const colorInput = document.getElementById('studio-custom-color');
+                if (colorInput) colorInput.value = hexColor;
+                renderStudioPreview();
+            }
+        },
+
+        initColorUI() {
+            const globalSwatch = document.getElementById('global-color-swatch');
+            // Show what the global theme color is currently
+            const activeTheme = localStorage.getItem('selectedTheme') || 'blue';
+            const themeColors = {
+                'blue':'#0284c7','green':'#059669','purple':'#9333ea','red':'#e11d48',
+                'teal':'#0d9488','gold':'#d97706','navy-blue':'#202B5D','forest':'#043927',
+                'ruby':'#C32644','slate':'#475569'
+            };
+            const globalColor = activeTheme === 'custom'
+                ? (localStorage.getItem('customThemeColor') || '#3b82f6')
+                : (themeColors[activeTheme] || '#0284c7');
+            if (globalSwatch) globalSwatch.style.background = globalColor;
+
+            const radioGlobal = document.getElementById('card-color-global');
+            const radioCustom = document.getElementById('card-color-custom');
+            const colorInput = document.getElementById('studio-custom-color');
+            const hexInput = document.getElementById('studio-custom-hex');
+
+            if (studioConfig.colorMode === 'custom') {
+                if (radioCustom) radioCustom.checked = true;
+                const activeColor = studioConfig.cardCustomColor || '#0284c7';
+                if (colorInput) colorInput.value = activeColor;
+                if (hexInput) hexInput.value = activeColor;
+            } else {
+                if (radioGlobal) radioGlobal.checked = true;
+                if (hexInput) hexInput.value = globalColor;
+            }
         },
 
         saveTemplateConfig() {

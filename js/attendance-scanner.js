@@ -1,6 +1,6 @@
 // NFC Smart Scanner Core Script — Mode routing, Keyboard Wedge Interceptor, Web NFC mobile API, and Web Audio Synths
 (function() {
-    let currentMode = 'gate'; // Options: gate, library, bursar
+    let currentMode = 'gate'; // Options: gate, library, bursar, disciplinary
     let allStudents = [];
     let isSoundOn = true;
     let recentScans = []; // Ledger scan sessions
@@ -69,7 +69,13 @@
     };
 
     function loadDatabase() {
-        allStudents = JSON.parse(localStorage.getItem('sms_students') || '[]');
+        const students = JSON.parse(localStorage.getItem('sms_students') || '[]');
+        // We inject mock staff/parents for the scanner demo
+        const mockStaff = [
+            { id: 'STF-001', name: 'Dr. John Doe', className: 'Staff - Principal', photo: '', emoji: '👨‍🏫', nfc_uid: 'STF1001' },
+            { id: 'STF-002', name: 'Mrs. Jane Smith', className: 'Staff - Teacher', photo: '', emoji: '👩‍🏫', nfc_uid: 'STF1002' }
+        ];
+        allStudents = [...students, ...mockStaff];
         renderSimulatorList();
     }
 
@@ -335,6 +341,60 @@
                     <i class="fas fa-receipt"></i> Authorize / Log School Fee Payment
                 </button>
             </div>`;
+        } else if (currentMode === 'disciplinary') {
+            addToLedger(student, `Disciplinary Clearance Checked`, 'present');
+            
+            // Dynamic mock discipline state
+            const merits = student.className.includes('SS') ? 14 : 28;
+            const demerits = student.className.includes('SS') ? 1 : 0;
+            const rating = demerits > 0 ? 'Good Standing' : 'Exemplary Conduct';
+            
+            contextDetailsHtml = `
+            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
+                <h5 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Behavioral & Merit Record</h5>
+                <div class="grid grid-cols-3 gap-2.5 text-center">
+                    <div class="p-3 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
+                        <div class="text-[8px] text-gray-400 uppercase font-black tracking-wider mb-1">Merits</div>
+                        <strong class="text-sm text-green-600 dark:text-green-400 font-mono">+${merits}</strong>
+                    </div>
+                    <div class="p-3 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
+                        <div class="text-[8px] text-gray-400 uppercase font-black tracking-wider mb-1">Demerits</div>
+                        <strong class="text-sm text-red-600 dark:text-red-400 font-mono">${demerits}</strong>
+                    </div>
+                    <div class="p-3 border border-green-200 dark:border-green-950 rounded-2xl bg-green-50/50 dark:bg-green-950/20 col-span-1">
+                        <div class="text-[8px] text-green-600 dark:text-green-400 uppercase font-black tracking-wider mb-1">Rating</div>
+                        <strong class="text-xs text-green-700 dark:text-green-300 truncate block">${rating}</strong>
+                    </div>
+                </div>
+                <div class="p-3 bg-blue-50/30 dark:bg-blue-950/10 border border-blue-200/50 dark:border-blue-900/30 rounded-xl text-[10px] text-blue-600 dark:text-blue-400 flex items-center gap-2">
+                    <i class="fas fa-certificate text-xs animate-pulse"></i>
+                    <span>Eligible for Student Leadership Council candidacy.</span>
+                </div>
+                <button class="w-full py-2.5 bg-red-600 hover:bg-red-750 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm transform active:scale-95">
+                    <i class="fas fa-exclamation-triangle"></i> Log Incident / File Demerit Report
+                </button>
+            </div>`;
+        } else if (currentMode === 'staff') {
+            addToLedger(student, `Staff Clock-In Verified`, 'present');
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            contextDetailsHtml = `
+            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
+                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Terminal ID</span>
+                        <strong class="text-sm text-gray-800 dark:text-white font-mono">STAFF-ENTRY</strong>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
+                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Timestamp</span>
+                        <strong class="text-sm text-gray-800 dark:text-white font-mono">${currentTime}</strong>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center bg-green-50 dark:bg-green-900/20 p-3.5 rounded-2xl border border-green-200 dark:border-green-800">
+                    <span class="text-xs font-bold text-green-800 dark:text-green-300">Clock-In Successful</span>
+                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                </div>
+            </div>`;
         }
 
         panel.innerHTML = `
@@ -367,15 +427,15 @@
             currentMode = mode;
             
             // Update Active Tab Class UI buttons
-            const modeIds = ['gate', 'library', 'bursar'];
+            const modeIds = ['gate', 'library', 'bursar', 'disciplinary', 'staff'];
             modeIds.forEach(m => {
                 const btn = document.getElementById(`scanner-mode-btn-${m}`);
                 if (!btn) return;
                 
                 if (m === mode) {
-                    btn.className = "flex items-center justify-center gap-3.5 py-4 px-5 rounded-2xl border-2 transition-all font-bold text-sm bg-primary-50 dark:bg-primary-950 border-primary-500 text-primary-850 dark:text-primary-200 shadow-md transform hover:-translate-y-0.5";
+                    btn.className = "flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300";
                 } else {
-                    btn.className = "flex items-center justify-center gap-3.5 py-4 px-5 rounded-2xl border border-gray-200 dark:border-gray-700 transition-all font-bold text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transform hover:-translate-y-0.5 shadow-sm";
+                    btn.className = "flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all whitespace-nowrap text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50";
                 }
             });
 
@@ -401,6 +461,54 @@
             }
 
             maintainFocus();
+        },
+
+        html5QrCode: null,
+        webcamActive: false,
+
+        toggleWebcamScanner() {
+            const container = document.getElementById('webcam-scanner-container');
+            const btn = document.getElementById('webcam-toggle-btn');
+            
+            if (!this.webcamActive) {
+                container.classList.remove('hidden');
+                btn.innerHTML = `<i class="fas fa-times mr-1"></i> Close Webcam Scanner`;
+                
+                if (!this.html5QrCode) {
+                    this.html5QrCode = new window.Html5Qrcode("html5-qrcode-reader");
+                }
+                
+                this.html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 200, height: 200 } },
+                    (decodedText, decodedResult) => {
+                        console.log(`Webcam Scan Code: ${decodedText}`);
+                        // Avoid double scanning within 2 seconds
+                        if (Date.now() - wedgeTimeout > 2000) {
+                            wedgeTimeout = Date.now();
+                            processScannedCard(decodedText);
+                        }
+                    },
+                    (errorMessage) => {
+                        // ignore background errors
+                    }
+                ).catch((err) => {
+                    console.error("Failed to start scanner", err);
+                    alert("Failed to start webcam. Please ensure camera permissions are granted.");
+                    container.classList.add('hidden');
+                    btn.innerHTML = `<i class="fas fa-camera mr-1"></i> Switch to Webcam Barcode Scanner`;
+                });
+                
+                this.webcamActive = true;
+            } else {
+                if (this.html5QrCode) {
+                    this.html5QrCode.stop().then(() => {
+                        container.classList.add('hidden');
+                        btn.innerHTML = `<i class="fas fa-camera mr-1"></i> Switch to Webcam Barcode Scanner`;
+                        this.webcamActive = false;
+                    }).catch(err => console.error("Failed to stop scanner", err));
+                }
+            }
         },
 
         mockScan(uid) {

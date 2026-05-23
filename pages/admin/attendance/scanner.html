@@ -35,43 +35,30 @@
 
 <!-- Main Dashboard Container -->
 <div class="p-4 sm:p-6 bg-gray-50 dark:bg-gray-900/40 min-h-[calc(100vh-12rem)] transition-all">
-    
-    <!-- Mode Desk Selector -->
-    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-5 shadow-sm mb-6 transition-all">
-        <label class="block text-xs font-extrabold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 text-center">Active Scanner Desk Mode</label>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-4xl mx-auto">
-            <!-- Mode 1: Gate -->
-            <button onclick="window.nfcScannerApp.switchMode('gate')" id="scanner-mode-btn-gate" class="flex items-center justify-center gap-3.5 py-4 px-5 rounded-2xl border-2 transition-all font-bold text-sm bg-primary-50 dark:bg-primary-950 border-primary-500 text-primary-850 dark:text-primary-200 shadow-md transform hover:-translate-y-0.5">
-                <div class="w-10 h-10 rounded-xl bg-primary-500/25 flex items-center justify-center text-primary-700 dark:text-primary-350">
-                    <i class="fas fa-door-open text-xl"></i>
-                </div>
-                <div class="text-left">
-                    <div class="leading-none text-base">Gate Entrance</div>
-                    <span class="text-[10px] text-primary-500 font-semibold mt-1 block">Logs check-ins & check-outs</span>
-                </div>
-            </button>
 
-            <!-- Mode 2: Library -->
-            <button onclick="window.nfcScannerApp.switchMode('library')" id="scanner-mode-btn-library" class="flex items-center justify-center gap-3.5 py-4 px-5 rounded-2xl border border-gray-200 dark:border-gray-700 transition-all font-bold text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transform hover:-translate-y-0.5 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500">
-                    <i class="fas fa-book-reader text-xl"></i>
-                </div>
-                <div class="text-left">
-                    <div class="leading-none text-base">Library Desk</div>
-                    <span class="text-[10px] text-gray-400 font-semibold mt-1 block">Borrows / returns catalog</span>
-                </div>
-            </button>
-
-            <!-- Mode 3: Bursar -->
-            <button onclick="window.nfcScannerApp.switchMode('bursar')" id="scanner-mode-btn-bursar" class="flex items-center justify-center gap-3.5 py-4 px-5 rounded-2xl border border-gray-200 dark:border-gray-700 transition-all font-bold text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transform hover:-translate-y-0.5 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500">
-                    <i class="fas fa-wallet text-xl"></i>
-                </div>
-                <div class="text-left">
-                    <div class="leading-none text-base">Bursary Office</div>
-                    <span class="text-[10px] text-gray-400 font-semibold mt-1 block">School fees invoice ledger</span>
-                </div>
-            </button>
+    <!-- Responsive Mode Tabs -->
+    <div class="w-full mb-6">
+        <div class="overflow-x-auto w-full pb-2" style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
+            <style>
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+            </style>
+            <div class="inline-flex items-center gap-1.5 p-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm no-scrollbar">
+                <button onclick="window.nfcScannerApp.switchMode('gate')" id="scanner-mode-btn-gate" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+                    <i class="fas fa-door-open"></i> Gate Entrance
+                </button>
+                <button onclick="window.nfcScannerApp.switchMode('library')" id="scanner-mode-btn-library" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                    <i class="fas fa-book-reader"></i> Library Desk
+                </button>
+                <button onclick="window.nfcScannerApp.switchMode('bursar')" id="scanner-mode-btn-bursar" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                    <i class="fas fa-wallet"></i> Bursary Office
+                </button>
+                <button onclick="window.nfcScannerApp.switchMode('disciplinary')" id="scanner-mode-btn-disciplinary" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                    <i class="fas fa-gavel"></i> Discipline Desk
+                </button>
+                <button onclick="window.nfcScannerApp.switchMode('staff')" id="scanner-mode-btn-staff" class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all whitespace-nowrap text-gray-500 hover:text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                    <i class="fas fa-user-tie"></i> Staff Clock-In
+                </button>
+            </div>
         </div>
     </div>
 
@@ -111,14 +98,28 @@
                     </div>
                 </div>
                 
-                <div class="space-y-1.5 relative z-10">
+                <!-- Webcam Fallback Scanner Container (Hidden initially) -->
+                <div id="webcam-scanner-container" class="hidden w-full max-w-[250px] aspect-square rounded-2xl overflow-hidden shadow-inner border-2 border-primary-500 relative z-10 bg-black mt-2">
+                    <div id="html5-qrcode-reader" class="w-full h-full object-cover"></div>
+                </div>
+
+                <div class="space-y-1.5 relative z-10 mt-4">
                     <h3 class="font-black text-gray-900 dark:text-white text-lg tracking-tight" id="scanner-state-title">Scan Reader Active</h3>
                     <p class="text-xs text-gray-500" id="scanner-focus-prompt">Hardware Auto-focused. Tap your smart card directly against the device scanner now.</p>
+                </div>
+                
+                <div class="relative z-10 pt-2 border-t dark:border-gray-700 w-full text-center">
+                    <button onclick="window.nfcScannerApp.toggleWebcamScanner()" id="webcam-toggle-btn" class="text-[10px] font-bold tracking-wider uppercase text-gray-500 hover:text-primary-500 transition-colors">
+                        <i class="fas fa-camera mr-1"></i> Switch to Webcam Barcode Scanner
+                    </button>
                 </div>
 
                 <!-- Hidden Input for keyboard-wedge readers (keeps focus globally) -->
                 <input type="text" id="scanner-focus-field" class="w-1 h-1 opacity-0 absolute pointer-events-none" autocomplete="off">
             </div>
+
+            <!-- Include HTML5-QRCode Library via CDN if not present -->
+            <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
             <!-- Manual Lookup Card Option (Very important real-world backup!) -->
             <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl p-6 shadow-sm space-y-4 transition-all">

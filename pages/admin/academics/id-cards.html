@@ -104,120 +104,198 @@
 
 <!-- CONTAINER B: ID Card Design Studio -->
 <div id="idc-tab-studio" class="hidden p-4 sm:p-6">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    <div class="flex flex-col gap-8">
         
-        <!-- Left Pane: Configuration Sidebar -->
-        <div class="lg:col-span-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5 space-y-5 shadow-sm">
-            <h3 class="font-bold text-gray-900 dark:text-white text-base border-b pb-2 flex items-center gap-2">
-                <i class="fas fa-sliders-h text-primary-500"></i> Card Configuration
-            </h3>
+        <!-- Top Pane: Real-Time Live Preview Workspace -->
+        <div class="w-full flex flex-col items-center justify-center p-6 lg:p-8 border-2 border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 rounded-2xl">
+            <h4 class="text-xs uppercase text-gray-500 dark:text-gray-400 font-extrabold tracking-widest mb-6 bg-white dark:bg-gray-800 px-4 py-1.5 rounded-full shadow-sm border dark:border-gray-700">
+                <i class="fas fa-eye text-primary-500 mr-2"></i> Live CR80 Print Preview
+            </h4>
             
-            <!-- Orientation Toggle -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Orientation</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="window.idCardApp.changeStudioConfig('orientation', 'portrait')" id="studio-btn-portrait" class="px-4 py-2.5 rounded-lg border text-sm font-semibold flex items-center justify-center gap-2 transition-all bg-primary-50 dark:bg-primary-900/30 border-primary-300 text-primary-700 dark:text-primary-300">
-                        <i class="fas fa-portrait"></i> Vertical (Portrait)
-                    </button>
-                    <button onclick="window.idCardApp.changeStudioConfig('orientation', 'landscape')" id="studio-btn-landscape" class="px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-center gap-2 transition-all hover:bg-gray-50">
-                        <i class="fas fa-landscape"></i> Horizontal (Landscape)
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card Template Design Selection -->
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Select Card Template Design</label>
-                <select id="studio-template-id" onchange="window.idCardApp.changeStudioConfig('templateId', parseInt(this.value))" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2.5 font-semibold">
-                    <option value="1">Template 1: Modern Corporate</option>
-                    <option value="2">Template 2: Clean Elegant</option>
-                    <option value="3">Template 3: School Crest Banner (Delhi Public)</option>
-                    <option value="4">Template 4: Block Header Title (Tarahara)</option>
-                    <option value="5">Template 5: Wavy Fluid Accent</option>
-                    <option value="6">Template 6: Elegant Stripes</option>
-                    <option value="7">Template 7: Minimalist Border Accent</option>
-                    <option value="8">Template 8: Book Badge Traditional (Umair Hassan)</option>
-                    <option value="9">Template 9: Executive Dark Modern</option>
-                    <option value="10">Template 10: Tech Glow Grid</option>
-                </select>
-            </div>
-
-            <!-- Field Toggles -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Display Details</label>
-                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-300 mb-4 border-b dark:border-gray-700 pb-3" id="idc-base-fields-toggles">
-                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                        <input type="checkbox" id="studio-show-photo" onchange="window.idCardApp.toggleStudioField('showPhoto')" checked class="rounded text-primary-600 focus:ring-primary-500">
-                        <span>Photo</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                        <input type="checkbox" id="studio-show-dob" onchange="window.idCardApp.toggleStudioField('showDob')" checked class="rounded text-primary-600 focus:ring-primary-500">
-                        <span>Date of Birth</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                        <input type="checkbox" id="studio-show-blood" onchange="window.idCardApp.toggleStudioField('showBlood')" checked class="rounded text-primary-600 focus:ring-primary-500">
-                        <span>Blood Group</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer p-1.5 rounded hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                        <input type="checkbox" id="studio-show-phone" onchange="window.idCardApp.toggleStudioField('showPhone')" checked class="rounded text-primary-600 focus:ring-primary-500">
-                        <span>Parent Phone</span>
-                    </label>
-                </div>
-
-                <!-- Custom Fields Section -->
-                <div class="mb-3">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Custom Card Fields</label>
-                    <div id="studio-custom-fields-list" class="space-y-2 mb-3">
-                        <!-- Dynamic Custom field list and toggles injected here -->
-                    </div>
-
-                    <!-- Custom Field Creator Form -->
-                    <div class="bg-primary-50 dark:bg-primary-900/20 p-5 rounded-xl border-2 border-primary-500 shadow-lg mt-4">
-                        <span class="block text-sm font-extrabold text-primary-700 dark:text-primary-300 uppercase tracking-wider mb-4"><i class="fas fa-plus-circle mr-1"></i> Add Custom Card Field</span>
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <input type="text" id="studio-new-field-label" placeholder="e.g. Bus Route" class="text-sm rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 p-2.5 dark:text-white font-bold focus:border-primary-500 focus:ring-primary-500">
-                            <input type="text" id="studio-new-field-value" placeholder="e.g. Route A" class="text-sm rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 p-2.5 dark:text-white focus:border-primary-500 focus:ring-primary-500">
-                        </div>
-                        <button onclick="window.idCardApp.addCustomField()" class="w-full py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all transform hover:scale-[1.02]">
-                            <i class="fas fa-plus"></i> Create Field
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Backside Settings -->
-            <div>
-                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">ID Card Terms & Conditions (Backside)</label>
-                <textarea id="studio-back-rules" oninput="window.idCardApp.updateStudioBackRules(this.value)" rows="3" class="w-full text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-2" placeholder="e.g. This card remains the property of the school. If found, please return to the school administration desk."></textarea>
-            </div>
-
-            <button onclick="window.idCardApp.saveTemplateConfig()" class="w-full py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg transition-all flex items-center justify-center gap-2">
-                <i class="fas fa-save"></i> Save Template Design
-            </button>
-        </div>
-
-        <!-- Right Pane: Real-Time Live Preview Workspace -->
-        <div class="lg:col-span-7 flex flex-col items-center justify-center p-6 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl space-y-6 min-h-[480px]">
-            <h4 class="text-xs uppercase text-gray-400 font-bold tracking-wider mb-2">Live CR80 Print Preview</h4>
-            
-            <div id="studio-preview-cards-container" class="flex flex-col md:flex-row gap-8 justify-center items-center w-full">
+            <div id="studio-preview-cards-container" class="flex flex-col xl:flex-row gap-10 xl:gap-16 justify-center items-center w-full transition-all">
                 <!-- Front Side Card Container -->
-                <div class="flex flex-col items-center">
-                    <span class="text-xs font-semibold text-gray-500 mb-2">Front Side</span>
-                    <div id="studio-preview-card-front"></div>
+                <div class="flex flex-col items-center group">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 group-hover:text-primary-500 transition-colors">Front Side</span>
+                    <div id="studio-preview-card-front" class="shadow-2xl rounded-xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 transition-transform duration-300 hover:scale-105"></div>
                 </div>
 
                 <!-- Back Side Card Container -->
-                <div class="flex flex-col items-center">
-                    <span class="text-xs font-semibold text-gray-500 mb-2">Back Side</span>
-                    <div id="studio-preview-card-back"></div>
+                <div class="flex flex-col items-center group">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 group-hover:text-primary-500 transition-colors">Back Side</span>
+                    <div id="studio-preview-card-back" class="shadow-2xl rounded-xl overflow-hidden ring-1 ring-black/5 dark:ring-white/10 transition-transform duration-300 hover:scale-105"></div>
                 </div>
             </div>
             
-            <div class="text-center text-xs text-gray-400 pt-4 border-t dark:border-gray-700 w-full">
-                <i class="fas fa-info-circle mr-1"></i> Dimensions strictly locked at standard **CR80** metrics (`85.6mm x 54mm`) for standard lamination & printing layouts.
+            <div class="text-center text-xs text-gray-400 pt-6 mt-6 border-t dark:border-gray-700 w-full max-w-3xl">
+                <i class="fas fa-info-circle mr-1 text-primary-500"></i> Dimensions strictly locked at standard **CR80** metrics (`85.6mm x 54mm`) for lamination & printing layouts.
             </div>
         </div>
+
+        <!-- Bottom Pane: Configuration Dashboard Grid -->
+        <div class="w-full flex flex-col space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b dark:border-gray-700 pb-3">
+                <h3 class="font-bold text-gray-900 dark:text-white text-xl flex items-center gap-2">
+                    <i class="fas fa-sliders-h text-primary-500"></i> Card Configuration Dashboard
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="window.idCardApp.generateBatchPrintLayout()" class="py-2.5 px-4 text-sm font-bold text-gray-700 bg-white border border-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-print"></i> Batch Print
+                    </button>
+                    <button onclick="window.idCardApp.saveTemplateConfig()" class="py-2.5 px-6 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        <i class="fas fa-save text-lg"></i> Save Design
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid Configuration Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- ── Card 1: Layout & Templates ── -->
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+                    <h4 class="text-xs font-extrabold text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-1 border-b dark:border-gray-700 pb-2">
+                        <i class="fas fa-layer-group text-primary-500"></i> Layout & Design
+                    </h4>
+                    
+                    <!-- Orientation -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Orientation</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="window.idCardApp.changeStudioConfig('orientation', 'portrait')" id="studio-btn-portrait" class="px-3 py-2.5 rounded-xl border text-sm font-semibold flex items-center justify-center gap-1.5 transition-all bg-primary-50 dark:bg-primary-900/30 border-primary-300 text-primary-700 dark:text-primary-300 shadow-sm">
+                                <i class="fas fa-portrait"></i> Portrait
+                            </button>
+                            <button onclick="window.idCardApp.changeStudioConfig('orientation', 'landscape')" id="studio-btn-landscape" class="px-3 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-semibold text-gray-600 dark:text-gray-400 flex items-center justify-center gap-1.5 transition-all hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <i class="fas fa-landscape"></i> Landscape
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Template Selection -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Template Theme</label>
+                        <select id="studio-template-id" onchange="window.idCardApp.changeStudioConfig('templateId', parseInt(this.value))" class="w-full text-sm rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-3 font-semibold focus:ring-primary-500 focus:border-primary-500 shadow-sm transition-all cursor-pointer">
+                            <option value="1">Template 1: Modern Corporate</option>
+                            <option value="2">Template 2: Clean Elegant</option>
+                            <option value="3">Template 3: School Crest Banner</option>
+                            <option value="4">Template 4: Block Header Title</option>
+                            <option value="5">Template 5: Wavy Fluid Accent</option>
+                            <option value="6">Template 6: Elegant Stripes</option>
+                            <option value="7">Template 7: Minimalist Border Accent</option>
+                            <option value="8">Template 8: Book Badge Traditional</option>
+                            <option value="9">Template 9: Executive Dark Modern</option>
+                            <option value="10">Template 10: Tech Glow Grid</option>
+                        </select>
+                    </div>
+
+                    <!-- Color Customizer -->
+                    <div class="mt-auto pt-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Card Accent Color</label>
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center gap-2 cursor-pointer p-2.5 rounded-xl border-2 border-transparent bg-gray-50 dark:bg-gray-700/50 hover:border-primary-300 transition-all has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 dark:has-[:checked]:bg-primary-950/30">
+                                    <input type="radio" name="card-color-mode" id="card-color-global" value="global" onchange="window.idCardApp.setColorMode('global')" checked class="text-primary-600 focus:ring-primary-500 flex-shrink-0">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <div id="global-color-swatch" class="w-4 h-4 rounded-full border border-gray-200 shadow flex-shrink-0"></div>
+                                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300 truncate">Global Theme</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-2.5 rounded-xl border-2 border-transparent bg-gray-50 dark:bg-gray-700/50 hover:border-blue-300 transition-all has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50 dark:has-[:checked]:bg-blue-950/30">
+                                    <input type="radio" name="card-color-mode" id="card-color-custom" value="custom" onchange="window.idCardApp.setColorMode('custom')" class="text-primary-600 focus:ring-primary-500 flex-shrink-0">
+                                    <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Custom Color</span>
+                                </label>
+                            </div>
+
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/40 rounded-xl border border-gray-200 dark:border-gray-600">
+                                <input type="color" id="studio-custom-color" value="#0284c7" oninput="window.idCardApp.applyCustomColor(this.value); document.getElementById('studio-custom-hex').value = this.value;" class="w-10 h-10 rounded-lg border border-gray-300 cursor-pointer p-0.5 bg-white flex-shrink-0 shadow-sm transition-transform hover:scale-105">
+                                <input type="text" id="studio-custom-hex" value="#0284c7" maxlength="7" placeholder="#0284c7" oninput="window.idCardApp.applyHexInput(this.value)" class="w-full text-sm font-mono rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 dark:text-white p-2.5 focus:ring-primary-500 focus:border-primary-500 shadow-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+                <!-- ── Card 2: Fields & Text ── -->
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+                    <h4 class="text-xs font-extrabold text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-1 border-b dark:border-gray-700 pb-2">
+                        <i class="fas fa-list-ul text-primary-500"></i> Card Details & Backside
+                    </h4>
+
+                    <!-- Display Toggles -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Display Fields</label>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-medium text-gray-700 dark:text-gray-300" id="idc-base-fields-toggles">
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                                <input type="checkbox" id="studio-show-photo" onchange="window.idCardApp.toggleStudioField('showPhoto')" checked class="rounded text-primary-600 focus:ring-primary-500 w-4 h-4"> <span>Photo</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                                <input type="checkbox" id="studio-show-dob" onchange="window.idCardApp.toggleStudioField('showDob')" checked class="rounded text-primary-600 focus:ring-primary-500 w-4 h-4"> <span>Date of Birth</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                                <input type="checkbox" id="studio-show-blood" onchange="window.idCardApp.toggleStudioField('showBlood')" checked class="rounded text-primary-600 focus:ring-primary-500 w-4 h-4"> <span>Blood Group</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                                <input type="checkbox" id="studio-show-phone" onchange="window.idCardApp.toggleStudioField('showPhone')" checked class="rounded text-primary-600 focus:ring-primary-500 w-4 h-4"> <span>Parent Phone</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer p-2 rounded-lg bg-gray-50 dark:bg-gray-700/30 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-gray-200 dark:hover:border-gray-600 col-span-2 mt-2 pt-2 border-t dark:border-gray-700">
+                                <input type="checkbox" id="studio-show-barcode" onchange="window.idCardApp.toggleStudioField('showBarcode')" class="rounded text-primary-600 focus:ring-primary-500 w-4 h-4"> <span>Barcode / QR (Back)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Custom Fields -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Custom Fields</label>
+                        <div id="studio-custom-fields-list" class="space-y-2 mb-3 empty:hidden"></div>
+                        <div class="bg-gray-50 dark:bg-gray-900/50 p-3.5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <input type="text" id="studio-new-field-label" placeholder="Label (e.g. Bus)" class="text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-2.5 dark:text-white focus:border-primary-500 focus:ring-primary-500 shadow-sm">
+                                <input type="text" id="studio-new-field-value" placeholder="Value (e.g. Route A)" class="text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-2.5 dark:text-white focus:border-primary-500 focus:ring-primary-500 shadow-sm">
+                            </div>
+                            <button onclick="window.idCardApp.addCustomField()" class="w-full py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-plus"></i> Add Field
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Backside Rules -->
+                    <div class="mt-auto pt-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Backside Terms</label>
+                        <textarea id="studio-back-rules" oninput="window.idCardApp.updateStudioBackRules(this.value)" rows="4" class="w-full text-xs rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white p-3 focus:ring-primary-500 shadow-inner" placeholder="e.g. This card remains the property of the school..."></textarea>
+                    </div>
+                </div>
+
+                <!-- ── Card 3: Signatures ── -->
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+                    <h4 class="text-xs font-extrabold text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-1 border-b dark:border-gray-700 pb-2">
+                        <i class="fas fa-signature text-primary-500"></i> Card Signatory Blocks
+                    </h4>
+                    
+                    <div class="flex flex-col gap-5 h-full">
+                        <div class="bg-primary-50 dark:bg-primary-950/20 border border-primary-200 dark:border-primary-800 rounded-xl p-5 shadow-sm">
+                            <span class="block text-xs font-extrabold text-primary-700 dark:text-primary-400 mb-3 flex items-center gap-1.5"><i class="fas fa-user-plus"></i> Add New Signatory</span>
+                            <div class="space-y-3">
+                                <div class="flex flex-col gap-1">
+                                    <label class="block text-[10px] font-bold text-gray-500 uppercase">Signature Image</label>
+                                    <input type="file" id="studio-sig-image" accept="image/png, image/jpeg" onchange="window.idCardApp.handleSignatureUpload(this)" class="w-full text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-1.5 dark:text-white focus:border-primary-500 shadow-sm cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900/30 dark:file:text-primary-400">
+                                    <input type="hidden" id="studio-sig-image-base64" value="">
+                                </div>
+                                <input type="text" id="studio-sig-title" placeholder="Title (e.g. School Principal)" class="w-full text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-2.5 dark:text-white focus:border-primary-500 focus:ring-primary-500 shadow-sm">
+                            </div>
+                            <button id="studio-sig-submit-btn" onclick="window.idCardApp.addSignature()" class="w-full mt-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-bold shadow-sm transition-all transform hover:-translate-y-0.5">
+                                Add to Card
+                            </button>
+                        </div>
+                        <div class="flex flex-col flex-1">
+                            <span class="block text-[10px] font-bold text-gray-500 uppercase mb-2">Active Signatures</span>
+                            <div id="studio-signatures-list" class="space-y-2 flex-1 overflow-y-auto max-h-48 bg-gray-50 dark:bg-gray-900/50 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 shadow-inner">
+                                <!-- Dynamic signatures injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
