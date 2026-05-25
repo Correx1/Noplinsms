@@ -439,6 +439,27 @@
                 }
             });
 
+            // Re-initialize SmartScanner with correct biometric rules for this mode
+            const storedConfig = localStorage.getItem('sms_nfc_config');
+            let reqBio = false;
+            if (storedConfig) {
+                const conf = JSON.parse(storedConfig);
+                if (mode === 'gate' && conf.studentAttendance) reqBio = conf.studentAttendance.bio;
+                else if (mode === 'staff' && conf.staffAttendance) reqBio = conf.staffAttendance.bio;
+                else if (mode === 'library' && conf.library) reqBio = conf.library.bio;
+                else if (mode === 'disciplinary' && conf.discipline) reqBio = conf.discipline.bio;
+                // Bursary never requires bio.
+            }
+            
+            if (window.SmartScanner) {
+                window.SmartScanner.stop();
+                window.SmartScanner.start({
+                    requireBiometric: reqBio,
+                    onSuccess: processScannedCard,
+                    onFail: (reason) => { console.log('Kiosk scan failed:', reason); }
+                });
+            }
+
             // Update radar status prompt
             const prompt = document.getElementById('scanner-focus-prompt');
             if (prompt) {
@@ -639,33 +660,16 @@
     // Initialize Database
     loadDatabase();
 
-    // Set Global input auto focus locking
+    // Set Global input auto focus locking (legacy)
     maintainFocus();
     document.addEventListener('click', () => {
         setTimeout(maintainFocus, 100);
     });
 
-    // Global Key Interceptor buffer Wedge Readers
-    document.addEventListener('keydown', (e) => {
-        const currentTime = Date.now();
-        if (currentTime - wedgeTimeout > 50) {
-            wedgeBuffer = "";
-        }
-        wedgeTimeout = currentTime;
-
-        if (e.key.length === 1) {
-            wedgeBuffer += e.key;
-        }
-
-        if (e.key === 'Enter') {
-            if (wedgeBuffer.length >= 6) {
-                e.preventDefault();
-                console.log("Wedge Scanner scan intercepted:", wedgeBuffer);
-                processScannedCard(wedgeBuffer);
-                wedgeBuffer = "";
-            }
-        }
-    });
+    // Initialize Smart Scanner for the default 'gate' mode
+    setTimeout(() => {
+        window.nfcScannerApp.switchMode('gate');
+    }, 500);
 
     // Run Android Web NFC check on startup
     window.nfcScannerApp.startWebNfcScanner();

@@ -54,6 +54,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userRole = localStorage.getItem('userRole');
 
+    // Load global database and biometric service (synchronous — no async flag)
+    // These must be available before any module script polls for them.
+    function loadGlobalScript(src, id) {
+        if (document.getElementById(id)) return; // already loaded
+        const s = document.createElement('script');
+        s.src = src;
+        s.id  = id;
+        // NO s.async — browser will still execute in injection order, but not defer page rendering
+        document.body.appendChild(s);
+    }
+    loadGlobalScript('../../js/database.js', 'global-database-script');
+    loadGlobalScript('../../js/nfc-biometric-service.js', 'nfc-biometric-script');
+
     if (!isLoggedIn) {
          window.location.href = '../../index.html';
     }
@@ -542,4 +555,5 @@ window.loadSettingsProfilePage = () => loadPage('settings/profile.html', '../../
 window.loadSettingsUsersPage = () => loadPage('settings/users.html', '../../js/users.js', 'users-script');
 window.loadThemeSettingsPage = () => loadPage('settings/theme.html', '../../js/theme-settings.js', 'theme-settings-script');
 window.loadTemplatesPage = () => loadPage('settings/templates.html', '../../js/templates.js', 'templates-script');
+window.loadNfcSettingsPage = () => loadPage('settings/nfc.html', '../../js/settings.js', 'settings-script');
 

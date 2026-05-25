@@ -1,0 +1,284 @@
+<!-- Page Header -->
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">NFC & Biometrics</h1>
+    <p class="text-gray-600 dark:text-gray-400">Configure smart scanning hardware options for specific modules globally.</p>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Module Configurations</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enable or disable scanning features independently for different parts of the application.</p>
+        </div>
+        <button onclick="saveNFCSettings()" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors duration-200 shadow-sm flex items-center gap-2">
+            <i class="fas fa-save"></i> Save Settings
+        </button>
+    </div>
+
+    <!-- Settings List -->
+    <div class="divide-y divide-gray-200 dark:divide-gray-700" id="nfc-settings-list">
+        
+        <!-- Student Attendance -->
+        <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fas fa-user-graduate text-blue-500 w-5"></i> Student Attendance
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Controls the fast batch-scanning mode in the classroom.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">NFC</span>
+                    <input type="checkbox" id="nfc-student-attendance" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-fingerprint text-gray-400 mr-1"></i> Biometric</span>
+                    <input type="checkbox" id="bio-student-attendance" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Staff Attendance -->
+        <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fas fa-user-tie text-purple-500 w-5"></i> Staff Attendance (HR)
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Clock-in and clock-out for teachers and administrators.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">NFC</span>
+                    <input type="checkbox" id="nfc-staff-attendance" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-fingerprint text-gray-400 mr-1"></i> Biometric</span>
+                    <input type="checkbox" id="bio-staff-attendance" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Library -->
+        <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fas fa-book-reader text-green-500 w-5"></i> Library Loans
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Authenticate members issuing or returning books.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">NFC</span>
+                    <input type="checkbox" id="nfc-library" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-fingerprint text-gray-400 mr-1"></i> Biometric</span>
+                    <input type="checkbox" id="bio-library" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Discipline -->
+        <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fas fa-gavel text-red-500 w-5"></i> Disciplinary Incidents
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ensure absolute identification when logging behavioral offenses.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">NFC</span>
+                    <input type="checkbox" id="nfc-discipline" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-fingerprint text-gray-400 mr-1"></i> Biometric</span>
+                    <input type="checkbox" id="bio-discipline" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Bursary / Fee Collection -->
+        <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fas fa-wallet text-amber-500 w-5"></i> Fee Collection
+                </h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Tap card to instantly load student payment history.</p>
+            </div>
+            <div class="flex items-center gap-6">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">NFC</span>
+                    <input type="checkbox" id="nfc-bursary" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600 relative"></div>
+                </label>
+                <label class="flex items-center gap-2 cursor-not-allowed opacity-50" title="Biometrics not required for fee lookup">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-fingerprint text-gray-400 mr-1"></i> Biometric</span>
+                    <input type="checkbox" id="bio-bursary" class="sr-only peer" disabled>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 relative"></div>
+                </label>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ATTENDANCE TIME SCHEDULE SETTINGS
+     ══════════════════════════════════════════════════════ -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mt-6">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fas fa-clock text-primary-500"></i> Attendance Time Schedule
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Set arrival windows and lateness thresholds. Card scans at the gate auto-classify as <strong>Present</strong> or <strong>Late</strong> based on these times.
+            </p>
+        </div>
+        <button onclick="saveAttendanceSchedule()" class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors shadow-sm flex items-center gap-2">
+            <i class="fas fa-save"></i> Save Schedule
+        </button>
+    </div>
+
+    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+
+        <!-- Student Schedule -->
+        <div class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+                <i class="fas fa-user-graduate text-blue-500"></i>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200">Student Attendance Schedule</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                        <i class="fas fa-door-open text-green-500 mr-1"></i> School Opens (Earliest Check-in)
+                    </label>
+                    <input type="time" id="student-start-time" value="07:00"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <p class="text-xs text-gray-400 mt-1">Cards scanned before this time are ignored / too early.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                        <i class="fas fa-exclamation-circle text-amber-500 mr-1"></i> Late Threshold
+                    </label>
+                    <input type="time" id="student-late-time" value="08:15"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <p class="text-xs text-gray-400 mt-1">Cards scanned at or after this time are marked <span class="text-amber-600 font-bold">Late</span>.</p>
+                </div>
+            </div>
+            <div class="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                <i class="fas fa-info-circle mt-0.5 shrink-0"></i>
+                <span>Example: Opens at <strong>07:00</strong>, Late threshold <strong>08:15</strong> → a student who taps at 08:20 is marked <strong>Late</strong>.</span>
+            </div>
+        </div>
+
+        <!-- Staff Schedule -->
+        <div class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+                <i class="fas fa-user-tie text-purple-500"></i>
+                <h3 class="text-base font-bold text-gray-800 dark:text-gray-200">Staff Attendance Schedule</h3>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                        <i class="fas fa-door-open text-green-500 mr-1"></i> Office Opens (Earliest Clock-in)
+                    </label>
+                    <input type="time" id="staff-start-time" value="06:30"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <p class="text-xs text-gray-400 mt-1">Staff clock-ins before this time are too early.</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                        <i class="fas fa-exclamation-circle text-amber-500 mr-1"></i> Late Threshold
+                    </label>
+                    <input type="time" id="staff-late-time" value="07:45"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <p class="text-xs text-gray-400 mt-1">Staff who clock in at or after this time are marked <span class="text-amber-600 font-bold">Late</span>.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const DEFAULT_NFC_CONFIG = {
+        studentAttendance: { nfc: true, bio: true },
+        staffAttendance: { nfc: true, bio: true },
+        library: { nfc: true, bio: true },
+        discipline: { nfc: true, bio: true },
+        bursary: { nfc: true, bio: false }
+    };
+
+    const DEFAULT_ATTENDANCE_SCHEDULE = {
+        student: { startTime: '07:00', lateThreshold: '08:15' },
+        staff:   { startTime: '06:30', lateThreshold: '07:45' }
+    };
+
+    function loadNFCSettings() {
+        const config = JSON.parse(localStorage.getItem('sms_nfc_config') || 'null') || DEFAULT_NFC_CONFIG;
+        document.getElementById('nfc-student-attendance').checked = config.studentAttendance.nfc;
+        document.getElementById('bio-student-attendance').checked = config.studentAttendance.bio;
+        document.getElementById('nfc-staff-attendance').checked   = config.staffAttendance.nfc;
+        document.getElementById('bio-staff-attendance').checked   = config.staffAttendance.bio;
+        document.getElementById('nfc-library').checked    = config.library.nfc;
+        document.getElementById('bio-library').checked    = config.library.bio;
+        document.getElementById('nfc-discipline').checked = config.discipline.nfc;
+        document.getElementById('bio-discipline').checked = config.discipline.bio;
+        document.getElementById('nfc-bursary').checked    = config.bursary.nfc;
+
+        // Load attendance schedule
+        const sched = JSON.parse(localStorage.getItem('sms_attendance_config') || 'null') || DEFAULT_ATTENDANCE_SCHEDULE;
+        document.getElementById('student-start-time').value = sched.student.startTime;
+        document.getElementById('student-late-time').value  = sched.student.lateThreshold;
+        document.getElementById('staff-start-time').value   = sched.staff.startTime;
+        document.getElementById('staff-late-time').value    = sched.staff.lateThreshold;
+    }
+
+    function saveNFCSettings() {
+        const config = {
+            studentAttendance: {
+                nfc: document.getElementById('nfc-student-attendance').checked,
+                bio: document.getElementById('bio-student-attendance').checked
+            },
+            staffAttendance: {
+                nfc: document.getElementById('nfc-staff-attendance').checked,
+                bio: document.getElementById('bio-staff-attendance').checked
+            },
+            library:    { nfc: document.getElementById('nfc-library').checked,    bio: document.getElementById('bio-library').checked },
+            discipline: { nfc: document.getElementById('nfc-discipline').checked, bio: document.getElementById('bio-discipline').checked },
+            bursary:    { nfc: document.getElementById('nfc-bursary').checked,    bio: false }
+        };
+        localStorage.setItem('sms_nfc_config', JSON.stringify(config));
+        if (typeof showToast === 'function') showToast('Success', 'NFC & Biometric settings saved.', 'success');
+        else alert('Settings saved!');
+    }
+
+    function saveAttendanceSchedule() {
+        const sched = {
+            student: {
+                startTime:     document.getElementById('student-start-time').value,
+                lateThreshold: document.getElementById('student-late-time').value
+            },
+            staff: {
+                startTime:     document.getElementById('staff-start-time').value,
+                lateThreshold: document.getElementById('staff-late-time').value
+            }
+        };
+        localStorage.setItem('sms_attendance_config', JSON.stringify(sched));
+        if (typeof showToast === 'function') showToast('Success', 'Attendance schedule saved.', 'success');
+        else alert('Schedule saved!');
+    }
+
+    loadNFCSettings();
+</script>

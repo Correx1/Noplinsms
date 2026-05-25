@@ -38,8 +38,11 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member ID / Name</label>
                     <div class="flex">
                          <input type="text" id="issue-member-search" class="rounded-none rounded-l-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-primary-500 focus:border-primary-500 block flex-1 min-w-0 w-full text-sm p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Enter Student or Staff ID">
-                        <button type="button" class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                        <button type="button" id="regular-search-btn" class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-l-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
                             Search
+                        </button>
+                        <button type="button" id="library-nfc-btn" onclick="startLibraryNFC()" class="hidden items-center justify-center px-4 bg-primary-100 hover:bg-primary-200 text-primary-700 border border-l-0 border-primary-200 rounded-r-md transition-colors" title="Scan ID & Fingerprint">
+                            <i class="fas fa-wifi mr-1"></i> Scan
                         </button>
                     </div>
                 </div>
@@ -76,6 +79,15 @@
         <div class="p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <h3 class="mb-4 text-lg font-bold text-gray-900 dark:text-white border-b pb-2">Return / Active Issues</h3>
             
+            <!-- NFC member filter banner (shown after scan) -->
+            <div id="lib-member-filter-banner" class="hidden flex items-center gap-2 mb-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-800 dark:text-blue-200">
+                <i class="fas fa-id-card text-blue-500 shrink-0"></i>
+                <span>Viewing books for: <strong id="lib-banner-name"></strong></span>
+                <button onclick="window.libResetReturnTable()" class="ml-auto text-xs underline text-blue-600 hover:text-blue-800 whitespace-nowrap">
+                    <i class="fas fa-times mr-1"></i> Show All
+                </button>
+            </div>
+
             <div class="mb-4">
                  <input type="text" id="return-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Search by Member Name or Book Title...">
             </div>

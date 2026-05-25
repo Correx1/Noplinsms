@@ -5,7 +5,7 @@
     // Page Detection
     const isDashboard = document.getElementById('lib-total-books');
     const isBooksPage = document.getElementById('lib-add-book-form');
-    const isTransactionsPage = document.getElementById('lib-issue-book-form');
+    const isTransactionsPage = document.getElementById('issue-book-form');
     const isMembersPage = document.getElementById('lib-members-table-body');
 
     let booksData = [];
@@ -25,22 +25,24 @@
 
     async function loadAllData() {
         try {
+            // Helper to wait for database
+            while(!window.SchoolDatabase) {
+                await new Promise(r => setTimeout(r, 50));
+            }
+
             // Books
-            const resBooks = await fetch('../../data/library-books.json');
             const storedBooks = localStorage.getItem('lib_books');
-            booksData = storedBooks ? JSON.parse(storedBooks) : await resBooks.json();
+            booksData = storedBooks ? JSON.parse(storedBooks) : window.SchoolDatabase.books || [];
             if(!storedBooks) localStorage.setItem('lib_books', JSON.stringify(booksData));
 
             // Transactions
-            const resTrans = await fetch('../../data/library-transactions.json');
             const storedTrans = localStorage.getItem('lib_transactions');
-            transData = storedTrans ? JSON.parse(storedTrans) : await resTrans.json();
+            transData = storedTrans ? JSON.parse(storedTrans) : window.SchoolDatabase.libraryTransactions || [];
             if(!storedTrans) localStorage.setItem('lib_transactions', JSON.stringify(transData));
 
              // Members
-            const resMembers = await fetch('../../data/library-members.json');
             const storedMembers = localStorage.getItem('lib_members');
-            membersData = storedMembers ? JSON.parse(storedMembers) : await resMembers.json();
+            membersData = storedMembers ? JSON.parse(storedMembers) : window.SchoolDatabase.libraryMembers || [];
             if(!storedMembers) localStorage.setItem('lib_members', JSON.stringify(membersData));
 
         } catch(e) { console.error('Lib Data Load Error', e); }
@@ -167,9 +169,12 @@
         };
 
         // Issue Logic
-        const issueForm = document.getElementById('lib-issue-book-form');
-        const issueBookSelect = document.getElementById('issue-book-id');
-        const issueMemberSelect = document.getElementById('issue-member-id');
+        const issueForm = document.getElementById('issue-book-form');
+        const issueBookSelect = document.getElementById('issue-book-search');
+        const issueMemberSelect = document.getElementById('issue-member-search');
+        
+        // Initialize NFC
+        initLibraryNFC();
 
         // Populate Selects
         booksData.filter(b => b.available > 0).forEach(b => {
@@ -230,27 +235,20 @@
             });
         });
 
-        // Return Logic
-        function renderIssuedTable() {
-            const tbody = document.getElementById('lib-return-table-body');
-            tbody.innerHTML = '';
-            const issued = transData.filter(t => t.status === 'Issued' || t.status === 'Overdue');
-            
-            issued.forEach(t => {
-                const tr = document.createElement('tr');
-                tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700';
-                 tr.innerHTML = `
-                    <td class="px-6 py-4">${t.issueDate}</td>
-                    <td class="px-6 py-4">${t.bookTitle}</td>
-                    <td class="px-6 py-4">${t.memberName}</td>
-                    <td class="px-6 py-4 text-red-600">${t.dueDate}</td>
-                    <td class="px-6 py-4">
-                        <button onclick="returnBook('${t.id}')" class="font-medium text-primary-600 dark:text-primary-500 hover:underline">Return</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+        // Live search on the return table
+        const returnSearchInput = document.getElementById('return-search');
+        if (returnSearchInput) {
+            returnSearchInput.addEventListener('input', () => {
+                const term = returnSearchInput.value.toLowerCase();
+                const rows = document.querySelectorAll('#issued-books-body tr');
+                rows.forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+                });
             });
         }
+
+        // Render on page load (show all)
+        renderIssuedTable();
         
         window.returnBook = function(id) {
             if(confirm('Confirm return of this book?')) {
@@ -258,15 +256,11 @@
                 t.status = 'Returned';
                 t.returnDate = new Date().toISOString().split('T')[0];
                 
-                // Update Book Stats
                 const book = booksData.find(b => b.id === t.bookId);
-                if(book) {
-                    book.available++;
-                    book.issued--;
-                }
+                if(book) { book.available++; book.issued--; }
                 
                 saveAll();
-                renderIssuedTable();
+                renderIssuedTable(); // re-render full list after return
             }
         };
     }
@@ -303,5 +297,155 @@
         if(status === 'Overdue') return 'bg-red-100 text-red-800';
         return 'bg-gray-100 text-gray-800';
     }
+
+    // *** IIFE-level: accessible by setupTransactionsPage, startLibraryNFC, and libResetReturnTable ***
+    function renderIssuedTable(filterMemberId) {
+        const tbody = document.getElementById('issued-books-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const issued = transData.filter(t =>
+            (t.status === 'Issued' || t.status === 'Overdue') &&
+            (!filterMemberId || t.memberId === filterMemberId)
+        );
+
+        if (issued.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-gray-400 italic">${
+                filterMemberId
+                    ? 'No active borrowed books for this member.'
+                    : 'No books are currently issued.'
+            }</td></tr>`;
+            return;
+        }
+
+        issued.forEach(t => {
+            const isOverdue = new Date(t.dueDate) < new Date();
+            const tr = document.createElement('tr');
+            tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700';
+            tr.innerHTML = `
+                <td class="px-3 py-2">
+                    <div class="font-medium text-gray-900 dark:text-white text-sm">${t.bookTitle}</div>
+                    <div class="text-xs text-gray-500">${t.bookId || ''}</div>
+                </td>
+                <td class="px-3 py-2">
+                    <div class="text-sm">${t.memberName}</div>
+                    <div class="text-xs text-gray-500">${t.memberId}</div>
+                </td>
+                <td class="px-3 py-2">
+                    <span class="${isOverdue ? 'text-red-600 font-bold' : 'text-gray-700 dark:text-gray-300'} text-sm">
+                        ${t.dueDate} ${isOverdue ? '⚠️' : ''}
+                    </span>
+                </td>
+                <td class="px-3 py-2">
+                    <button onclick="returnBook('${t.id}')" class="font-medium text-primary-600 dark:text-primary-500 hover:underline text-sm">Return</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- NFC & Biometric Integration ---
+    let libNfcConfig = { nfc: true, bio: true }; // Default
+    let isLibScanning = false;
+
+    function initLibraryNFC() {
+        const storedConfig = localStorage.getItem('sms_nfc_config');
+        if (storedConfig) {
+            try {
+                const parsed = JSON.parse(storedConfig);
+                libNfcConfig = parsed.library || { nfc: true, bio: true };
+            } catch (e) {
+                libNfcConfig = { nfc: true, bio: true };
+            }
+        } else {
+            libNfcConfig = { nfc: true, bio: true };
+        }
+        
+        const nfcBtn = document.getElementById('library-nfc-btn');
+        const searchBtn = document.getElementById('regular-search-btn');
+
+        // Show NFC button if enabled for this module
+        if (libNfcConfig && libNfcConfig.nfc && nfcBtn && searchBtn) {
+            nfcBtn.classList.remove('hidden');
+            nfcBtn.classList.add('flex');
+            // Fix radius on regular search btn
+            searchBtn.classList.remove('rounded-r-md');
+        }
+    }
+
+    window.startLibraryNFC = function() {
+        const btn = document.getElementById('library-nfc-btn');
+        if (!btn) return;
+
+        if (isLibScanning) {
+            isLibScanning = false;
+            btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+            btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+            btn.innerHTML = '<i class="fas fa-wifi mr-1"></i> Scan';
+            if (window.SmartScanner) window.SmartScanner.stop();
+            return;
+        }
+
+        if (!window.SmartScanner) { alert('Scanner not loaded. Please refresh.'); return; }
+
+        isLibScanning = true;
+        btn.classList.add('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+        btn.classList.remove('bg-primary-100', 'text-primary-700', 'border-primary-200');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Wait';
+
+        window.SmartScanner.start({
+            requireBiometric: true,    // Library: card scan + fingerprint mandatory
+            onSuccess: (scannedId) => {
+                isLibScanning = false;
+                btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                btn.innerHTML = '<i class="fas fa-wifi mr-1"></i> Scan';
+
+                // Resolve member name
+                let memberName = scannedId;
+                try {
+                    const everyone = (window.SchoolDatabase?.staff || []).concat(window.SchoolDatabase?.students || []);
+                    const found = everyone.find(m => m.id === scannedId);
+                    if (found) memberName = `${found.name} (${scannedId})`;
+                } catch(e) {}
+
+                // Fill the member input field
+                const memberInput = document.getElementById('issue-member-search');
+                if (memberInput) memberInput.value = memberName;
+
+                // --- Filter the Return/Active Issues table for this member only ---
+                renderIssuedTable(scannedId);
+
+                // Show banner
+                const banner = document.getElementById('lib-member-filter-banner');
+                const bannerName = document.getElementById('lib-banner-name');
+                if (banner && bannerName) {
+                    bannerName.textContent = memberName;
+                    banner.classList.remove('hidden');
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast('Success', `Card scanned: ${memberName}`, 'success');
+                }
+            },
+            onFail: () => {
+                isLibScanning = false;
+                btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                btn.innerHTML = '<i class="fas fa-wifi mr-1"></i> Scan';
+            }
+        });
+    };
+
+    // Reset the return table back to full list and hide the member banner
+    window.libResetReturnTable = function() {
+        renderIssuedTable();   // no filter → show all
+        const banner = document.getElementById('lib-member-filter-banner');
+        if (banner) banner.classList.add('hidden');
+        const memberInput = document.getElementById('issue-member-search');
+        if (memberInput) memberInput.value = '';
+        const returnSearch = document.getElementById('return-search');
+        if (returnSearch) returnSearch.value = '';
+    };
 
 })();

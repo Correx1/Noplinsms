@@ -29,6 +29,8 @@
     let currentStudent = null;
     let currentFeeData = null;
     let pendingAmount = 0;
+    // NFC config — module-level so startBursaryNFC can access it
+    let nfcConfig = { nfc: true, bio: true };
 
     // Set Default Date
     if(payDate) payDate.value = new Date().toISOString().split('T')[0];
@@ -40,10 +42,14 @@
 
         try {
             console.log('Searching for:', term);
-            // 1. Fetch Students - using absolute path from root
-            const sRes = await fetch('../../../data/students-data.json');
-            if (!sRes.ok) throw new Error('Failed to load students');
-            const students = await sRes.json();
+            
+            // Helper to wait for database
+            while(!window.SchoolDatabase) {
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            // 1. Fetch Students
+            const students = window.SchoolDatabase.students;
             console.log('Students loaded:', students.length);
             
             const student = students.find(s => 
@@ -58,10 +64,8 @@
 
             console.log('Student found:', student.name);
 
-            // 2. Fetch Fee Data - using absolute path from root
-            const fRes = await fetch('../../../data/fee-data.json');
-            if (!fRes.ok) throw new Error('Failed to load fee data');
-            const fees = await fRes.json();
+            // 2. Fetch Fee Data
+            const fees = window.SchoolDatabase.feeData || [];
             console.log('Fee data loaded:', fees.length);
             
             const feeData = fees.find(f => f.studentId === student.id) || createDefaultFee(student.id);
@@ -111,7 +115,9 @@
         sPhoto.src = student.photo;
         sId.textContent = student.id;
         sClass.textContent = `${student.class} - ${student.section}`;
-        sParent.textContent = `${student.parent.father} (${student.parent.phone})`;
+        if (sParent) sParent.textContent = student.parent
+            ? `${student.parent.father} (${student.parent.phone})`
+            : (student.phone || 'N/A');
 
         // Populate Fee Structure
         renderFeeStructure(feeData);
@@ -280,16 +286,10 @@
             // Show loading
             overviewBody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center"><i class="fas fa-spinner fa-spin text-2xl text-primary-600"></i></td></tr>';
 
-            // Fetch data
-            const [studentsRes, feesRes] = await Promise.all([
-                fetch('../../../data/students-data.json'),
-                fetch('../../../data/fee-data.json')
-            ]);
-
-            if (!studentsRes.ok || !feesRes.ok) throw new Error('Failed to load data');
-
-            const students = await studentsRes.json();
-            const fees = await feesRes.json();
+            // Fetch data from centralized database
+            while(!window.SchoolDatabase) { await new Promise(r => setTimeout(r, 50)); }
+            const students = window.SchoolDatabase.students || [];
+            const fees     = window.SchoolDatabase.feeData  || [];
 
             console.log('Loaded students:', students.length, 'fees:', fees.length);
 
@@ -364,6 +364,7 @@
     // Load overview on page load
     setTimeout(() => {
         loadFeeOverview();
+        initBursaryNFC();
     }, 100);
 
     // === Search and Filter Functionality ===
@@ -433,5 +434,121 @@
             }
         }
     }
+
+    // === NFC Integration ===
+    function initBursaryNFC() {
+        // Load into MODULE-LEVEL nfcConfig so startBursaryNFC can read it
+        try {
+            const raw = localStorage.getItem('sms_nfc_config');
+            nfcConfig = raw ? (JSON.parse(raw).bursary || { nfc: true, bio: true }) : { nfc: true, bio: true };
+        } catch (e) {
+            nfcConfig = { nfc: true, bio: true };
+        }
+
+        const btn       = document.getElementById('bursary-nfc-btn');
+        const btnHeader = document.getElementById('bursary-nfc-btn-header');
+
+        if (nfcConfig && nfcConfig.nfc) {
+            if (btn)       { btn.classList.remove('hidden');       btn.classList.add('flex'); }
+            if (btnHeader) { btnHeader.classList.remove('hidden'); btnHeader.classList.add('inline-flex'); }
+        }
+    }
+
+    let isScanning = false;
+    window.startBursaryNFC = function() {
+        const btn = document.getElementById('bursary-nfc-btn');
+        const btnHeader = document.getElementById('bursary-nfc-btn-header');
+        
+        let icon = null;
+        let iconHeader = null;
+        if(btn) icon = btn.querySelector('i');
+        if(btnHeader) iconHeader = btnHeader.querySelector('i');
+        
+        if (isScanning) {
+            // Cancel scan
+            isScanning = false;
+            if(btn) {
+                btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                if(icon) icon.className = 'fas fa-wifi';
+            }
+            if(btnHeader) {
+                btnHeader.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                btnHeader.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                btnHeader.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Student';
+            }
+            if (window.SmartScanner) window.SmartScanner.stop();
+            return;
+        }
+
+        isScanning = true;
+        if(btn) {
+            btn.classList.add('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+            btn.classList.remove('bg-primary-100', 'text-primary-700', 'border-primary-200');
+            if(icon) icon.className = 'fas fa-spinner fa-spin';
+        }
+        if(btnHeader) {
+            btnHeader.classList.add('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+            btnHeader.classList.remove('bg-primary-100', 'text-primary-700', 'border-primary-200');
+            btnHeader.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Scanning...';
+        }
+
+        if (!window.SmartScanner) {
+            alert('Scanner service not loaded. Please refresh the page.');
+            isScanning = false;
+            return;
+        }
+
+        window.SmartScanner.start({
+                requireBiometric: false,   // Finance: card scan only, no fingerprint
+                onSuccess: (scannedId) => {
+                    isScanning = false;
+                    if(btn) {
+                        btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                        btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                        if(icon) icon.className = 'fas fa-wifi';
+                    }
+                    if(btnHeader) {
+                        btnHeader.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                        btnHeader.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                        btnHeader.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Student';
+                    }
+
+                    // --- Filter the overview table to show ONLY this student ---
+                    const overviewSearch = document.getElementById('overview-search');
+                    if (overviewSearch) {
+                        overviewSearch.value = scannedId;
+                        // Trigger the existing filter logic
+                        overviewSearch.dispatchEvent(new Event('input'));
+                    }
+
+                    // Show a reset button so staff can go back to full list
+                    let resetBanner = document.getElementById('nfc-filter-banner');
+                    if (!resetBanner) {
+                        resetBanner = document.createElement('div');
+                        resetBanner.id = 'nfc-filter-banner';
+                        resetBanner.className = 'flex items-center gap-3 px-4 py-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-800 dark:text-blue-200 mb-3';
+                        const overviewTable = document.getElementById('fee-overview-body')?.closest('.bg-white, .dark\\:bg-gray-800');
+                        if (overviewTable) overviewTable.parentNode.insertBefore(resetBanner, overviewTable);
+                    }
+                    resetBanner.innerHTML = `<i class="fas fa-id-card text-blue-500"></i> Showing fees for card: <strong>${scannedId}</strong> &nbsp; <button onclick="document.getElementById('overview-search').value=''; document.getElementById('overview-search').dispatchEvent(new Event('input')); document.getElementById('nfc-filter-banner').remove();" class="ml-auto text-xs underline text-blue-600 hover:text-blue-800">Clear &amp; Show All</button>`;
+                },
+                onFail: () => {
+                    isScanning = false;
+                    const btn = document.getElementById('bursary-nfc-btn');
+                    const btnHeader = document.getElementById('bursary-nfc-btn-header');
+                    if(btn) {
+                        btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                        btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                        btn.querySelector('i').className = 'fas fa-wifi';
+                    }
+                    if(btnHeader) {
+                        btnHeader.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
+                        btnHeader.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
+                        btnHeader.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Student';
+                    }
+                }
+            });
+    };
 
 })();
