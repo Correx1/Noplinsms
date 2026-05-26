@@ -69,14 +69,18 @@
     };
 
     function loadDatabase() {
-        const students = JSON.parse(localStorage.getItem('sms_students') || '[]');
-        // We inject mock staff/parents for the scanner demo
-        const mockStaff = [
-            { id: 'STF-001', name: 'Dr. John Doe', className: 'Staff - Principal', photo: '', emoji: '👨‍🏫', nfc_uid: 'STF1001' },
-            { id: 'STF-002', name: 'Mrs. Jane Smith', className: 'Staff - Teacher', photo: '', emoji: '👩‍🏫', nfc_uid: 'STF1002' }
-        ];
-        allStudents = [...students, ...mockStaff];
-        renderSimulatorList();
+        const poll = setInterval(() => {
+            if (!window.SchoolDatabase) return;
+            clearInterval(poll);
+            const students = (window.SchoolDatabase.students || []).map(s => ({
+                ...s, nfc_uid: s.id, className: s.class + (s.section ? ' ' + s.section : ''), emoji: '🎓'
+            }));
+            const staff = (window.SchoolDatabase.staff || []).map(s => ({
+                ...s, nfc_uid: s.id, className: s.role || s.department || 'Staff', emoji: '👨‍🏫'
+            }));
+            allStudents = [...students, ...staff];
+            renderSimulatorList();
+        }, 50);
     }
 
     // ── Render Tap Simulator Sidebar ─────────────────────────────────────
@@ -127,10 +131,48 @@
     }
 
     // ── Keep Input field focused for Keyboard-Wedge Readers ─────────────────
+    // Only refocus the hidden wedge field if the user clicked outside a real text input
     function maintainFocus() {
+        const active = document.activeElement;
+        const isRealInput = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable);
+        if (isRealInput) return;   // don't steal focus from manual search / sim search
         const inp = document.getElementById('scanner-focus-field');
-        if (inp) {
-            inp.focus();
+        if (inp) inp.focus();
+    }
+
+    // ── Read NFC config biometric flag for current mode ───────────────────────
+    function modeRequiresBiometric() {
+        try {
+            const cfg = JSON.parse(localStorage.getItem('sms_nfc_config') || '{}');
+            const map = { gate: 'studentAttendance', staff: 'staffAttendance', library: 'library', disciplinary: 'discipline', bursar: 'bursary' };
+            const key = map[currentMode];
+            return key && cfg[key] ? !!cfg[key].bio : false;
+        } catch(e) { return false; }
+    }
+
+    // ── Central card read handler: biometric gate → processScannedCard ─────────
+    function handleCardRead(uid) {
+        if (modeRequiresBiometric() && window.SmartScanner) {
+            // Show biometric modal first; only process if fingerprint passes
+            window.SmartScanner.start({
+                requireBiometric: true,
+                // Pass the already-scanned UID so SmartScanner just shows the bio step
+                prefillUid: uid,
+                onSuccess: (resolvedId) => {
+                    // SmartScanner may return its own id; prefer our uid
+                    processScannedCard(uid || resolvedId);
+                },
+                onFail: () => {
+                    const panel = document.getElementById('scanner-result-panel');
+                    if (panel) panel.innerHTML = `<div class="text-center py-10 space-y-3">
+                        <i class="fas fa-fingerprint text-4xl text-red-400"></i>
+                        <p class="font-bold text-red-600">Biometric Verification Failed</p>
+                        <p class="text-xs text-gray-400">Please try again or use manual override.</p>
+                    </div>`;
+                }
+            });
+        } else {
+            processScannedCard(uid);
         }
     }
 
@@ -191,209 +233,133 @@
         }).join('');
     }
 
-    // ── Process Scanned NFC Card UID ──────────────────────────────────────────
     function processScannedCard(uid) {
-        const student = allStudents.find(s => s.nfc_uid === uid);
+        // Look up by id (nfc_uid === id in our DB mapping)
+        const student = allStudents.find(s => s.id === uid || s.nfc_uid === uid);
         const panel = document.getElementById('scanner-result-panel');
         const radarRing = document.getElementById('scanner-radar-ring');
         const stateTitle = document.getElementById('scanner-state-title');
         if (!panel) return;
 
-        // Visual flash animation on radar target ring
         if (radarRing) {
             radarRing.classList.remove('bg-primary-50', 'dark:bg-primary-950/20', 'border-primary-100/50');
             if (student) {
                 radarRing.classList.add('bg-green-50', 'dark:bg-green-950/50', 'border-green-500');
-                if (stateTitle) {
-                    stateTitle.innerHTML = `<span class="text-green-600 dark:text-green-400 flex items-center gap-2 justify-center"><i class="fas fa-check"></i> Authorized</span>`;
-                }
+                if (stateTitle) stateTitle.innerHTML = `<span class="text-green-600 dark:text-green-400 flex items-center gap-2 justify-center"><i class="fas fa-check"></i> Authorized</span>`;
             } else {
                 radarRing.classList.add('bg-red-50', 'dark:bg-red-950/50', 'border-red-500');
-                if (stateTitle) {
-                    stateTitle.innerHTML = `<span class="text-red-600 dark:text-red-400 flex items-center gap-2 justify-center"><i class="fas fa-times"></i> Unrecognized</span>`;
-                }
+                if (stateTitle) stateTitle.innerHTML = `<span class="text-red-600 dark:text-red-400 flex items-center gap-2 justify-center"><i class="fas fa-times"></i> Unrecognized</span>`;
             }
-
             setTimeout(() => {
                 radarRing.className = "w-44 h-44 rounded-full bg-primary-50 dark:bg-primary-950/20 flex items-center justify-center relative shadow-inner border border-primary-100/50 dark:border-primary-900/30";
-                if (stateTitle) {
-                    stateTitle.textContent = "Scan Reader Active";
-                }
+                if (stateTitle) stateTitle.textContent = "Scan Reader Active";
             }, 1200);
         }
 
         if (!student) {
             SoundEffects.playError();
-            addToLedger(null, `Unlinked Card Read: ${uid}`, 'unrecognized');
-            panel.innerHTML = `
-            <div class="text-center space-y-5 py-8 animate-fade-in w-full">
-                <div class="w-16 h-16 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center mx-auto border border-red-200 dark:border-red-900">
-                    <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-2xl animate-bounce"></i>
-                </div>
-                <div class="space-y-1">
-                    <h3 class="font-black text-red-600 dark:text-red-400 text-lg">Card Not Recognized</h3>
-                    <p class="text-xs text-gray-500">Unregistered Smart Tag: <strong class="font-mono bg-gray-100 dark:bg-gray-900 px-2 py-0.5 rounded text-red-500">${uid}</strong></p>
-                </div>
-                <div class="text-xs text-gray-400 dark:text-gray-500 max-w-sm mx-auto border-t border-dashed pt-4 leading-relaxed">
-                    This credential badge hardware ID is not currently registered. Please associate this smart card to a student under the <strong class="text-primary-500">ID Cards administrative desk</strong> first.
-                </div>
+            addToLedger(null, `Unlinked Card: ${uid}`, 'unrecognized');
+            panel.innerHTML = `<div class="text-center space-y-5 py-8 animate-fade-in w-full">
+                <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mx-auto border border-red-200"><i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i></div>
+                <h3 class="font-black text-red-600 text-lg">Card Not Recognized</h3>
+                <p class="text-xs text-gray-500">UID: <strong class="font-mono">${uid}</strong></p>
             </div>`;
             return;
         }
 
-        // Success Feedback
         SoundEffects.playSuccess();
 
-        // Render card results dynamically based on Section Mode
-        const photoHtml = student.photo 
-            ? `<img src="${student.photo}" class="w-full h-full object-cover">` 
+        const photoHtml = student.photo
+            ? `<img src="${student.photo}" class="w-full h-full object-cover">`
             : `<div class="text-4xl">${student.emoji || '👤'}</div>`;
 
-        let contextDetailsHtml = "";
+        // ── Helper: lateness check from settings ──────────────────────────
+        function getLatenessStatus(type) {
+            const defaultSched = { startTime: '07:00', lateThreshold: '08:15' };
+            const sched = JSON.parse(localStorage.getItem('sms_attendance_config') || '{}');
+            const cfg = (sched[type] || defaultSched);
+            const now = new Date();
+            const [lH, lM] = cfg.lateThreshold.split(':').map(Number);
+            const lateMs = lH * 60 + lM;
+            const nowMs  = now.getHours() * 60 + now.getMinutes();
+            return nowMs >= lateMs;
+        }
+
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        let contextDetailsHtml = '';
 
         if (currentMode === 'gate') {
-            // Check-in and check-out timestamp layouts
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            // Set dynamic lateness based on standard 8:00 AM settings check
-            const hours = new Date().getHours();
-            const mins = new Date().getMinutes();
-            const isLate = (hours > 8 || (hours === 8 && mins > 0)); // Late if after 8:00 AM
-
+            const isLate = getLatenessStatus('student');
             const statusClass = isLate ? 'late' : 'present';
-            addToLedger(student, `Gate Entry: ${isLate ? 'Late Check-In' : 'Authorized'}`, statusClass);
-
-            const statusBadge = isLate 
-                ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-900 text-amber-700 dark:text-amber-300 rounded-full"><span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Late Check-In</span>`
-                : `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-green-50 dark:bg-green-950/30 border border-green-300 dark:border-green-900 text-green-700 dark:text-green-300 rounded-full"><span class="w-2 h-2 rounded-full bg-green-500"></span> Present (On Time)</span>`;
-
-            contextDetailsHtml = `
-            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
+            addToLedger(student, `Gate Entry: ${isLate ? 'Late Check-In' : 'On Time'}`, statusClass);
+            const statusBadge = isLate
+                ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-amber-50 border border-amber-300 text-amber-700 rounded-full"><span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span> Late Check-In</span>`
+                : `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-green-50 border border-green-300 text-green-700 rounded-full"><span class="w-2 h-2 rounded-full bg-green-500"></span> Present (On Time)</span>`;
+            contextDetailsHtml = `<div class="w-full border-t border-dashed pt-5 text-left space-y-4">
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
-                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Terminal ID</span>
-                        <strong class="text-sm text-gray-800 dark:text-white font-mono">GATE-01-A</strong>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
-                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Timestamp</span>
-                        <strong class="text-sm text-gray-800 dark:text-white font-mono">${currentTime}</strong>
-                    </div>
+                    <div class="bg-gray-50 p-3 rounded-2xl border"><span class="text-[10px] text-gray-400 uppercase font-black block">Terminal</span><strong class="text-sm font-mono">GATE-01-A</strong></div>
+                    <div class="bg-gray-50 p-3 rounded-2xl border"><span class="text-[10px] text-gray-400 uppercase font-black block">Time</span><strong class="text-sm font-mono">${currentTime}</strong></div>
                 </div>
-                <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-900/20 p-3.5 rounded-2xl border border-gray-150 dark:border-gray-750">
-                    <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Authorized Access</span>
-                    ${statusBadge}
-                </div>
-                <!-- Simulated Gate Open Bar Animation -->
-                <div class="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden relative">
-                    <div class="h-full bg-green-500 animate-pulse w-full"></div>
-                </div>
-                <span class="text-[10px] text-green-500 font-bold flex items-center justify-center gap-1.5"><i class="fas fa-door-open"></i> Virtual barrier open. Welcome to Campus!</span>
+                <div class="flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border"><span class="text-xs font-bold">Status</span>${statusBadge}</div>
+                <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 animate-pulse w-full"></div></div>
+                <span class="text-[10px] text-green-500 font-bold flex items-center justify-center gap-1.5"><i class="fas fa-door-open"></i> Welcome to Campus!</span>
             </div>`;
         } else if (currentMode === 'library') {
-            addToLedger(student, `Library Access Verification`, 'present');
-            // Mock dynamic borrowed list
-            const mockBorrowed = [
-                { title: 'Essential Mathematics for JSS1', due: '2 Days Overdue', late: true },
-                { title: 'Integrated Science Basics', due: 'Due in 5 Days', late: false }
-            ];
-
-            const loanList = mockBorrowed.map(b => `
-                <div class="flex justify-between items-center text-xs p-3 rounded-xl bg-gray-50 dark:bg-gray-900/40 border dark:border-gray-750">
-                    <span class="truncate font-extrabold text-gray-700 dark:text-gray-300 max-w-[200px]">${b.title}</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold ${b.late ? 'bg-red-50 text-red-600 dark:bg-red-950/30' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-450'}">${b.due}</span>
-                </div>
-            `).join('');
-
-            contextDetailsHtml = `
-            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
-                <div class="flex justify-between items-center">
-                    <h5 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Active Book Loans Ledger</h5>
-                    <span class="text-[9px] bg-primary-100 text-primary-800 dark:bg-primary-950 dark:text-primary-300 px-2 py-0.5 rounded font-black font-mono">2 Checked Out</span>
-                </div>
-                <div class="space-y-2">
-                    ${loanList}
-                </div>
-                <button class="w-full py-2.5 bg-primary-600 hover:bg-primary-750 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm transform active:scale-95">
-                    <i class="fas fa-plus"></i> Process New Borrow / Return Receipt
+            addToLedger(student, 'Library Desk - Member Verified', 'present');
+            const libTrans = (window.SchoolDatabase?.libraryTransactions || []).filter(t => t.memberId === student.id && (t.status === 'Issued' || t.status === 'Overdue'));
+            const loanList = libTrans.length > 0
+                ? libTrans.map(b => { const over = new Date(b.dueDate) < new Date(); return `<div class="flex justify-between items-center text-xs p-3 rounded-xl bg-gray-50 border"><span class="truncate font-bold max-w-[160px]">${b.bookTitle}</span><span class="px-2 py-0.5 rounded text-[10px] font-bold ${over ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-500'}">${b.dueDate}</span></div>`; }).join('')
+                : `<p class="text-xs text-gray-400 italic text-center py-2">No books currently borrowed.</p>`;
+            contextDetailsHtml = `<div class="w-full border-t border-dashed pt-5 text-left space-y-3">
+                <div class="flex justify-between items-center"><h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Borrowed Books</h5><span class="text-[9px] bg-primary-100 text-primary-800 px-2 py-0.5 rounded font-black">${libTrans.length} Active</span></div>
+                <div class="space-y-2">${loanList}</div>
+                <button onclick="window._libScanId='${student.id}'; if(window.loadIssueReturnPage) loadIssueReturnPage();" class="w-full py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <i class="fas fa-book-open"></i> Go to Issue / Return Desk
                 </button>
             </div>`;
         } else if (currentMode === 'bursar') {
-            addToLedger(student, `Bursary Balance Statement Checked`, 'present');
-            // Mock finance balance lookup
-            contextDetailsHtml = `
-            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
-                <h5 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Fee Ledger Invoice</h5>
+            addToLedger(student, 'Bursary - Fee Lookup', 'present');
+            const feeRec = (window.SchoolDatabase?.feeRecords || []).find(f => f.studentId === student.id);
+            const total = feeRec?.totalFee || 0, paid = feeRec?.paidAmount || 0, bal = total - paid;
+            const fmt = n => '₦' + n.toLocaleString();
+            contextDetailsHtml = `<div class="w-full border-t border-dashed pt-5 text-left space-y-4">
+                <h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Fee Ledger</h5>
                 <div class="grid grid-cols-3 gap-2.5 text-center">
-                    <div class="p-3 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
-                        <div class="text-[8px] text-gray-400 uppercase font-black tracking-wider mb-1">Total Bill</div>
-                        <strong class="text-sm text-gray-850 dark:text-white font-mono">₦150,000</strong>
-                    </div>
-                    <div class="p-3 border border-green-200 dark:border-green-950 rounded-2xl bg-green-50/50 dark:bg-green-950/20">
-                        <div class="text-[8px] text-green-600 dark:text-green-400 uppercase font-black tracking-wider mb-1">Paid</div>
-                        <strong class="text-sm text-green-700 dark:text-green-300 font-mono">₦120,000</strong>
-                    </div>
-                    <div class="p-3 border border-red-200 dark:border-red-950 rounded-2xl bg-red-50/50 dark:bg-red-950/20">
-                        <div class="text-[8px] text-red-600 dark:text-red-400 uppercase font-black tracking-wider mb-1">Balance</div>
-                        <strong class="text-sm text-red-700 dark:text-red-300 font-mono">₦30,000</strong>
-                    </div>
+                    <div class="p-3 border rounded-2xl bg-gray-50"><div class="text-[8px] text-gray-400 uppercase font-black mb-1">Total</div><strong class="text-sm font-mono">${fmt(total)}</strong></div>
+                    <div class="p-3 border border-green-200 rounded-2xl bg-green-50"><div class="text-[8px] text-green-600 uppercase font-black mb-1">Paid</div><strong class="text-sm text-green-700 font-mono">${fmt(paid)}</strong></div>
+                    <div class="p-3 border border-red-200 rounded-2xl bg-red-50"><div class="text-[8px] text-red-600 uppercase font-black mb-1">Balance</div><strong class="text-sm text-red-700 font-mono">${fmt(bal)}</strong></div>
                 </div>
-                <button class="w-full py-2.5 bg-green-600 hover:bg-green-750 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm transform active:scale-95">
-                    <i class="fas fa-receipt"></i> Authorize / Log School Fee Payment
+                <button onclick="if(window.loadFeeCollectionPage){ window._feeFilterId='${student.id}'; loadFeeCollectionPage(); }" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <i class="fas fa-receipt"></i> Open Fee Collection Page
                 </button>
             </div>`;
         } else if (currentMode === 'disciplinary') {
-            addToLedger(student, `Disciplinary Clearance Checked`, 'present');
-            
-            // Dynamic mock discipline state
-            const merits = student.className.includes('SS') ? 14 : 28;
-            const demerits = student.className.includes('SS') ? 1 : 0;
-            const rating = demerits > 0 ? 'Good Standing' : 'Exemplary Conduct';
-            
-            contextDetailsHtml = `
-            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
-                <h5 class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">Behavioral & Merit Record</h5>
-                <div class="grid grid-cols-3 gap-2.5 text-center">
-                    <div class="p-3 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
-                        <div class="text-[8px] text-gray-400 uppercase font-black tracking-wider mb-1">Merits</div>
-                        <strong class="text-sm text-green-600 dark:text-green-400 font-mono">+${merits}</strong>
-                    </div>
-                    <div class="p-3 border dark:border-gray-700 rounded-2xl bg-gray-50 dark:bg-gray-900/40">
-                        <div class="text-[8px] text-gray-400 uppercase font-black tracking-wider mb-1">Demerits</div>
-                        <strong class="text-sm text-red-600 dark:text-red-400 font-mono">${demerits}</strong>
-                    </div>
-                    <div class="p-3 border border-green-200 dark:border-green-950 rounded-2xl bg-green-50/50 dark:bg-green-950/20 col-span-1">
-                        <div class="text-[8px] text-green-600 dark:text-green-400 uppercase font-black tracking-wider mb-1">Rating</div>
-                        <strong class="text-xs text-green-700 dark:text-green-300 truncate block">${rating}</strong>
-                    </div>
+            addToLedger(student, 'Discipline Desk - Checked', 'present');
+            const discRecs = (window.SchoolDatabase?.disciplineRecords || []).filter(r => r.studentId === student.id);
+            const open = discRecs.filter(r => r.status === 'Open' || r.status === 'Pending').length;
+            const total_d = discRecs.length;
+            contextDetailsHtml = `<div class="w-full border-t border-dashed pt-5 text-left space-y-3">
+                <h5 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Discipline Record</h5>
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="p-3 border rounded-2xl bg-gray-50"><div class="text-[8px] text-gray-400 uppercase font-black mb-1">Total Incidents</div><strong class="text-sm font-mono">${total_d}</strong></div>
+                    <div class="p-3 border ${open > 0 ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'} rounded-2xl"><div class="text-[8px] ${open > 0 ? 'text-red-600' : 'text-green-600'} uppercase font-black mb-1">Open Cases</div><strong class="text-sm ${open > 0 ? 'text-red-700' : 'text-green-700'} font-mono">${open}</strong></div>
                 </div>
-                <div class="p-3 bg-blue-50/30 dark:bg-blue-950/10 border border-blue-200/50 dark:border-blue-900/30 rounded-xl text-[10px] text-blue-600 dark:text-blue-400 flex items-center gap-2">
-                    <i class="fas fa-certificate text-xs animate-pulse"></i>
-                    <span>Eligible for Student Leadership Council candidacy.</span>
-                </div>
-                <button class="w-full py-2.5 bg-red-600 hover:bg-red-750 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm transform active:scale-95">
-                    <i class="fas fa-exclamation-triangle"></i> Log Incident / File Demerit Report
+                <button onclick="window.editingIncidentId=null; window._disciplineStudentId='${student.id}'; if(window.loadAddIncidentPage) loadAddIncidentPage();" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <i class="fas fa-exclamation-triangle"></i> Log New Incident for ${student.name}
                 </button>
             </div>`;
         } else if (currentMode === 'staff') {
-            addToLedger(student, `Staff Clock-In Verified`, 'present');
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            
-            contextDetailsHtml = `
-            <div class="w-full border-t border-dashed dark:border-gray-700 pt-5 text-left space-y-4">
+            const isLateStaff = getLatenessStatus('staff');
+            addToLedger(student, `Staff Clock-In: ${isLateStaff ? 'Late' : 'On Time'}`, isLateStaff ? 'late' : 'present');
+            const staffBadge = isLateStaff
+                ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-amber-50 border border-amber-300 text-amber-700 rounded-full"><span class="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span> Late</span>`
+                : `<span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black bg-green-50 border border-green-300 text-green-700 rounded-full"><span class="w-2 h-2 bg-green-500 rounded-full"></span> On Time</span>`;
+            contextDetailsHtml = `<div class="w-full border-t border-dashed pt-5 text-left space-y-4">
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
-                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Terminal ID</span>
-                        <strong class="text-sm text-gray-800 dark:text-white font-mono">STAFF-ENTRY</strong>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-900/40 p-3 rounded-2xl border dark:border-gray-700">
-                        <span class="text-[10px] text-gray-400 uppercase font-black tracking-wider block">Timestamp</span>
-                        <strong class="text-sm text-gray-800 dark:text-white font-mono">${currentTime}</strong>
-                    </div>
+                    <div class="bg-gray-50 p-3 rounded-2xl border"><span class="text-[10px] text-gray-400 uppercase font-black block">Terminal</span><strong class="text-sm font-mono">STAFF-ENTRY</strong></div>
+                    <div class="bg-gray-50 p-3 rounded-2xl border"><span class="text-[10px] text-gray-400 uppercase font-black block">Time</span><strong class="text-sm font-mono">${currentTime}</strong></div>
                 </div>
-                <div class="flex justify-between items-center bg-green-50 dark:bg-green-900/20 p-3.5 rounded-2xl border border-green-200 dark:border-green-800">
-                    <span class="text-xs font-bold text-green-800 dark:text-green-300">Clock-In Successful</span>
-                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
-                </div>
+                <div class="flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border"><span class="text-xs font-bold">Clock-In Status</span>${staffBadge}</div>
             </div>`;
         }
 
@@ -427,7 +393,7 @@
             currentMode = mode;
             
             // Update Active Tab Class UI buttons
-            const modeIds = ['gate', 'library', 'bursar', 'disciplinary', 'staff'];
+            const modeIds = ['gate', 'hostel', 'library', 'bursar', 'disciplinary', 'staff'];
             modeIds.forEach(m => {
                 const btn = document.getElementById(`scanner-mode-btn-${m}`);
                 if (!btn) return;
@@ -439,21 +405,52 @@
                 }
             });
 
-            // Re-initialize SmartScanner with correct biometric rules for this mode
+            // Re-initialize SmartScanner with correct NFC + biometric rules for this mode
             const storedConfig = localStorage.getItem('sms_nfc_config');
-            let reqBio = false;
+            let reqNFC = true, reqBio = false;
             if (storedConfig) {
-                const conf = JSON.parse(storedConfig);
-                if (mode === 'gate' && conf.studentAttendance) reqBio = conf.studentAttendance.bio;
-                else if (mode === 'staff' && conf.staffAttendance) reqBio = conf.staffAttendance.bio;
-                else if (mode === 'library' && conf.library) reqBio = conf.library.bio;
-                else if (mode === 'disciplinary' && conf.discipline) reqBio = conf.discipline.bio;
-                // Bursary never requires bio.
+                try {
+                    const conf = JSON.parse(storedConfig);
+                    const modeMap = {
+                        gate:         conf.studentAttendance,
+                        hostel:       conf.hostelAttendance,
+                        staff:        conf.staffAttendance,
+                        library:      conf.library,
+                        disciplinary: conf.discipline,
+                        bursar:       conf.bursary
+                    };
+                    const modeCfg = modeMap[mode];
+                    if (modeCfg) {
+                        reqNFC = modeCfg.nfc !== false; // default true
+                        reqBio = !!modeCfg.bio;
+                    }
+                    // Bursary never requires bio regardless of setting
+                    if (mode === 'bursar') reqBio = false;
+                } catch(e) {}
             }
-            
+
+            const panel = document.getElementById('scanner-result-panel');
+
+            if (!reqNFC && !reqBio) {
+                // Both disabled — stop scanner and show notice
+                if (window.SmartScanner) window.SmartScanner.stop();
+                if (panel) panel.innerHTML = `
+                <div class="space-y-3 text-center py-16">
+                    <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto">
+                        <i class="fas fa-ban text-3xl text-gray-400"></i>
+                    </div>
+                    <h4 class="font-black text-gray-700 dark:text-gray-300">Scanner Disabled</h4>
+                    <p class="text-xs text-gray-400">Both NFC and Biometric are turned off for <strong>${mode}</strong> in Settings → NFC & Biometric.</p>
+                    <a href="#" onclick="window.loadPage && loadPage('settings/nfc.html','../../js/settings.js','settings-script')" class="inline-block text-xs text-primary-600 underline">Go to Settings</a>
+                </div>`;
+                maintainFocus();
+                return; // don't start SmartScanner
+            }
+
             if (window.SmartScanner) {
                 window.SmartScanner.stop();
                 window.SmartScanner.start({
+                    requireNFC: reqNFC,
                     requireBiometric: reqBio,
                     onSuccess: processScannedCard,
                     onFail: (reason) => { console.log('Kiosk scan failed:', reason); }
@@ -463,11 +460,12 @@
             // Update radar status prompt
             const prompt = document.getElementById('scanner-focus-prompt');
             if (prompt) {
-                prompt.textContent = `Hardware Auto-focused. Tap card directly now to process ${mode} check.`;
+                const modeLabel = { gate: 'Student Attendance', hostel: 'Hostel', staff: 'Staff Clock-In', library: 'Library Desk', bursar: 'Bursary', disciplinary: 'Discipline' }[mode] || mode;
+                const scanType = reqNFC ? 'Tap card' : 'Enter ID manually';
+                prompt.textContent = `${scanType} to process ${modeLabel} check.`;
             }
 
-            // Reset result screen to active default check state
-            const panel = document.getElementById('scanner-result-panel');
+            // Reset result panel to waiting state
             if (panel) {
                 panel.innerHTML = `
                 <div class="space-y-4 text-gray-400 dark:text-gray-500 py-16">
@@ -476,7 +474,7 @@
                     </div>
                     <div>
                         <h4 class="font-black text-gray-800 dark:text-gray-200 text-base">Waiting for Scan</h4>
-                        <p class="text-xs mt-1">Please scan student card for ${mode} processing.</p>
+                        <p class="text-xs mt-1">${reqNFC ? 'Scan card' : 'Enter ID manually'} in the scanner panel${reqBio ? ', then verify fingerprint' : ''} to continue.</p>
                     </div>
                 </div>`;
             }
@@ -533,9 +531,17 @@
         },
 
         mockScan(uid) {
-            // Close Sandbox Simulator Modal
             document.getElementById('sim-modal-container').classList.add('hidden');
-            processScannedCard(uid);
+            // Feed the uid into the EXISTING SmartScanner session.
+            // switchMode() already started SmartScanner with the correct requireBiometric
+            // value from settings. processNFCScan checks that flag and shows the fingerprint
+            // modal automatically when biometric is required.
+            if (window.SmartScanner && window.SmartScanner.isActive) {
+                window.SmartScanner.processNFCScan(uid);
+            } else {
+                // Fallback: SmartScanner not active, process directly
+                processScannedCard(uid);
+            }
         },
 
         toggleSound() {
@@ -660,10 +666,14 @@
     // Initialize Database
     loadDatabase();
 
-    // Set Global input auto focus locking (legacy)
+    // Set Global input auto focus locking
     maintainFocus();
-    document.addEventListener('click', () => {
-        setTimeout(maintainFocus, 100);
+    document.addEventListener('click', (e) => {
+        // Only regrab focus if the click target is not inside a real input
+        const tag = e.target?.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && !e.target?.isContentEditable) {
+            setTimeout(maintainFocus, 100);
+        }
     });
 
     // Initialize Smart Scanner for the default 'gate' mode

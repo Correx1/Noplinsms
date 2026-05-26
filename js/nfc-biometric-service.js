@@ -308,6 +308,7 @@ class SmartScannerService {
 
     start(config = {}) {
         this.currentConfig = {
+            requireNFC: config.requireNFC !== false, // default true
             requireBiometric: config.requireBiometric || false,
             onSuccess: config.onSuccess || (() => {}),
             onFail: config.onFail || (() => {})
@@ -318,10 +319,15 @@ class SmartScannerService {
             this.isActive = true;
         }
         
-        this.setNFCState();
+        // If NFC is disabled but biometric is on → fingerprint-first mode
+        if (!this.currentConfig.requireNFC && this.currentConfig.requireBiometric) {
+            this.setFingerprintFirstState();
+        } else {
+            this.setNFCState();
+        }
+        
         document.getElementById('smart-scanner-modal-overlay').classList.add('active');
         
-        // Focus hidden input to ensure physical scanner works without clicking anywhere
         setTimeout(() => {
             const simInput = document.getElementById('nfc-sim-input');
             if(simInput) simInput.focus();
@@ -363,6 +369,28 @@ class SmartScannerService {
         document.getElementById('nfc-sim-input').style.display = 'block';
         document.getElementById('bio-sim-actions').style.display = 'none';
         document.getElementById('sim-title-text').innerText = 'Demo Simulator: Enter ID and press Enter';
+    }
+
+    // Fingerprint-first mode: NFC disabled, biometric required
+    // Attendant manually enters the person's ID, then fingerprint verifies
+    setFingerprintFirstState() {
+        this.currentState = 'nfc'; // still 'nfc' so handleKeyDown works for ID entry
+        this.scannedIdPending = null;
+
+        document.getElementById('scanner-modal-title').innerText = 'Fingerprint Verification';
+        document.getElementById('scanner-user-info').style.display = 'none';
+
+        const btn = document.getElementById('scanner-action-btn');
+        btn.className = 'scanner-icon-container state-bio';
+        document.getElementById('scanner-icon').className = 'fas fa-fingerprint';
+
+        document.getElementById('scanner-status-message').innerText = 'NFC disabled — enter ID manually to begin fingerprint check';
+        document.getElementById('scanner-status-message').style.color = '';
+
+        // Show the ID input (same sim input, different label)
+        document.getElementById('nfc-sim-input').style.display = 'block';
+        document.getElementById('bio-sim-actions').style.display = 'none';
+        document.getElementById('sim-title-text').innerText = 'Enter Person ID manually, then press Enter';
     }
 
     setBioState(scannedId) {
@@ -473,3 +501,6 @@ class SmartScannerService {
 
 // Initialize Global Singleton
 window.SmartScanner = new SmartScannerService();
+
+// processNFCScan is already a class method — confirm it's accessible externally
+// (no action needed; class methods are on the prototype and accessible on instances)

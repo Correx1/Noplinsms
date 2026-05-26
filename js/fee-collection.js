@@ -435,23 +435,29 @@
         }
     }
 
-    // === NFC Integration ===
     function initBursaryNFC() {
-        // Load into MODULE-LEVEL nfcConfig so startBursaryNFC can read it
         try {
             const raw = localStorage.getItem('sms_nfc_config');
-            nfcConfig = raw ? (JSON.parse(raw).bursary || { nfc: true, bio: true }) : { nfc: true, bio: true };
+            nfcConfig = raw ? (JSON.parse(raw).bursary || { nfc: true, bio: false }) : { nfc: true, bio: false };
         } catch (e) {
-            nfcConfig = { nfc: true, bio: true };
+            nfcConfig = { nfc: true, bio: false };
         }
 
         const btn       = document.getElementById('bursary-nfc-btn');
         const btnHeader = document.getElementById('bursary-nfc-btn-header');
 
-        if (nfcConfig && nfcConfig.nfc) {
-            if (btn)       { btn.classList.remove('hidden');       btn.classList.add('flex'); }
-            if (btnHeader) { btnHeader.classList.remove('hidden'); btnHeader.classList.add('inline-flex'); }
-        }
+        // Always show the buttons
+        if (btn)       { btn.classList.remove('hidden');       btn.classList.add('flex'); }
+        if (btnHeader) { btnHeader.classList.remove('hidden'); btnHeader.classList.add('inline-flex'); }
+
+        // Disable only if BOTH nfc AND bio are off
+        const bothOff = !nfcConfig.nfc && !nfcConfig.bio;
+        [btn, btnHeader].forEach(b => {
+            if (!b) return;
+            b.disabled = bothOff;
+            if (bothOff) { b.classList.add('opacity-50', 'cursor-not-allowed'); b.title = 'NFC & Biometric both disabled in settings'; }
+            else         { b.classList.remove('opacity-50', 'cursor-not-allowed'); b.title = ''; }
+        });
     }
 
     let isScanning = false;
@@ -500,6 +506,7 @@
         }
 
         window.SmartScanner.start({
+                requireNFC: nfcConfig.nfc,
                 requireBiometric: false,   // Finance: card scan only, no fingerprint
                 onSuccess: (scannedId) => {
                     isScanning = false;

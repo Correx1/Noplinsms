@@ -364,12 +364,16 @@
         const nfcBtn = document.getElementById('library-nfc-btn');
         const searchBtn = document.getElementById('regular-search-btn');
 
-        // Show NFC button if enabled for this module
-        if (libNfcConfig && libNfcConfig.nfc && nfcBtn && searchBtn) {
-            nfcBtn.classList.remove('hidden');
-            nfcBtn.classList.add('flex');
-            // Fix radius on regular search btn
-            searchBtn.classList.remove('rounded-r-md');
+        // Always show the NFC button
+        if (nfcBtn) { nfcBtn.classList.remove('hidden'); nfcBtn.classList.add('flex'); }
+        if (searchBtn) searchBtn.classList.remove('rounded-r-md');
+
+        // Disable only if BOTH nfc AND bio are off
+        if (nfcBtn) {
+            const bothOff = !libNfcConfig.nfc && !libNfcConfig.bio;
+            nfcBtn.disabled = bothOff;
+            if (bothOff) { nfcBtn.classList.add('opacity-50', 'cursor-not-allowed'); nfcBtn.title = 'NFC & Biometric both disabled in settings'; }
+            else         { nfcBtn.classList.remove('opacity-50', 'cursor-not-allowed'); nfcBtn.title = ''; }
         }
     }
 
@@ -394,7 +398,8 @@
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Wait';
 
         window.SmartScanner.start({
-            requireBiometric: true,    // Library: card scan + fingerprint mandatory
+            requireNFC: libNfcConfig.nfc,
+            requireBiometric: libNfcConfig.bio,    // Library: reads from settings
             onSuccess: (scannedId) => {
                 isLibScanning = false;
                 btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');

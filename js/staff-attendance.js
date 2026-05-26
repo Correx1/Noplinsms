@@ -1,328 +1,384 @@
 (function() {
     console.log('Staff Attendance Script Loaded');
-    
-    // === Variables & Setup ===
-    const dateInput = document.getElementById('staff-att-date');
+
+    const SESSIONS_KEY = 'sms_staff_att_sessions';
+    let forcedScanDirection = null;
+
+    const dateInput   = document.getElementById('staff-att-date');
     const dateDisplay = document.getElementById('current-date-display');
-    const form = document.getElementById('staff-attendance-filter-form');
-    const tableBody = document.getElementById('staff-table-body');
-    const container = document.getElementById('staff-attendance-container');
+    const form        = document.getElementById('staff-attendance-filter-form');
+    const tableBody   = document.getElementById('staff-table-body');
+    const container   = document.getElementById('staff-attendance-container');
 
-    // Set Default Date
     const today = new Date().toISOString().split('T')[0];
-    if(dateInput) dateInput.value = today;
-    if(dateDisplay) dateDisplay.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    if (dateInput)   dateInput.value = today;
+    if (dateDisplay) dateDisplay.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // === Fetch & Load Data ===
-    if(form) {
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function getSessions() {
+        try { return JSON.parse(localStorage.getItem(SESSIONS_KEY) || '{}'); } catch(e) { return {}; }
+    }
+    function saveSessions(s) { localStorage.setItem(SESSIONS_KEY, JSON.stringify(s)); }
+    function sessionKey(date, id) { return `${date}_${id}`; }
+
+    function getSchedule() {
+        try {
+            const cfg = JSON.parse(localStorage.getItem('sms_attendance_config') || '{}');
+            return cfg.staff || { startTime: '06:30', lateThreshold: '07:45', expectedOut: '15:00' };
+        } catch(e) { return { startTime: '06:30', lateThreshold: '07:45', expectedOut: '15:00' }; }
+    }
+
+    function timeToMin(t) {
+        if (!t) return 0;
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+    }
+
+    function computeStatus(timeIn, timeOut, schedule, override) {
+        if (override === 'Absent') return 'Absent';
+        if (override === 'Leave')  return 'Leave';
+        if (!timeIn) return 'Absent';
+        if (timeToMin(timeIn) > timeToMin(schedule.lateThreshold || '07:45')) return 'Late';
+        if (timeOut && timeToMin(timeOut) < timeToMin(schedule.expectedOut || '15:00')) return 'Early Out';
+        return 'Present';
+    }
+
+    function statusBadge(status) {
+        const map = {
+            'Present':   'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+            'Late':      'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300',
+            'Absent':    'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+            'Leave':     'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+            'Early Out': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+        };
+        return `<span class="px-2.5 py-1 rounded-full text-xs font-bold ${map[status] || 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}">${status || 'Absent'}</span>`;
+    }
+
+    function applyRowColor(row, status) {
+        row.classList.remove('bg-green-50','dark:bg-green-900/10','bg-yellow-50','dark:bg-yellow-900/10','bg-red-50','dark:bg-red-900/10','bg-purple-50','dark:bg-purple-900/10','bg-blue-50','dark:bg-blue-900/10');
+        const m = { Present: ['bg-green-50','dark:bg-green-900/10'], Late: ['bg-yellow-50','dark:bg-yellow-900/10'], Absent: ['bg-red-50','dark:bg-red-900/10'], Leave: ['bg-purple-50','dark:bg-purple-900/10'], 'Early Out': ['bg-blue-50','dark:bg-blue-900/10'] };
+        if (m[status]) row.classList.add(...m[status]);
+    }
+
+    // ── Row builder ────────────────────────────────────────────────────────
+    function buildRow(item, date) {
+        const sessions = getSessions();
+        const schedule = getSchedule();
+        const sk       = sessionKey(date, item.id);
+        const session  = sessions[sk] || { timeIn: '', timeOut: '', override: '' };
+        const override = session.override || '';
+        const status   = computeStatus(session.timeIn, session.timeOut, schedule, override);
+
+        const tr = document.createElement('tr');
+        tr.id        = `staff-row-${item.id}`;
+        tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors cursor-pointer';
+        tr.innerHTML = `
+            <td class="px-4 py-3" onclick="event.stopPropagation()">
+                <input type="checkbox" class="staff-row-check w-4 h-4 text-primary-600 rounded cursor-pointer"
+                    data-id="${item.id}" onchange="window._onStaffCheckChange()">
+            </td>
+            <td class="px-4 py-3 font-mono text-xs font-bold text-gray-700 dark:text-gray-300">${item.id}</td>
+            <td class="px-4 py-3">
+                <img class="w-9 h-9 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600" src="${item.photo || 'assets/img/default-avatar.png'}" alt="">
+            </td>
+            <td class="px-4 py-3 font-semibold text-gray-900 dark:text-white">${item.name}</td>
+            <td class="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">${item.subject || item.dept || 'N/A'}</td>
+            <td class="px-4 py-3 text-center">
+                <span id="sin-${item.id}" class="text-sm font-mono font-bold ${session.timeIn ? 'text-green-600 dark:text-green-400' : 'text-gray-300 dark:text-gray-600'}">${session.timeIn || '—'}</span>
+            </td>
+            <td class="px-4 py-3 text-center">
+                <span id="sout-${item.id}" class="text-sm font-mono font-bold ${session.timeOut ? 'text-blue-600 dark:text-blue-400' : 'text-gray-300 dark:text-gray-600'}">${session.timeOut || '—'}</span>
+            </td>
+            <td class="px-4 py-3 text-center" id="sstatus-cell-${item.id}">${statusBadge(status)}</td>
+            <td class="px-4 py-3">
+                <input type="text" id="sremark-${item.id}" value="${session.remark || ''}"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="Remarks..." onclick="event.stopPropagation()">
+            </td>
+        `;
+        tr.addEventListener('click', () => {
+            const cb = tr.querySelector('.staff-row-check');
+            if (cb) { cb.checked = !cb.checked; window._onStaffCheckChange(); }
+        });
+        applyRowColor(tr, status);
+        return tr;
+    }
+
+    // ── Update single row display ──────────────────────────────────────────
+    function updateRowDisplay(id, session) {
+        const schedule   = getSchedule();
+        const status     = computeStatus(session.timeIn, session.timeOut, schedule, session.override || '');
+        const inEl       = document.getElementById(`sin-${id}`);
+        const outEl      = document.getElementById(`sout-${id}`);
+        const statusCell = document.getElementById(`sstatus-cell-${id}`);
+        const row        = document.getElementById(`staff-row-${id}`);
+
+        if (inEl) {
+            inEl.textContent = session.timeIn || '—';
+            inEl.className = `text-sm font-mono font-bold ${session.timeIn ? 'text-green-600 dark:text-green-400' : 'text-gray-300 dark:text-gray-600'}`;
+        }
+        if (outEl) {
+            outEl.textContent = session.timeOut || '—';
+            outEl.className = `text-sm font-mono font-bold ${session.timeOut ? 'text-blue-600 dark:text-blue-400' : 'text-gray-300 dark:text-gray-600'}`;
+        }
+        if (statusCell) statusCell.innerHTML = statusBadge(status);
+        if (row) applyRowColor(row, status);
+    }
+
+    // ── Selection helpers ──────────────────────────────────────────────────
+    function getSelectedIds() {
+        return [...document.querySelectorAll('.staff-row-check:checked')].map(cb => cb.dataset.id);
+    }
+
+    window._onStaffCheckChange = function() {
+        const ids    = getSelectedIds();
+        const count  = ids.length;
+        const selBar = document.getElementById('staff-selection-bar');
+        const cntEl  = document.getElementById('staff-selected-count');
+        const allCb  = document.getElementById('select-all-staff');
+
+        if (selBar) selBar.classList.toggle('hidden', count === 0);
+        if (cntEl)  cntEl.textContent = count;
+        if (allCb) {
+            const total = document.querySelectorAll('.staff-row-check').length;
+            allCb.checked       = count === total && total > 0;
+            allCb.indeterminate = count > 0 && count < total;
+        }
+        hideNotice();
+    };
+
+    window.selectAllStaff = function(checked) {
+        document.querySelectorAll('.staff-row-check').forEach(cb => cb.checked = checked);
+        window._onStaffCheckChange();
+    };
+
+    function requireSelection() {
+        const ids = getSelectedIds();
+        if (!ids.length) { showNotice(); return null; }
+        hideNotice();
+        return ids;
+    }
+
+    function showNotice() {
+        const el = document.getElementById('staff-no-selection-notice');
+        if (el) { el.classList.remove('hidden'); setTimeout(() => el.classList.add('hidden'), 3000); }
+    }
+    function hideNotice() {
+        const el = document.getElementById('staff-no-selection-notice');
+        if (el) el.classList.add('hidden');
+    }
+
+    // ── Bulk actions (selected rows only) ─────────────────────────────────
+    window.setAsStaffClockIn = function() {
+        forcedScanDirection = 'in';
+        window.startStaffNFC();
+    };
+
+    window.setAsStaffClockOut = function() {
+        forcedScanDirection = 'out';
+        window.startStaffNFC();
+    };
+
+    window.resetTodayStaffAttendance = function() {
+        if (!confirm('Clear ALL staff attendance for ' + currentDate + '?')) return;
+        const sessions = getSessions();
+        const prefix   = currentDate + '_';
+        Object.keys(sessions).forEach(k => { if (k.startsWith(prefix)) delete sessions[k]; });
+        saveSessions(sessions);
+        renderRows(staffData);
+    };
+
+    window.markStaffAs = function(status) {
+        const ids = requireSelection();
+        if (!ids) return;
+        const sessions = getSessions();
+        ids.forEach(id => {
+            const sk = sessionKey(currentDate, id);
+            const session = sessions[sk] || {};
+            session.timeIn = ''; session.timeOut = ''; session.override = status;
+            sessions[sk] = session;
+            updateRowDisplay(id, session);
+        });
+        saveSessions(sessions);
+    };
+
+    // ── Load / Render ──────────────────────────────────────────────────────
+    let currentDate = today;
+    let staffData   = [];
+
+    if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Form submitted - loading staff');
-            
-            // Show loading
+            currentDate = dateInput ? dateInput.value : today;
             container.classList.remove('hidden');
-            tableBody.innerHTML = '<tr><td colspan="6" class="p-4 text-center"><i class="fas fa-spinner fa-spin text-2xl text-primary-600"></i></td></tr>';
-
-            // Simulate Network Delay
-            setTimeout(() => {
-                loadStaff();
-            }, 600);
+            tableBody.innerHTML = '<tr><td colspan="9" class="p-6 text-center"><i class="fas fa-spinner fa-spin text-2xl text-primary-600"></i></td></tr>';
+            setTimeout(loadStaff, 400);
         });
     }
 
     function loadStaff() {
-        const selectedDept = document.getElementById('staff-att-dept').value;
-
-        console.log('Loading staff for department:', selectedDept);
-
         const checkDb = setInterval(() => {
-            if(window.SchoolDatabase) {
+            if (window.SchoolDatabase) {
                 clearInterval(checkDb);
-                const data = window.SchoolDatabase.staff || [];
-                console.log('Staff data loaded:', data.length);
-                let filtered = data;
-                if(selectedDept) {
-                    // For now, we don't have department field in teachers-data.json
-                    // So we'll just load all staff regardless of filter
-                }
-                
-                console.log('Filtered staff:', filtered.length);
-                renderRows(filtered);
+                staffData = window.SchoolDatabase.staff || [];
+                renderRows(staffData);
             }
         }, 50);
     }
 
     function renderRows(items) {
         tableBody.innerHTML = '';
-        if (items.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-gray-500">No staff found for selection.</td></tr>';
+        if (!items.length) {
+            tableBody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-gray-500">No staff found.</td></tr>';
             return;
         }
-
-        items.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.id = `staff-row-${item.id}`;
-            tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors';
-            
-            tr.innerHTML = `
-                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${item.id}</td>
-                <td class="px-6 py-4">
-                    <img class="w-10 h-10 rounded-full object-cover" src="${item.photo}" alt="Avatar">
-                </td>
-                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${item.name}</td>
-                <td class="px-6 py-4 text-gray-500 dark:text-gray-400">${item.subject || 'N/A'}</td>
-                <td class="px-6 py-4 text-center">
-                    <div class="flex items-center justify-center space-x-3">
-                        <label class="cursor-pointer flex items-center space-x-1">
-                            <input type="radio" name="status-${item.id}" value="Present" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${item.id}', this.value)">
-                            <span class="text-sm text-green-600 font-medium">P</span>
-                        </label>
-                         <label class="cursor-pointer flex items-center space-x-1">
-                            <input type="radio" name="status-${item.id}" value="Absent" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${item.id}', this.value)">
-                            <span class="text-sm text-red-600 font-medium">A</span>
-                        </label>
-                         <label class="cursor-pointer flex items-center space-x-1">
-                            <input type="radio" name="status-${item.id}" value="Late" class="w-4 h-4 text-yellow-500 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${item.id}', this.value)">
-                            <span class="text-sm text-yellow-600 font-medium">L</span>
-                        </label>
-                         <label class="cursor-pointer flex items-center space-x-1">
-                            <input type="radio" name="status-${item.id}" value="Leave" class="w-4 h-4 text-purple-500 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${item.id}', this.value)">
-                            <span class="text-sm text-purple-600 font-medium">Lv</span>
-                        </label>
-                    </div>
-                </td>
-                <td class="px-6 py-4">
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Remarks...">
-                </td>
-            `;
-            tableBody.appendChild(tr);
-        });
+        items.forEach(item => tableBody.appendChild(buildRow(item, currentDate)));
+        window._onStaffCheckChange();
     }
 
-    // === Global Actions ===
-    window.markAllStaff = function(status) {
-        const radios = document.querySelectorAll(`input[type="radio"][value="${status}"]`);
-        radios.forEach(r => r.checked = true);
-    };
-
-    window.copyYesterdayStaff = function() {
-        // Placeholder for copying yesterday's attendance
-        alert('Copy Yesterday feature - to be implemented with backend');
-    };
-
+    // ── Save ───────────────────────────────────────────────────────────────
     window.saveStaffAttendance = function(print = false) {
-        // Collect Data
-        // For visual confirmation only
+        const sessions = getSessions();
+        staffData.forEach(item => {
+            const sk = sessionKey(currentDate, item.id);
+            const session = sessions[sk] || {};
+            const remarkEl = document.getElementById(`sremark-${item.id}`);
+            if (remarkEl) session.remark = remarkEl.value;
+            sessions[sk] = session;
+        });
+        saveSessions(sessions);
         const toast = document.getElementById('toast-staff-attendance');
-        if(toast) {
-            toast.classList.remove('hidden');
-            
-            setTimeout(() => {
-                toast.classList.add('hidden');
-                if (print) {
-                    window.print();
-                }
-            }, 2000);
-        }
-    }
+        if (toast) { toast.classList.remove('hidden'); setTimeout(() => { toast.classList.add('hidden'); if (print) window.print(); }, 2000); }
+    };
 
-    // === NFC & Biometric Integration ===
-    let nfcConfig = null;
-    let staffData = [];
+    // ── NFC / SmartScanner ─────────────────────────────────────────────────
+    let staffNfcConfig = { nfc: true, bio: true };
     let isStaffScanning = false;
 
-    function initStaffAttendanceNFC() {
-        const storedConfig = localStorage.getItem('sms_nfc_config');
-        if (storedConfig) {
-            try {
-                const parsed = JSON.parse(storedConfig);
-                staffNfcConfig = parsed.staffAttendance || { nfc: true, bio: true };
-            } catch (e) {
-                staffNfcConfig = { nfc: true, bio: true };
-            }
-        } else {
-            staffNfcConfig = { nfc: true, bio: true };
-        }
-        
-        const nfcBtn = document.getElementById('staff-nfc-btn');
-        
-        if (staffNfcConfig && staffNfcConfig.nfc && nfcBtn) {
-            nfcBtn.classList.remove('hidden');
-            nfcBtn.classList.add('inline-flex');
-        }
-    }
-
-    // Call init on script load
-    initStaffAttendanceNFC();
+    (function initNFC() {
+        try {
+            const raw = localStorage.getItem('sms_nfc_config');
+            staffNfcConfig = raw ? (JSON.parse(raw).staffAttendance || { nfc: true, bio: true }) : { nfc: true, bio: true };
+        } catch(e) {}
+        const btn = document.getElementById('staff-nfc-btn');
+        if (!btn) return;
+        btn.classList.remove('hidden');
+        btn.classList.add('inline-flex');
+        const bothOff = !staffNfcConfig.nfc && !staffNfcConfig.bio;
+        btn.disabled = bothOff;
+        btn.classList.toggle('opacity-50', bothOff);
+        btn.classList.toggle('cursor-not-allowed', bothOff);
+        btn.title = bothOff ? 'NFC & Biometric both disabled in settings' : '';
+    })();
 
     window.startStaffNFC = function() {
         const btn = document.getElementById('staff-nfc-btn');
-        const icon = btn.querySelector('i');
-        
+        if (!btn) return;
         if (isStaffScanning) {
             isStaffScanning = false;
-            btn.classList.remove('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
-            btn.classList.add('bg-primary-100', 'text-primary-700', 'border-primary-200');
-            icon.className = 'fas fa-wifi mr-2';
-            btn.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Attendance';
+            btn.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Card';
+            btn.classList.remove('bg-green-100','text-green-600','border-green-300','animate-pulse');
             if (window.SmartScanner) window.SmartScanner.stop();
             return;
         }
-
         isStaffScanning = true;
-        btn.classList.add('bg-green-100', 'text-green-600', 'border-green-300', 'animate-pulse');
-        btn.classList.remove('bg-primary-100', 'text-primary-700', 'border-primary-200');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Scanning...';
-
+        btn.classList.add('bg-green-100','text-green-600','border-green-300','animate-pulse');
         if (window.SmartScanner) {
             window.SmartScanner.start({
+                requireNFC:       staffNfcConfig.nfc,
                 requireBiometric: staffNfcConfig.bio,
-                onSuccess: (scannedId) => {
-                    handleSuccessfulScan(scannedId);
-                },
-                onFail: (reason) => {
-                    console.error('Scan failed:', reason);
-                }
+                onSuccess: (id)  => handleStaffScan(id),
+                onFail:    ()    => resetBtn()
             });
         }
     };
 
-    async function handleSuccessfulScan(scannedId) {
-        // Ensure container is visible
-        const container = document.getElementById('staff-attendance-container');
-        if (container) container.classList.remove('hidden');
-
-        // Find the staff row
-        let row = document.getElementById(`staff-row-${scannedId}`);
-        
-        // If row doesn't exist, try to load data and create it
-        if (!row) {
-            try {
-                // Fetch staff data if not loaded
-                if (staffData.length === 0) {
-                    while(!window.SchoolDatabase) { await new Promise(r => setTimeout(r, 50)); }
-                    staffData = window.SchoolDatabase.staff || [];
-                }
-                
-                // Find staff
-                const staff = staffData.find(s => s.id === scannedId);
-                if (staff) {
-                    const tableBody = document.getElementById('staff-attendance-table-body');
-                    const tr = document.createElement('tr');
-                    tr.id = `staff-row-${staff.id}`;
-                    tr.className = 'bg-white border-b hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-600 transition-colors';
-                    
-                    tr.innerHTML = `
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${staff.id}</td>
-                        <td class="px-6 py-4">
-                            <img class="w-10 h-10 rounded-full object-cover" src="${staff.photo}" alt="Avatar">
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${staff.name}</td>
-                        <td class="px-6 py-4 text-gray-500 dark:text-gray-400">${staff.subject || 'N/A'}</td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center space-x-3">
-                                <label class="cursor-pointer flex items-center space-x-1">
-                                    <input type="radio" name="status-${staff.id}" value="Present" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${staff.id}', this.value)">
-                                    <span class="text-sm text-green-600 font-medium">P</span>
-                                </label>
-                                 <label class="cursor-pointer flex items-center space-x-1">
-                                    <input type="radio" name="status-${staff.id}" value="Absent" class="w-4 h-4 text-red-600 bg-gray-100 border-gray-300 focus:ring-red-500 dark:focus:ring-red-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${staff.id}', this.value)">
-                                    <span class="text-sm text-red-600 font-medium">A</span>
-                                </label>
-                                 <label class="cursor-pointer flex items-center space-x-1">
-                                    <input type="radio" name="status-${staff.id}" value="Late" class="w-4 h-4 text-yellow-500 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${staff.id}', this.value)">
-                                    <span class="text-sm text-yellow-600 font-medium">L</span>
-                                </label>
-                                 <label class="cursor-pointer flex items-center space-x-1">
-                                    <input type="radio" name="status-${staff.id}" value="Leave" class="w-4 h-4 text-purple-500 bg-gray-100 border-gray-300 focus:ring-purple-500 dark:focus:ring-purple-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onchange="window.updateStaffRowColor('${staff.id}', this.value)">
-                                    <span class="text-sm text-purple-600 font-medium">Lv</span>
-                                </label>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Remarks...">
-                        </td>
-                    `;
-                    // Prepend to top
-                    tableBody.insertBefore(tr, tableBody.firstChild);
-                    row = tr;
-                }
-            } catch (error) {
-                console.error("Error loading staff data", error);
-            }
-        }
-
-        if (row) {
-            // Update the select dropdown (or radio)
-            const radioPresent = row.querySelector(`input[type="radio"][value="Present"]`);
-            const selectDropdown = document.getElementById(`status-staff-${scannedId}`);
-            
-            if (radioPresent) {
-                radioPresent.checked = true;
-                window.updateStaffRowColor(scannedId, 'Present');
-            } else if (selectDropdown) {
-                selectDropdown.value = 'Present';
-                selectDropdown.dispatchEvent(new Event('change'));
-            }
-            
-            // Visual highlight animation
-            row.classList.add('bg-green-50', 'dark:bg-green-900/20');
-            setTimeout(() => {
-                row.classList.remove('bg-green-50', 'dark:bg-green-900/20');
-            }, 1500);
-
-            // Automatically scroll to the row
-            row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            alert(`Staff ID ${scannedId} not found in database.`);
-        }
+    function resetBtn() {
+        isStaffScanning = false;
+        const btn = document.getElementById('staff-nfc-btn');
+        if (btn) { btn.innerHTML = '<i class="fas fa-wifi mr-2"></i> Scan Card'; btn.classList.remove('bg-green-100','text-green-600','border-green-300','animate-pulse'); }
     }
 
-    // Dummy data functions for demo purposes (used when form submitted)
-    window.loadDummyStaffData = function() {
-        staffData = [
-            { id: 'STF001', name: 'Dr. John Doe', dept: 'Science', photo: '👨‍🏫' },
-            { id: 'STF002', name: 'Mrs. Jane Smith', dept: 'Arts', photo: '👩‍🏫' },
-            { id: 'STF003', name: 'Mr. Robert Johnson', dept: 'Mathematics', photo: '👨‍🏫' }
-        ];
-        
-        tableBody.innerHTML = staffData.map(s => `
-            <tr id="staff-row-${s.id}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                <td class="px-6 py-4 font-mono text-xs font-bold">${s.id}</td>
-                <td class="px-6 py-4 text-2xl">${s.photo}</td>
-                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">${s.name}</td>
-                <td class="px-6 py-4 text-gray-600 dark:text-gray-300">${s.dept}</td>
-                <td class="px-6 py-4">
-                    <select id="status-staff-${s.id}" onchange="updateStaffRowColor('${s.id}')" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        <option value="Select">-- Select --</option>
-                        <option value="Present">Present</option>
-                        <option value="Absent">Absent</option>
-                        <option value="Late">Late</option>
-                        <option value="Leave">On Leave</option>
-                    </select>
-                </td>
-                <td class="px-6 py-4">
-                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Optional remark">
-                </td>
-            </tr>
-        `).join('');
-    };
+    async function handleStaffScan(scannedId) {
+        resetBtn();
+        if (container) container.classList.remove('hidden');
 
-    window.updateStaffRowColor = function(id, val) {
-        const select = document.getElementById(`status-staff-${id}`);
-        const row = document.getElementById(`staff-row-${id}`);
-        if (!row) return;
+        if (!staffData.length) {
+            while (!window.SchoolDatabase) await new Promise(r => setTimeout(r, 50));
+            staffData = window.SchoolDatabase.staff || [];
+        }
 
-        // Reset
-        row.classList.remove('bg-green-50', 'bg-red-50', 'bg-yellow-50', 'bg-purple-50', 'dark:bg-green-900/10', 'dark:bg-red-900/10', 'dark:bg-yellow-900/10', 'dark:bg-purple-900/10');
-        
-        let statusValue = val;
-        if (select) statusValue = select.value;
-        
-        if (statusValue === 'Present') row.classList.add('bg-green-50', 'dark:bg-green-900/10');
-        else if (statusValue === 'Absent') row.classList.add('bg-red-50', 'dark:bg-red-900/10');
-        else if (statusValue === 'Late') row.classList.add('bg-yellow-50', 'dark:bg-yellow-900/10');
-        else if (statusValue === 'Leave') row.classList.add('bg-purple-50', 'dark:bg-purple-900/10');
-    };
+        const staff    = staffData.find(s => s.id === scannedId);
+        const schedule = getSchedule();
+        const sessions = getSessions();
+        const sk       = sessionKey(currentDate, scannedId);
+        const now      = new Date().toTimeString().slice(0, 5);
+
+        let session   = sessions[sk] || { timeIn: '', timeOut: '', override: '' };
+        let direction;
+
+        // Clock-out enforces same SmartScanner authentication as clock-in
+        // forcedScanDirection lets the Set As Clock-In/Out buttons force direction
+        if (forcedScanDirection === 'in') {
+            session.timeIn   = now;
+            session.override = '';
+            direction = 'in';
+        } else if (forcedScanDirection === 'out') {
+            session.timeOut  = now;
+            session.override = '';
+            direction = 'out';
+        } else if (!session.timeIn) {
+            session.timeIn = now; session.override = ''; direction = 'in';
+        } else if (!session.timeOut) {
+            session.timeOut = now; session.override = ''; direction = 'out';
+        } else {
+            direction = 'done';
+        }
+        forcedScanDirection = null;
+
+        session.status = computeStatus(session.timeIn, session.timeOut, schedule, '');
+        sessions[sk]   = session;
+        saveSessions(sessions);
+
+        let row = document.getElementById(`staff-row-${scannedId}`);
+        if (!row && staff) {
+            if (!staffData.find(s => s.id === scannedId)) staffData.push(staff);
+            const newRow = buildRow(staff, currentDate);
+            tableBody.insertBefore(newRow, tableBody.firstChild);
+            row = newRow;
+        } else {
+            updateRowDisplay(scannedId, session);
+        }
+
+        showBanner(staff, direction, session, now);
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function showBanner(staff, direction, session, time) {
+        const banner = document.getElementById('staff-scan-banner');
+        if (!banner) return;
+        const config = {
+            in:   { icon: '🟢', label: 'CLOCKED IN',   border: 'border-green-400 bg-green-50 dark:bg-green-900/20 dark:border-green-800' },
+            out:  { icon: '🔵', label: 'CLOCKED OUT',  border: 'border-blue-400 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800' },
+            done: { icon: '⚪', label: 'ALREADY DONE', border: 'border-gray-300 bg-gray-50 dark:bg-gray-700/40 dark:border-gray-600' },
+        };
+        const c    = config[direction] || config.done;
+        const name = staff ? staff.name : `ID: ?`;
+        banner.className = `mb-4 p-4 rounded-2xl border-2 flex items-center gap-4 transition-all ${c.border}`;
+        banner.innerHTML = `
+            <div class="text-3xl">${c.icon}</div>
+            <div class="flex-1">
+                <p class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">${c.label}</p>
+                <p class="text-lg font-black text-gray-900 dark:text-white">${name}</p>
+                <p class="text-sm text-gray-500">${time} &nbsp;·&nbsp; ${statusBadge(session.status || 'Absent')}</p>
+            </div>
+            <div class="text-right text-xs text-gray-400 leading-6">
+                Clock-In: <strong class="text-green-600">${session.timeIn  || '—'}</strong><br>
+                Clock-Out: <strong class="text-blue-600">${session.timeOut || '—'}</strong>
+            </div>`;
+        banner.classList.remove('hidden');
+        setTimeout(() => banner.classList.add('hidden'), 7000);
+    }
 
 })();

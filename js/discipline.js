@@ -280,23 +280,31 @@
             discNfcConfig = { nfc: true, bio: true };
         }
 
-        if (!discNfcConfig.nfc) return; // NFC disabled for this module
+        const bothOff = !discNfcConfig.nfc && !discNfcConfig.bio;
 
         // Show header button (always shown on list page)
         const headerBtn = document.getElementById('discipline-nfc-btn-header');
         if (headerBtn) {
             headerBtn.classList.remove('hidden');
             headerBtn.classList.add('inline-flex');
+            headerBtn.disabled = bothOff;
+            if (bothOff) { headerBtn.classList.add('opacity-50', 'cursor-not-allowed'); headerBtn.title = 'NFC & Biometric both disabled in settings'; }
+            else         { headerBtn.classList.remove('opacity-50', 'cursor-not-allowed'); headerBtn.title = ''; }
         }
 
         // Show inline button on form page
         const nfcBtn      = document.getElementById('discipline-nfc-btn');
         const studentInput = document.getElementById('incident-student');
-        if (nfcBtn && studentInput) {
+        if (nfcBtn) {
             nfcBtn.classList.remove('hidden');
             nfcBtn.classList.add('flex');
-            studentInput.classList.remove('rounded-lg');
-            studentInput.classList.add('rounded-l-lg', 'rounded-r-none');
+            nfcBtn.disabled = bothOff;
+            if (bothOff) { nfcBtn.classList.add('opacity-50', 'cursor-not-allowed'); nfcBtn.title = 'NFC & Biometric both disabled in settings'; }
+            else         { nfcBtn.classList.remove('opacity-50', 'cursor-not-allowed'); nfcBtn.title = ''; }
+            if (studentInput) {
+                studentInput.classList.remove('rounded-lg');
+                studentInput.classList.add('rounded-l-lg', 'rounded-r-none');
+            }
         }
     }
 
@@ -317,6 +325,7 @@
         if (btn) { btn.classList.add('animate-pulse'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...'; }
 
         window.SmartScanner.start({
+            requireNFC: discNfcConfig.nfc,
             requireBiometric: discNfcConfig.bio,
             onSuccess: (scannedId) => {
                 isDiscScanning = false;
@@ -358,6 +367,7 @@
         if (btn) { btn.classList.add('animate-pulse'); btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Wait'; }
 
         window.SmartScanner.start({
+            requireNFC: discNfcConfig.nfc,
             requireBiometric: discNfcConfig.bio,
             onSuccess: (scannedId) => {
                 isDiscScanning = false;

@@ -1,46 +1,141 @@
-<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+<!-- Page Header -->
+<div class="p-4 sm:p-6 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
         <nav class="flex mb-5" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
-                <li class="inline-flex items-center">
-                    <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">Home</a>
-                </li>
-                <li>
-                     <span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Hostel Management</span>
-                </li>
-                <li>
-                     <span class="ml-1 text-gray-500 md:ml-2 dark:text-gray-400">Attendance</span>
-                </li>
+                <li><a href="#" onclick="loadDashboardHome()" class="text-gray-700 hover:text-primary-600 dark:text-gray-300">Home</a></li>
+                <li><span class="ml-1 text-gray-700 md:ml-2 dark:text-gray-300">Hostel Management</span></li>
+                <li><span class="ml-1 text-gray-500 md:ml-2 dark:text-gray-400">Attendance</span></li>
             </ol>
         </nav>
-        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Hostel Attendance</h1>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">Hostel Attendance</h1>
+            <button id="hostel-nfc-btn" onclick="window.startHostelNFC()"
+                class="hidden items-center gap-2 px-4 py-2.5 text-sm font-bold rounded-xl border-2 border-primary-200 bg-primary-100 text-primary-700 hover:bg-primary-200 transition-all dark:bg-primary-900/30 dark:border-primary-800 dark:text-primary-300">
+                <i class="fas fa-wifi"></i> Scan Attendance
+            </button>
+        </div>
     </div>
 </div>
 
-<div class="p-4">
-    <!-- Filter -->
-    <div class="flex flex-wrap gap-4 mb-6">
-        <input type="date" id="att-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        <button onclick="alert('Load for date')" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700">Load Attendance</button>
+<div class="p-4 sm:p-6 space-y-4">
+
+    <!-- Scan Banner -->
+    <div id="hostel-att-scan-banner" class="hidden"></div>
+
+    <!-- Filter Row -->
+    <form id="hostel-att-filter-form" class="flex flex-wrap gap-3 items-end bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4 shadow-sm">
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-semibold text-gray-500 dark:text-gray-400">Date</label>
+            <input type="date" id="hostel-att-date"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        </div>
+        <div class="flex flex-col gap-1">
+            <label class="text-xs font-semibold text-gray-500 dark:text-gray-400">Hostel</label>
+            <select id="hostel-att-hostel"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="">All Hostels</option>
+            </select>
+        </div>
+        <button type="submit"
+            class="px-5 py-2.5 text-sm font-bold text-white bg-primary-700 hover:bg-primary-800 rounded-lg transition-all">
+            <i class="fas fa-search mr-1"></i> Load Attendance
+        </button>
+    </form>
+
+    <!-- Selection bar -->
+    <div id="hostel-selection-bar" class="hidden px-4 py-2.5 bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-xl flex items-center gap-3">
+        <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">
+            <span id="hostel-selected-count">0</span> row(s) selected
+        </span>
+        <span class="text-gray-300">|</span>
+        <button onclick="window.selectAllHostel(true)" class="text-xs text-primary-600 hover:underline">Select All</button>
+        <button onclick="window.selectAllHostel(false)" class="text-xs text-gray-500 hover:underline">Deselect All</button>
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <!-- Quick Actions (work on selected rows) -->
+    <div class="flex flex-wrap gap-2">
+        <button onclick="window.setAsHostelCheckIn()"
+            class="px-3 py-2 text-xs font-bold text-green-700 bg-green-100 rounded-lg hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300" title="Starts scanner, forces Check-In direction">
+            <i class="fas fa-sign-in-alt mr-1"></i> Set As Check-In Now
+        </button>
+        <button onclick="window.setAsHostelCheckOut()"
+            class="px-3 py-2 text-xs font-bold text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300" title="Starts scanner, forces Check-Out direction">
+            <i class="fas fa-sign-out-alt mr-1"></i> Set As Check-Out Now
+        </button>
+        <button onclick="window.markHostelAs('Absent')"
+            class="px-3 py-2 text-xs font-bold text-red-700 bg-red-100 rounded-lg hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300" title="Mark selected rows as Absent (no scan required)">
+            <i class="fas fa-times-circle mr-1"></i> Mark As Absent
+        </button>
+        <button onclick="window.markHostelAs('Leave')"
+            class="px-3 py-2 text-xs font-bold text-purple-700 bg-purple-100 rounded-lg hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300" title="Mark selected rows as Leave (no scan required)">
+            <i class="fas fa-umbrella-beach mr-1"></i> Mark As Leave
+        </button>
+        <button onclick="window.resetTodayHostelAttendance()"
+            class="px-3 py-2 text-xs font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400" title="Clear all hostel attendance for the selected date">
+            <i class="fas fa-trash-alt mr-1"></i> Reset Day
+        </button>
+    </div>
+
+    <!-- No-selection notice -->
+    <div id="hostel-no-selection-notice" class="hidden px-4 py-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-sm text-amber-700 dark:text-amber-300">
+        <i class="fas fa-exclamation-circle mr-1"></i> Please select at least one row to perform this action.
+    </div>
+
+    <!-- Attendance Table -->
+    <div id="hostel-att-container" class="bg-white border border-gray-200 rounded-2xl shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden">
         <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">Student Name</th>
-                        <th scope="col" class="px-6 py-3">Room</th>
-                        <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Time In</th>
-                        <th scope="col" class="px-6 py-3">Time Out</th>
-                         <th scope="col" class="px-6 py-3">Notes</th>
+                        <th class="px-4 py-3 w-10">
+                            <input type="checkbox" id="select-all-hostel" class="w-4 h-4 text-primary-600 rounded cursor-pointer"
+                                onchange="window.selectAllHostel(this.checked)">
+                        </th>
+                        <th class="px-4 py-3">Student</th>
+                        <th class="px-4 py-3">Room</th>
+                        <th class="px-4 py-3">Hostel</th>
+                        <th class="px-4 py-3 text-center text-green-600">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Check-In
+                        </th>
+                        <th class="px-4 py-3 text-center text-blue-600">
+                            <i class="fas fa-sign-out-alt mr-1"></i> Check-Out
+                        </th>
+                        <th class="px-4 py-3 text-center">Status</th>
+                        <th class="px-4 py-3">Notes</th>
                     </tr>
                 </thead>
                 <tbody id="hostel-att-table-body">
-                    <!-- JS Populated -->
+                    <tr>
+                        <td colspan="8" class="px-6 py-10 text-center text-gray-400">
+                            <i class="fas fa-house-user text-3xl opacity-20 block mb-2"></i>
+                            Select a date and load attendance to begin.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Save Row -->
+    <div class="flex justify-end gap-3">
+        <button onclick="window.saveHostelAttendance()"
+            class="px-6 py-2.5 text-sm font-bold text-white bg-primary-700 hover:bg-primary-800 rounded-xl transition-all dark:bg-primary-600 dark:hover:bg-primary-700">
+            <i class="fas fa-save mr-2"></i> Save Attendance
+        </button>
+    </div>
+
 </div>
+
+<!-- Toast -->
+<div id="toast-hostel-att" class="hidden fixed bottom-5 right-5 z-50 flex items-center p-4 w-full max-w-xs text-gray-500 bg-white rounded-2xl shadow-xl dark:text-gray-400 dark:bg-gray-800 border border-gray-200 dark:border-gray-700" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-xl">
+        <i class="fas fa-check"></i>
+    </div>
+    <div class="ml-3 text-sm font-normal">Hostel attendance saved!</div>
+</div>
+
+<!-- Load trigger -->
+<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+     style="display:none" width="0" height="0"
+     onload="if(typeof window.initHostelAttNFC==='function') window.initHostelAttNFC();" alt="">
