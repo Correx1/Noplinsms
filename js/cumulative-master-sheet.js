@@ -16,6 +16,24 @@
         return { g: 'F9', r: 'Fail', c: 'text-red-600 dark:text-red-400' };
     }
 
+    // Tally function to count grades
+    function calculateGradeTally(cumulativeScores) {
+        const counts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+        cumulativeScores.forEach(sc => {
+            const gStr = grade(sc).g;
+            const letter = gStr.charAt(0);
+            if (counts[letter] !== undefined) counts[letter]++;
+        });
+        const parts = [];
+        if(counts.A) parts.push(`${counts.A}A`);
+        if(counts.B) parts.push(`${counts.B}B`);
+        if(counts.C) parts.push(`${counts.C}C`);
+        if(counts.D) parts.push(`${counts.D}D`);
+        if(counts.E) parts.push(`${counts.E}E`);
+        if(counts.F) parts.push(`${counts.F}F`);
+        return parts.join(', ') || '-';
+    }
+
     // Engine constructs the comprehensive 3-Term mapping
     function buildSheet(cls, sessionStr) {
         let students = JSON.parse(localStorage.getItem('sms_students') || '[]');
@@ -31,6 +49,17 @@
                 admissionNo: 'ADM' + String(1000 + i)
             }));
         }
+
+        // Fetch Global Promotion Setting
+        let promotionSettings = { minAvg: 45 };
+        try {
+            const settingsRaw = localStorage.getItem('globalResultSettings');
+            if (settingsRaw) {
+                const settings = JSON.parse(settingsRaw);
+                if (settings.promotion) promotionSettings = settings.promotion;
+            }
+        } catch(e) {}
+        const passMark = parseFloat(promotionSettings.minAvg) || 45;
 
         // Generate 3 sets of Term scores per subject per student
         return students.slice(0, 40).map(s => {
@@ -57,12 +86,18 @@
             });
 
             const avgCum = Math.round((totalCumScore / totalCumulativePoints) * 100);
+            const cumulativeScoresArray = subjectsAggregates.map(sg => sg.cum);
+            const tally = calculateGradeTally(cumulativeScoresArray);
+            
             return { 
                 ...s, 
                 subs: subjectsAggregates, 
                 grandCum: totalCumScore, 
                 avgCum: avgCum, 
-                grade: grade(avgCum) 
+                grade: grade(avgCum),
+                tally: tally,
+                subjectsOffered: SUBJECTS.length,
+                promotion: avgCum >= passMark ? 'PROMOTED' : 'REPEATED'
             };
         });
     }
@@ -150,16 +185,22 @@
                     `;
                 }).join('');
 
+                const promoColor = s.promotion === 'PROMOTED' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400';
+
                 return `<tr class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors">
                     <td class="px-3 py-2 text-xs font-bold ${posClass} text-center border-r-2 border-primary-500 bg-white dark:bg-gray-800 sticky left-0 z-10">${pos}</td>
-                    <td class="px-3 py-2 text-xs font-bold text-gray-900 dark:text-white whitespace-nowrap border-r-2 border-primary-500 bg-white dark:bg-gray-800 sticky left-[42px] z-10">${s.name}</td>
+                    <td class="px-3 py-2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap border-r-2 border-primary-500 bg-white dark:bg-gray-800 sticky left-[42px] z-10">${s.admissionNo || s.id}</td>
+                    <td class="px-3 py-2 text-xs font-bold text-gray-900 dark:text-white whitespace-nowrap border-r-2 border-primary-500 bg-white dark:bg-gray-800 sticky left-[122px] z-10">${s.name}</td>
                     
                     ${subjectScoresHtml}
                     
-                    <td class="px-3 py-2 text-center text-[14px] font-black text-gray-900 dark:text-white border-l-2 border-primary-500">${s.grandCum}</td>
+                    <td class="px-3 py-2 text-center text-[13px] font-bold text-gray-600 dark:text-gray-400 border-l-2 border-r dark:border-gray-700">${s.subjectsOffered}</td>
+                    <td class="px-3 py-2 text-center text-[14px] font-black text-gray-900 dark:text-white border-r dark:border-gray-700">${s.grandCum}</td>
                     <td class="px-3 py-2 text-center text-[14px] font-black ${s.grade.c} border-r dark:border-gray-700 shadow-sm">${s.avgCum}%</td>
-                    <td class="px-3 py-2 text-center text-xs font-bold ${s.grade.c}">${s.grade.g}</td>
-                    <td class="px-3 py-2 text-center text-xs font-medium">${s.grade.r}</td>
+                    <td class="px-3 py-2 text-center text-xs font-bold ${s.grade.c} border-r dark:border-gray-700">${s.grade.g}</td>
+                    <td class="px-3 py-2 text-center text-[11px] font-bold text-gray-600 dark:text-gray-400 border-r dark:border-gray-700 whitespace-nowrap">${s.tally}</td>
+                    <td class="px-3 py-2 text-center text-xs font-medium border-r dark:border-gray-700">${s.grade.r}</td>
+                    <td class="px-3 py-2 text-center text-[11px] font-black uppercase ${promoColor} whitespace-nowrap shadow-sm">${s.promotion}</td>
                 </tr>`;
             }).join('');
 
@@ -169,12 +210,16 @@
                         <thead class="text-xs uppercase bg-primary-700 text-white">
                             <tr>
                                 <th rowspan="2" class="px-3 py-3 text-center border-r-2 border-primary-500 bg-primary-700 sticky left-0 z-20 w-10 shadow-sm">Pos</th>
-                                <th rowspan="2" class="px-3 py-3 whitespace-nowrap border-r-2 border-primary-500 bg-primary-700 sticky left-[42px] z-20 shadow-sm">Student Name</th>
+                                <th rowspan="2" class="px-3 py-3 whitespace-nowrap border-r-2 border-primary-500 bg-primary-700 sticky left-[42px] z-20 shadow-sm w-20">Adm No</th>
+                                <th rowspan="2" class="px-3 py-3 whitespace-nowrap border-r-2 border-primary-500 bg-primary-700 sticky left-[122px] z-20 shadow-sm">Student Name</th>
                                 ${groupedHeaders}
-                                <th rowspan="2" class="px-3 py-3 text-center border-l-2 border-primary-500 shadow-sm">Total<br>Cum</th>
+                                <th rowspan="2" class="px-3 py-3 text-center border-l-2 border-r border-primary-500 shadow-sm">Subs</th>
+                                <th rowspan="2" class="px-3 py-3 text-center border-r border-primary-600 shadow-sm">Total<br>Cum</th>
                                 <th rowspan="2" class="px-3 py-3 text-center border-r border-primary-600 shadow-sm">Avg<br>%</th>
-                                <th rowspan="2" class="px-3 py-3 text-center shadow-sm">Grade</th>
-                                <th rowspan="2" class="px-3 py-3 whitespace-nowrap shadow-sm">Remark</th>
+                                <th rowspan="2" class="px-3 py-3 text-center border-r border-primary-600 shadow-sm">Grade</th>
+                                <th rowspan="2" class="px-3 py-3 text-center border-r border-primary-600 shadow-sm">Tally</th>
+                                <th rowspan="2" class="px-3 py-3 whitespace-nowrap border-r border-primary-600 shadow-sm">Remark</th>
+                                <th rowspan="2" class="px-3 py-3 text-center shadow-sm whitespace-nowrap">Promotion</th>
                             </tr>
                             <tr class="whitespace-nowrap">
                                 ${subHeaders}
@@ -194,28 +239,28 @@
             const session = document.getElementById('cms-term')?.value   || 'All';
 
             // Row 1: group headers — subject name then 3 blank cells (mirrors colspan="4" on screen)
-            const groupRow1 = ['Pos', 'Student Name'];
+            const groupRow1 = ['Pos', 'Adm No', 'Student Name'];
             SUBJECTS.forEach(sub => {
                 groupRow1.push(`"${sub}"`, '', '', '');   // subject + 3 empty = 4 cols
             });
-            groupRow1.push('Total Cum', 'Avg %', 'Grade', 'Remark');
+            groupRow1.push('Subs Offered', 'Total Cum', 'Avg %', 'Grade', 'Grade Tally', 'Remark', 'Promotion Status');
 
             // Row 2: sub-column headers
-            const groupRow2 = ['', ''];
+            const groupRow2 = ['', '', ''];
             SUBJECTS.forEach(() => {
                 groupRow2.push('T1', 'T2', 'T3', 'CUM');
             });
-            groupRow2.push('', '', '', '');
+            groupRow2.push('', '', '', '', '', '', '');
 
             // Data rows — CUM shows "score (grade)", T1/T2/T3 show plain score
             const rows = _filtered.map((s, i) => {
-                const row = [i + 1, `"${s.name}"`];
+                const row = [i + 1, `"${s.admissionNo || s.id}"`, `"${s.name}"`];
                 s.subs.forEach(sg => {
                     const g = grade(sg.cum);
                     row.push(sg.t1, sg.t2, sg.t3, `"${sg.cum} (${g.g})"`);
                 });
                 const ag = grade(s.avgCum);
-                row.push(s.grandCum, `${s.avgCum}%`, ag.g, ag.r);
+                row.push(s.subjectsOffered, s.grandCum, `${s.avgCum}%`, ag.g, `"${s.tally}"`, ag.r, s.promotion);
                 return row;
             });
 
@@ -235,8 +280,8 @@
             const session = document.getElementById('cms-term')?.value  || '2024/2025';
             const label   = `${cls} — Cumulative Session: ${session}`;
 
-            const thStyle = 'border:1px solid #ccc;padding:5px 4px;font-size:10px;background:#1e429f;color:#fff;text-align:center;';
-            const thCumStyle = 'border:1px solid #ccc;padding:5px 4px;font-size:10px;background:#1e3a8a;color:#fff;text-align:center;font-weight:900;';
+            const thStyle = 'border:1px solid #ccc;padding:5px 2px;font-size:9px;background:#1e429f;color:#fff;text-align:center;';
+            const thCumStyle = 'border:1px solid #ccc;padding:5px 2px;font-size:9px;background:#1e3a8a;color:#fff;text-align:center;font-weight:900;';
 
             // Group headers (one per subject, spanning 4 sub-cols)
             const groupThs = SUBJECTS.map(s =>
@@ -251,39 +296,50 @@
             const bodyRows = _filtered.map((s, idx) => {
                 const g = grade(s.avgCum);
                 const color = s.avgCum >= 70 ? '#15803d' : s.avgCum >= 50 ? '#1d4ed8' : s.avgCum >= 45 ? '#ca8a04' : '#dc2626';
+                const promoColor = s.promotion === 'PROMOTED' ? '#15803d' : '#dc2626';
+
                 const subCells = s.subs.map(sg => {
                     const cg = grade(sg.cum);
                     const cc = sg.cum >= 70 ? '#15803d' : sg.cum >= 50 ? '#1d4ed8' : sg.cum >= 45 ? '#ca8a04' : '#dc2626';
-                    return `<td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t1}</td>
-                            <td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t2}</td>
-                            <td style="border:1px solid #eee;padding:4px;text-align:center;font-size:10px;">${sg.t3}</td>
-                            <td style="border:2px solid #1e429f;padding:4px;text-align:center;font-size:11px;font-weight:900;color:${cc};">${sg.cum}</td>`;
+                    return `<td style="border:1px solid #eee;padding:4px 2px;text-align:center;font-size:9px;">${sg.t1}</td>
+                            <td style="border:1px solid #eee;padding:4px 2px;text-align:center;font-size:9px;">${sg.t2}</td>
+                            <td style="border:1px solid #eee;padding:4px 2px;text-align:center;font-size:9px;">${sg.t3}</td>
+                            <td style="border:2px solid #1e429f;padding:4px 2px;text-align:center;font-size:10px;font-weight:900;color:${cc};">${sg.cum}</td>`;
                 }).join('');
+
                 return `<tr style="background:${idx%2===0?'#fff':'#f9fafb'}">
-                    <td style="border:1px solid #ccc;padding:4px 6px;text-align:center;font-size:11px;font-weight:700;">${idx+1}</td>
-                    <td style="border:1px solid #ccc;padding:4px 8px;font-size:11px;font-weight:600;white-space:nowrap;">${s.name}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-size:10px;font-weight:700;">${idx+1}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-size:9px;color:#555;">${s.admissionNo||s.id}</td>
+                    <td style="border:1px solid #ccc;padding:4px 4px;font-size:10px;font-weight:600;white-space:nowrap;">${s.name}</td>
                     ${subCells}
-                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:800;font-size:12px;">${s.grandCum}</td>
-                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:700;color:${color};font-size:12px;">${s.avgCum}%</td>
-                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-weight:700;color:${color};font-size:11px;">${g.g}</td>
-                    <td style="border:1px solid #ccc;padding:4px;text-align:center;font-size:11px;">${g.r}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-weight:700;font-size:10px;">${s.subjectsOffered}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-weight:800;font-size:11px;">${s.grandCum}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-weight:700;color:${color};font-size:11px;">${s.avgCum}%</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-weight:700;color:${color};font-size:10px;">${g.g}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-weight:600;font-size:9px;white-space:nowrap;">${s.tally}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-size:10px;">${g.r}</td>
+                    <td style="border:1px solid #ccc;padding:4px 2px;text-align:center;font-size:10px;font-weight:900;color:${promoColor};">${s.promotion}</td>
                 </tr>`;
             }).join('');
 
             const html = `<!DOCTYPE html><html><head><title>${label}</title>
-                <style>body{font-family:Arial,sans-serif;margin:12px;}h2{font-size:14px;margin-bottom:6px;}table{border-collapse:collapse;width:100%;font-size:10px;}@media print{@page{size:landscape;}}</style>
+                <style>body{font-family:Arial,sans-serif;margin:10px;}h2{font-size:14px;margin-bottom:6px;}table{border-collapse:collapse;width:100%;font-size:9px;}@media print{@page{size:landscape;margin:8mm;}}</style>
             </head><body>
                 <h2>${label}</h2>
                 <table>
                     <thead>
                         <tr>
                             <th rowspan="2" style="${thStyle}">Pos</th>
+                            <th rowspan="2" style="${thStyle}">Adm No</th>
                             <th rowspan="2" style="${thStyle}">Student Name</th>
                             ${groupThs}
+                            <th rowspan="2" style="${thStyle}">Subs</th>
                             <th rowspan="2" style="${thStyle}">Total Cum</th>
                             <th rowspan="2" style="${thStyle}">Avg%</th>
                             <th rowspan="2" style="${thStyle}">Grade</th>
+                            <th rowspan="2" style="${thStyle}">Tally</th>
                             <th rowspan="2" style="${thStyle}">Remark</th>
+                            <th rowspan="2" style="${thStyle}">Promotion</th>
                         </tr>
                         <tr>${subThs}</tr>
                     </thead>

@@ -1,13 +1,13 @@
 <!-- Result Sheet Settings -->
 <div class="p-3 sm:p-5 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
     <div class="w-full mb-1">
-        <h1 class="text-lg font-semibold text-gray-900 sm:text-2xl dark:text-white">Result Sheet Global Settings</h1>
-        <p class="text-xs sm:text-sm text-gray-500 mt-1 dark:text-gray-400">Configure global configurations, signatures, and Affective Domains for all Report Cards.</p>
+        <h1 class="text-lg font-semibold text-gray-900 sm:text-2xl dark:text-white">Result Sheet Engine Configurations</h1>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1 dark:text-gray-400">Configure global rules, toggles, signatures, and domains for all Report Cards.</p>
     </div>
 </div>
 
 <div class="p-3 sm:p-5">
-    <form id="resultSettingsForm" class="max-w-5xl mx-auto space-y-8">
+    <form id="resultSettingsForm" class="max-w-6xl mx-auto space-y-8">
         
         <!-- SECTION: Configuration & Dates -->
         <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -25,19 +25,20 @@
                         <option value="2027/2028">2027/2028</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Next Term/Session Resumption Date</label>
-                    <input type="text" id="rs-resumption" placeholder="e.g. 9th September, 2024" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400">
+                <div class="md:col-span-2">
+                    <p class="text-xs text-primary-600 mb-2 font-medium bg-primary-50 p-2 rounded border border-primary-100">
+                        <i class="fas fa-info-circle mr-1"></i> School Days Opened, Closing Date, and Next Resumption Date are now pulled automatically from your Active Term in Academic Configuration.
+                    </p>
                 </div>
                 <!-- Unified Template Selection -->
-                <div class="md:col-span-2">
+                <div class="md:col-span-2 mt-2">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Active Result Sheet Template <span class="text-[11px] sm:text-xs text-primary-600 block sm:inline mt-0.5 sm:mt-0 sm:ml-1">(Applies to termly and annual)</span></label>
                         <button type="button" onclick="previewSelectedTemplate()" class="w-full sm:w-auto justify-center text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-xs px-3 py-2 sm:py-1.5 shadow-sm transition-colors flex items-center">
                             <i class="fas fa-eye mr-2"></i> Preview Template
                         </button>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                         <label class="cursor-pointer border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-primary-50 dark:hover:bg-gray-700 transition flex flex-col items-center gap-2">
                             <input type="radio" name="rs-template-sel" value="classic" class="w-4 h-4 text-primary-600" checked>
                             <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Classic Style</span>
@@ -63,6 +64,89 @@
             </div>
         </div>
 
+        <!-- SECTION: Feature Toggles Button (Drawer Trigger) -->
+        <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-toggle-on text-primary-600 mr-2"></i> Customise Result Sections
+                </h2>
+                <p class="text-sm text-gray-500 mt-1 dark:text-gray-400">Turn features on or off to build your ideal report card layout.</p>
+            </div>
+            <button class="w-full sm:w-auto text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" type="button" data-drawer-target="drawer-master-toggles" data-drawer-show="drawer-master-toggles" data-drawer-placement="right" aria-controls="drawer-master-toggles">
+                <i class="fas fa-sliders-h mr-2"></i> Manage Master Toggles
+            </button>
+        </div>
+
+        <!-- SECTION: Dynamic Settings Container (Revealed by Toggles) -->
+        <div id="dynamic-settings-container" class="space-y-8">
+            
+            <!-- Report Card Notice -->
+            <div id="rs-section-notice" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-bullhorn text-primary-600 mr-2"></i> Report Card Notice
+                </h2>
+                <p class="text-sm text-gray-500 mb-2 dark:text-gray-400">Type a custom message that will appear on every student's report card for this term.</p>
+                <textarea id="rs-custom-notice" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="e.g. Resumption date for Second Term is 13th January, 2025. All students must report with their school fees receipt."></textarea>
+            </div>
+
+            <!-- Pass / Fail Rules -->
+            <div id="rs-section-passfail" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-check-circle text-primary-600 mr-2"></i> Term Pass/Fail Rules
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Minimum Average Percentage (%)</label>
+                        <input type="number" id="rs-pass-min-avg" placeholder="e.g. 40" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotion Rules -->
+            <div id="rs-section-promotion" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
+                    <i class="fas fa-level-up-alt text-primary-600 mr-2"></i> Annual Promotion Rules (Third Term)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Minimum Session Cumulative Average (%)</label>
+                        <input type="number" id="rs-prom-min-avg" placeholder="e.g. 45" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affective Domains -->
+            <div id="rs-section-affective" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                        <i class="fas fa-list-ul text-primary-600 mr-2"></i> Affective Domains Setup
+                    </h2>
+                    <button type="button" onclick="addNewDomainField()" class="w-full sm:w-auto justify-center bg-primary-100 text-primary-700 hover:bg-primary-200 font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Domain
+                    </button>
+                </div>
+                <div id="domains-container" class="space-y-3 max-w-2xl">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+
+            <!-- Psychomotor Domains -->
+            <div id="rs-section-psychomotor" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b pb-2 dark:border-gray-700">
+                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
+                        <i class="fas fa-running text-primary-600 mr-2"></i> Psychomotor Domains Setup
+                    </h2>
+                    <button type="button" onclick="addNewPsychomotorDomainField()" class="w-full sm:w-auto justify-center bg-primary-100 text-primary-700 hover:bg-primary-200 font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center">
+                        <i class="fas fa-plus mr-1"></i> Add Domain
+                    </button>
+                </div>
+                <div id="psychomotor-domains-container" class="space-y-3 max-w-2xl">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+            
+        </div>
+
         <!-- SECTION: Signatories -->
         <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
@@ -71,7 +155,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
                 <div class="space-y-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                    <h3 class="font-bold text-gray-900 dark:text-white border-b pb-1 dark:border-gray-600 text-lg">Signatory 1</h3>
+                    <h3 class="font-bold text-gray-900 dark:text-white border-b pb-1 dark:border-gray-600 text-lg">Signatory 1 (e.g., Head Teacher)</h3>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Signatory Title</label>
                         <input type="text" id="rs-headteacher-title" placeholder="e.g. Head Teacher" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:text-white mb-2">
@@ -88,7 +172,7 @@
                 </div>
 
                 <div class="space-y-4 p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                    <h3 class="font-bold text-gray-900 dark:text-white border-b pb-1 dark:border-gray-600 text-lg">Signatory 2</h3>
+                    <h3 class="font-bold text-gray-900 dark:text-white border-b pb-1 dark:border-gray-600 text-lg">Signatory 2 (e.g., Principal)</h3>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Signatory Title</label>
                         <input type="text" id="rs-principal-title" placeholder="e.g. Principal / Director" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-500 dark:text-white mb-2">
@@ -105,92 +189,32 @@
                 </div>
 
             </div>
-            <p class="text-xs text-gray-500 mt-4 dark:text-gray-400 italic">Images are automatically scaled to fit the PDF signature line cleanly.</p>
-        </div>
-
-        <!-- SECTION: Affective Domains Matrix Setup -->
-        <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b pb-2 dark:border-gray-700">
-                <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-list-ul text-primary-600 mr-2"></i> Affective & Psychomotor Domains Setup
-                </h2>
-                <button type="button" onclick="addNewDomainField()" class="w-full sm:w-auto justify-center bg-primary-100 text-primary-700 hover:bg-primary-200 font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center">
-                    <i class="fas fa-plus mr-1"></i> Add Domain
-                </button>
-            </div>
-            
-            <p class="text-sm text-gray-500 mb-4 dark:text-gray-400">Define the psychological and behavioral parameters graded on a 1-5 scale.</p>
-            
-            <div id="domains-container" class="space-y-3 max-w-2xl">
-                <!-- Dynamically populated via JS -->
-            </div>
-        </div>
-
-        <!-- SECTION: Dynamic Settings Container -->
-        <div id="dynamic-settings-container" class="space-y-8">
-            <!-- SECTION: Psychomotor Domains Setup (Hidden by default) -->
-            <div id="psychomotor-domains-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b pb-2 dark:border-gray-700">
-                    <h2 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                        <i class="fas fa-running text-primary-600 mr-2"></i> Psychomotor Domains Setup
-                    </h2>
-                    <button type="button" onclick="addNewPsychomotorDomainField()" class="w-full sm:w-auto justify-center bg-primary-100 text-primary-700 hover:bg-primary-200 font-medium rounded-lg text-sm px-4 py-2 transition-colors flex items-center">
-                        <i class="fas fa-plus mr-1"></i> Add Domain
-                    </button>
-                </div>
-                
-                <p class="text-sm text-gray-500 mb-4 dark:text-gray-400">Define the physical skills and abilities graded on a 1-5 scale.</p>
-                
-                <div id="psychomotor-domains-container" class="space-y-3 max-w-2xl">
-                    <!-- Dynamically populated via JS -->
-                </div>
-            </div>
-
-            <!-- SECTION: School Bills Settings (Hidden by default) -->
-            <div id="school-bills-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-money-bill text-primary-600 mr-2"></i> Global School Bills Setup
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tuition Fee (₦)</label>
-                        <input type="number" id="rs-bill-tuition" placeholder="e.g. 50000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Equipment/Maintenance (₦)</label>
-                        <input type="number" id="rs-bill-equipment" placeholder="e.g. 5000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Library Fee (₦)</label>
-                        <input type="number" id="rs-bill-library" placeholder="e.g. 2000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sports/PTA Fee (₦)</label>
-                        <input type="number" id="rs-bill-sports" placeholder="e.g. 3000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTION: Attendance Configuration (Hidden by default) -->
-            <div id="attendance-config-section" class="hidden bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 class="text-base sm:text-lg font-bold mb-4 border-b pb-2 dark:border-gray-700 text-gray-900 dark:text-white flex items-center">
-                    <i class="fas fa-clipboard-check text-primary-600 mr-2"></i> Term/Session Attendance Setup
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Global Times Opened (School Days)</label>
-                        <input type="number" id="rs-times-opened" placeholder="e.g. 110" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Closing Date</label>
-                        <input type="text" id="rs-closing-date" placeholder="e.g. 25th July, 2024" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="text-right pb-10">
             <button type="submit" class="w-full sm:w-auto bg-primary-700 hover:bg-primary-800 text-white font-bold px-6 py-3 sm:px-10 rounded-lg text-sm transition-colors shadow-lg shadow-primary-500/30">Save All Configurations</button>
+        </div>
+
+        <!-- Master Toggles Drawer -->
+        <div id="drawer-master-toggles" class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-full sm:w-96 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700" tabindex="-1" aria-labelledby="drawer-master-toggles-label">
+            <h5 id="drawer-master-toggles-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-900 dark:text-gray-300">
+                <i class="fas fa-toggle-on text-primary-600 mr-2"></i> Master Toggles
+            </h5>
+            <button type="button" data-drawer-hide="drawer-master-toggles" aria-controls="drawer-master-toggles" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+               </svg>
+               <span class="sr-only">Close menu</span>
+            </button>
+            <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Toggle sections on or off to adjust the display fields on the result sheets.</p>
+            
+            <div class="flex flex-col gap-4" id="rs-master-toggles">
+                <!-- Dynamically populated by JS to keep HTML clean -->
+            </div>
+            
+            <div class="mt-8 pb-10">
+                <button type="button" data-drawer-hide="drawer-master-toggles" class="w-full bg-gray-100 text-gray-900 hover:bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">Close</button>
+            </div>
         </div>
     </form>
 </div>
@@ -216,4 +240,3 @@
             </div>
         </div>
     </div>
-

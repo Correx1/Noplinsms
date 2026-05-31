@@ -14,8 +14,25 @@ window.buildPrintPayload = function(rec, opts) {
     const themeRaw = localStorage.getItem('sms_theme_settings');
     const theme    = themeRaw ? JSON.parse(themeRaw) : {};
 
-    const promoteRule = parseInt(localStorage.getItem('sms_promotion_rule') || 50);
-    const isPromoted  = parseFloat(rec.average) >= promoteRule;
+    const passMin = parseFloat(settings.passFail?.minAvg || 40);
+    const promMin = parseFloat(settings.promotion?.minAvg || 45);
+    const avg = parseFloat(rec.average || 0);
+    
+    const isPromoted  = avg >= promMin;
+    const isPassedTerm = avg >= passMin;
+
+    // Fetch active term configuration
+    const academicConfigRaw = localStorage.getItem('sms_academic_config');
+    let activeTerm = null;
+    if(academicConfigRaw) {
+        try {
+            const acConfig = JSON.parse(academicConfigRaw);
+            if(acConfig.terms && acConfig.terms.length > 0) {
+                // Find active term or use the first one
+                activeTerm = acConfig.terms.find(t => t.status === 'Active') || acConfig.terms[0];
+            }
+        } catch(e) {}
+    }
 
     return {
         // School Branding
@@ -52,17 +69,23 @@ window.buildPrintPayload = function(rec, opts) {
 
         // Attendance
         attendance: {
-            timesOpened:  settings.schoolOpened || rec.attendance?.timesOpened  || '',
+            timesOpened:  (activeTerm ? activeTerm.daysOpened : null) || settings.schoolOpened || rec.attendance?.timesOpened  || '',
             timesPresent: rec.attendance?.present || rec.attendance?.timesPresent || '',
             timesAbsent:  rec.attendance?.absent  || rec.attendance?.timesAbsent  || ''
         },
 
         // Dates
         dates: {
-            closingDate:    settings.closingDate    || '',
-            resumptionDate: settings.resumptionDate || settings.resumption || '',
-            nextTermBegins: settings.resumption     || ''
+            closingDate:    (activeTerm ? activeTerm.endDate : null) || settings.dates?.closingDate || '',
+            resumptionDate: (activeTerm ? activeTerm.resumptionDate : null) || settings.resumption || '',
+            nextTermBegins: (activeTerm ? activeTerm.resumptionDate : null) || settings.resumption || ''
         },
+
+        // Toggles & Config Rules
+        toggles:       settings.toggles || {},
+        noticeMessage: settings.noticeMessage || '',
+        passFail:      settings.passFail || { minAvg: 40 },
+        promotion:     settings.promotion || { minAvg: 45 },
 
         // Academic Performance
         subjects:  rec.subjects  || [],
@@ -77,7 +100,8 @@ window.buildPrintPayload = function(rec, opts) {
             sectionPosition: rec.sectionPosition || '',
             sectionAverage:  rec.sectionAverage  || '',
             isPromoted:      isPromoted,
-            promotionStatus: isPromoted ? 'PROMOTED' : 'NOT PROMOTED'
+            promotionStatus: isPromoted ? 'PROMOTED' : 'NOT PROMOTED',
+            termStatus:      isPassedTerm ? 'PASS' : 'FAIL'
         },
 
         // Evaluation
@@ -89,8 +113,12 @@ window.buildPrintPayload = function(rec, opts) {
             psychomotorDomains: evals.psychomotor       || {}
         },
 
-        // Bills
+        // Dynamic Fees
         bills: evals.bills || {},
+        dynamicFees: (function() {
+            const rawFees = localStorage.getItem('sms_dynamic_fees');
+            return rawFees ? JSON.parse(rawFees) : [];
+        })(),
 
         // Grading Keys (from gradeBoundariesData)
         gradingKeys: (function() {

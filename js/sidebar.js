@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Settings
                 'Owner Profile': loadOwnerProfilePage,
                 'System Profile': loadSettingsProfilePage,
+                'Payment and Fees Settings': loadFeesSettingsPage,
                 'User Management': loadSettingsUsersPage,
                 'Templates': loadTemplatesPage,
                 'Theme': loadThemeSettingsPage,
@@ -552,6 +553,7 @@ window.loadImportUsersPage = () => loadPage('import-users/import-users.html', '.
 // ============================================
 window.loadSettingsPage = () => loadPage('settings/profile.html', '../../js/settings.js', 'settings-script');
 window.loadSettingsProfilePage = () => loadPage('settings/profile.html', '../../js/settings.js', 'settings-script');
+window.loadFeesSettingsPage = () => loadPage('settings/fees.html', '../../js/fees-settings.js', 'fees-settings-script');
 window.loadSettingsUsersPage = () => loadPage('settings/users.html', '../../js/users.js', 'users-script');
 window.loadThemeSettingsPage = () => loadPage('settings/theme.html', '../../js/theme-settings.js', 'theme-settings-script');
 window.loadTemplatesPage = () => loadPage('settings/templates.html', '../../js/templates.js', 'templates-script');

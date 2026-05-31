@@ -16,12 +16,12 @@
             closingDate:        true,
             resumptionDate:     true,
             affectiveDomains:   true,
-            psychomotorDomains: false,
+            psychomotorDomains: true,
             schoolBills:        true,
             keysToGrading:      true,
             keysToRating:       true,
             teacherRemark:      true,
-            headTeacherRemark:  false,
+            headTeacherRemark:  true,
             principalRemark:    true,
             signatures:         true,
             subjectPosition:    true,
@@ -32,6 +32,24 @@
         // TERM RENDERER
         // ==============================
         renderTerm: function(p) {
+            const t = Object.assign({
+                showSubjectsOffered: true,
+                showGradeTally: true,
+                showTermStatus: true,
+                showPromotionStatus: true,
+                showAttendance: true,
+                showFees: true,
+                showQRCode: true,
+                showGradingKey: true,
+                showAffective: true,
+                showPsychomotor: true,
+                showTeacherComment: true,
+                showHeadTeacherComment: true,
+                showPrincipalComment: true,
+                showNotice: true,
+                showStamp: true
+            }, p.toggles || {});
+
             const tc = p.school.themeColor || '#0b2265';
             
             // --- Academic Table ---
@@ -45,6 +63,7 @@
                 <th style="border:1px solid #000;padding:4px 4px;text-align:left;font-size:9px;font-weight:700;background:#fff;color:#000;">Remarks</th>`;
 
             let tbRows = '';
+            let aCount=0, bCount=0, cCount=0, dCount=0, fCount=0;
             p.subjects.forEach(sub => {
                 let tr = `<td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:10px;font-weight:600;color:#000;">${sub.subject}</td>`;
                 p.structure.components.forEach(c => {
@@ -55,6 +74,12 @@
                 tr += `<td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:700;color:#000;">${sub.grade}</td>`;
                 tr += `<td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:9px;font-weight:600;color:#000;">${sub.remark || ''}</td>`;
                 tbRows += `<tr>${tr}</tr>`;
+
+                if(sub.grade && sub.grade.includes('A')) aCount++;
+                if(sub.grade && sub.grade.includes('B')) bCount++;
+                if(sub.grade && sub.grade.includes('C')) cCount++;
+                if(sub.grade && sub.grade.includes('D')) dCount++;
+                if(sub.grade && sub.grade.includes('F')) fCount++;
             });
             // Empty row at the bottom
             tbRows += `<tr><td style="border:1px solid #000;padding:3px 4px;font-size:10px;color:#000;">&nbsp;</td>${p.structure.components.map(() => `<td style="border:1px solid #000;padding:3px 2px;text-align:center;"></td>`).join('')}<td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`;
@@ -99,7 +124,7 @@
             <div style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;width:100%;height:100%;color:#000;background:#fff;display:flex;flex-direction:column;padding-top:4px;box-sizing:border-box;">
 
                 <!-- HEADER ZONE -->
-                <div style="display:flex;align-items:center;margin-bottom:8px;border-bottom:1px solid #ddd;padding-bottom:6px;">
+                <div style="display:flex;align-items:center;margin-bottom:8px;border-bottom:1px solid #ddd;padding-bottom:6px;position:relative;">
                     <div style="width:85px;flex-shrink:0;">
                         <img src="${p.school.logo}" style="width:100%;max-height:90px;object-fit:contain;">
                     </div>
@@ -109,6 +134,10 @@
                         <div style="font-size:10px;font-weight:700;color:#2b4c7e;margin-top:2px;text-decoration:underline;">${p.school.email}, ${p.school.phone}</div>
                         <div style="font-size:13px;font-weight:800;color:#cc0000;text-transform:uppercase;margin-top:4px;">MOTTO: ${p.school.motto}</div>
                     </div>
+                    ${t.showQRCode !== false ? `
+                    <div style="width:65px;height:65px;margin-right:10px;opacity:0.8;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('VERIFIED: '+p.student.name)}" style="width:100%;height:100%;">
+                    </div>` : ''}
                     <div style="width:85px;height:100px;border:1px solid #ccc;flex-shrink:0;padding:2px;box-sizing:border-box;">
                         <img src="${p.student.photo}" style="width:100%;height:100%;object-fit:cover;">
                     </div>
@@ -141,6 +170,7 @@
                         <div style="flex:1.5;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;">${p.student.dob}</div>
                     </div>
 
+                    ${t.showAttendance !== false ? `
                     <div style="display:flex;align-items:flex-end;gap:4px;">
                         <div style="white-space:nowrap;">NO OF TIMES SCHOOL OPENED</div>
                         <div style="width:60px;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;">${p.attendance.timesOpened}</div>
@@ -150,7 +180,7 @@
                         <div style="flex:1;"></div>
                         <div style="white-space:nowrap;">NO OF TIMES ABSENT</div>
                         <div style="width:80px;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;">${p.attendance.timesAbsent || 'NIL'}</div>
-                    </div>
+                    </div>` : ''}
 
                     <div style="display:flex;align-items:flex-end;gap:4px;">
                         <div style="white-space:nowrap;">CLOSING DATE</div>
@@ -162,24 +192,38 @@
                 </div>
 
                 <!-- OVERALL SUMMARY BLOCKS -->
-                <div style="display:flex;justify-content:space-between;align-items:stretch;margin-bottom:8px;font-size:10px;font-weight:700;">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;font-weight:700;">
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>OVERALL TOTAL</span>
-                        <div style="border:2px solid #000;width:80px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.grandTotal}</div>
+                        <div style="border:2px solid #000;width:60px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.grandTotal}</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>AVERAGE</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.average}</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.average}</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>PERCENTAGE</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.percentage}%</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.percentage}%</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>POSITION</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.position}</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.position}</div>
                     </div>
+                    ${t.showSubjectsOffered !== false ? `
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>SUBJECTS</span>
+                        <div style="border:2px solid #000;width:40px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.subjects.length}</div>
+                    </div>` : ''}
+                    ${t.showTermStatus !== false ? `
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>STATUS</span>
+                        <div style="border:2px solid #000;padding:0 8px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;color:${p.summary.termStatus==='PASS'?'#16a34a':'#dc2626'};">${p.summary.termStatus}</div>
+                    </div>` : ''}
                 </div>
+                ${t.showGradeTally !== false ? `
+                <div style="font-size:10px;font-weight:800;color:#000;margin-bottom:8px;text-align:center;border:1px dashed #ccc;padding:4px;">
+                    GRADE TALLY: ${aCount}As, ${bCount}Bs, ${cCount}Cs, ${dCount}Ds, ${fCount}Fs
+                </div>` : ''}
 
                 <!-- ACADEMIC TABLE -->
                 <table style="border-collapse:collapse;width:100%;margin-bottom:8px;">
@@ -193,18 +237,43 @@
                 <!-- BOTTOM 3-COLUMN LAYOUT -->
                 <div style="display:flex;gap:15px;align-items:flex-start;margin-bottom:8px;">
                     <!-- DOMAINS -->
-                    <div style="flex:1;">
+                    <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                        ${t.showAffective !== false ? `
                         <table style="border-collapse:collapse;width:100%;text-align:center;">
                             <thead><tr>
-                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">DOMAINS</th>
-                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">RATING</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">AFFECTIVE TRAITS</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;width:40px;">RATING</th>
                             </tr></thead>
                             <tbody>${domRows}</tbody>
                         </table>
+                        ` : ''}
+                        ${t.showPsychomotor !== false ? `
+                        <table style="border-collapse:collapse;width:100%;text-align:center;">
+                            <thead><tr>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">PSYCHOMOTOR</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;width:40px;">RATING</th>
+                            </tr></thead>
+                            <tbody>
+                                ${(() => {
+                                    const pKeys = Object.keys(p.evaluation.psychomotorDomains || {});
+                                    const safePList = p.psychomotorList || [];
+                                    const cKeys = [...new Set([...pKeys, ...safePList])].slice(0, 6);
+                                    let html = '';
+                                    cKeys.forEach(d => {
+                                        let val = p.evaluation.psychomotorDomains && p.evaluation.psychomotorDomains[d] ? p.evaluation.psychomotorDomains[d] : '';
+                                        html += `<tr><td style="border:1px solid #000;padding:2px 4px;font-size:8px;font-weight:600;text-transform:uppercase;text-align:left;">${d}</td><td style="border:1px solid #000;padding:2px;font-size:8px;font-weight:800;">${val}</td></tr>`;
+                                    });
+                                    if(cKeys.length === 0) html += `<tr><td style="border:1px solid #000;padding:2px 4px;height:12px;"></td><td style="border:1px solid #000;"></td></tr>`;
+                                    return html;
+                                })()}
+                            </tbody>
+                        </table>
+                        ` : ''}
                     </div>
 
                     <!-- KEYS -->
                     <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                        ${t.showGradingKey !== false ? `
                         <table style="border-collapse:collapse;width:100%;text-align:center;">
                             <thead><tr><th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:900;color:red;text-decoration:underline;">KEYS TO GRADING</th></tr></thead>
                             <tbody>${gradingRows}</tbody>
@@ -217,33 +286,55 @@
                                 <tr><td style="border:1px solid #000;padding:2px 4px;font-size:8px;">1= Very Poor</td></tr>
                             </tbody>
                         </table>
+                        ` : ''}
                     </div>
 
                     <!-- SCHOOL BILLS -->
                     <div style="flex:1;">
+                        ${t.showFees !== false ? `
                         <table style="border-collapse:collapse;width:100%;">
                             <thead><tr><th colspan="2" style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;">SCHOOL BILL</th></tr></thead>
                             <tbody>${billRows}</tbody>
                         </table>
+                        ` : ''}
                     </div>
                 </div>
 
                 <!-- FOOTER REMARKS -->
                 <div style="margin-top:auto;font-size:9px;font-weight:700;color:#000;">
-                    <div style="display:flex;align-items:flex-end;margin-bottom:8px;">
+                    ${t.showNotice !== false && p.noticeMessage ? `
+                    <div style="border:1px dashed #000; padding:4px 8px; margin-bottom:8px; background:#fafafa; text-align:center; font-style:italic;">
+                        <span style="font-weight:900;text-transform:uppercase;margin-right:6px;">Notice:</span> ${p.noticeMessage}
+                    </div>` : ''}
+
+                    ${t.showTeacherComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
                         <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">FORM TEACHER'S COMMENTS</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.teacherRemark}</div>
                     </div>
-                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px;">
+                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:6px;">
                         <span style="text-transform:uppercase;">NAME</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.signatories.teacher.name}</div>
                         <span style="text-transform:uppercase;">SIGNATURE</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;position:relative;min-height:14px;">${teacherSigImg}</div>
                         <span style="text-transform:uppercase;">DATE</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.dates.closingDate}</div>
+                    </div>` : ''}
+
+                    ${t.showHeadTeacherComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
+                        <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">HEAD TEACHER'S COMMENTS</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.headTeacherRemark || ''}</div>
                     </div>
+                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:6px;">
+                        <span style="text-transform:uppercase;">SIGNATURE</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;position:relative;min-height:14px;"></div>
+                        <span style="text-transform:uppercase;">DATE</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.dates.closingDate}</div>
+                    </div>` : ''}
                     
-                    <div style="display:flex;align-items:flex-end;margin-bottom:8px;">
+                    ${t.showPrincipalComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
                         <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">REMARKS BY PRINCIPAL</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.principalRemark}</div>
                     </div>
@@ -251,9 +342,9 @@
                         <span style="white-space:nowrap;text-transform:uppercase;">NAME & SIGNATURE, DATE & STAMP</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;position:relative;min-height:14px;display:flex;justify-content:center;align-items:flex-end;">
                             <span style="z-index:2;background:#fff;padding:0 4px;">${p.signatories.principal.name}</span>
-                            ${principalSigImg ? `<span style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:1;">${principalSigImg}</span>` : ''}
+                            ${principalSigImg && t.showStamp !== false ? `<span style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:1;">${principalSigImg}</span>` : ''}
                         </div>
-                    </div>
+                    </div>` : ''}
                 </div>
             </div>`;
         },
@@ -262,6 +353,24 @@
         // SESSION RENDERER
         // ==============================
         renderSession: function(p) {
+            const t = Object.assign({
+                showSubjectsOffered: true,
+                showGradeTally: true,
+                showTermStatus: true,
+                showPromotionStatus: true,
+                showAttendance: true,
+                showFees: true,
+                showQRCode: true,
+                showGradingKey: true,
+                showAffective: true,
+                showPsychomotor: true,
+                showTeacherComment: true,
+                showHeadTeacherComment: true,
+                showPrincipalComment: true,
+                showNotice: true,
+                showStamp: true
+            }, p.toggles || {});
+
             const tc = p.school.themeColor || '#0b2265';
             
             let thCols = `<th style="border:1px solid #000;padding:4px 3px;text-align:left;font-size:9px;font-weight:700;background:#fff;color:#000;">SUBJECT</th>`;
@@ -274,6 +383,7 @@
             thCols += `<th style="border:1px solid #000;padding:4px 4px;text-align:left;font-size:8px;font-weight:700;background:#fff;color:#000;">REMARKS</th>`;
 
             let tbRows = '';
+            let aCount=0, bCount=0, cCount=0, dCount=0, fCount=0;
             p.subjects.forEach(sub => {
                 tbRows += `<tr>
                     <td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:10px;font-weight:600;color:#000;">${sub.subject}</td>
@@ -285,6 +395,12 @@
                     <td style="border:1px solid #000;padding:3px 2px;text-align:center;font-size:10px;font-weight:700;color:#000;">${sub.grade || ''}</td>
                     <td style="border:1px solid #000;padding:3px 4px;text-align:left;font-size:9px;font-weight:600;color:#000;">${sub.remark || ''}</td>
                 </tr>`;
+
+                if(sub.grade && sub.grade.includes('A')) aCount++;
+                if(sub.grade && sub.grade.includes('B')) bCount++;
+                if(sub.grade && sub.grade.includes('C')) cCount++;
+                if(sub.grade && sub.grade.includes('D')) dCount++;
+                if(sub.grade && sub.grade.includes('F')) fCount++;
             });
             // Empty spacer row
             tbRows += `<tr><td style="border:1px solid #000;padding:3px 4px;font-size:10px;color:#000;">&nbsp;</td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td><td style="border:1px solid #000;"></td></tr>`;
@@ -328,7 +444,7 @@
             <div style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;width:100%;height:100%;color:#000;background:#fff;display:flex;flex-direction:column;padding-top:4px;box-sizing:border-box;">
 
                 <!-- HEADER ZONE -->
-                <div style="display:flex;align-items:center;margin-bottom:8px;border-bottom:1px solid #ddd;padding-bottom:6px;">
+                <div style="display:flex;align-items:center;margin-bottom:8px;border-bottom:1px solid #ddd;padding-bottom:6px;position:relative;">
                     <div style="width:85px;flex-shrink:0;">
                         <img src="${p.school.logo}" style="width:100%;max-height:90px;object-fit:contain;">
                     </div>
@@ -338,6 +454,10 @@
                         <div style="font-size:10px;font-weight:700;color:#2b4c7e;margin-top:2px;text-decoration:underline;">${p.school.email}, ${p.school.phone}</div>
                         <div style="font-size:13px;font-weight:800;color:#cc0000;text-transform:uppercase;margin-top:4px;">MOTTO: ${p.school.motto}</div>
                     </div>
+                    ${t.showQRCode !== false ? `
+                    <div style="width:65px;height:65px;margin-right:10px;opacity:0.8;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('VERIFIED: '+p.student.name)}" style="width:100%;height:100%;">
+                    </div>` : ''}
                     <div style="width:85px;height:100px;border:1px solid #ccc;flex-shrink:0;padding:2px;box-sizing:border-box;">
                         <img src="${p.student.photo}" style="width:100%;height:100%;object-fit:cover;">
                     </div>
@@ -369,6 +489,7 @@
                         <div style="flex:1;"></div>
                     </div>
 
+                    ${t.showAttendance !== false ? `
                     <div style="display:flex;align-items:flex-end;gap:4px;">
                         <div style="white-space:nowrap;">NO OF TIMES SCHOOL OPENED</div>
                         <div style="width:60px;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;">${p.attendance.timesOpened}</div>
@@ -378,28 +499,42 @@
                         <div style="flex:1;"></div>
                         <div style="white-space:nowrap;">NO OF TIMES ABSENT</div>
                         <div style="width:80px;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;">${p.attendance.timesAbsent || 'NIL'}</div>
-                    </div>
+                    </div>` : ''}
                 </div>
 
                 <!-- OVERALL SUMMARY BLOCKS -->
-                <div style="display:flex;justify-content:space-between;align-items:stretch;margin-bottom:8px;font-size:10px;font-weight:700;">
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:10px;font-weight:700;">
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>OVERALL TOTAL</span>
-                        <div style="border:2px solid #000;width:80px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.grandTotal}</div>
+                        <div style="border:2px solid #000;width:60px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.grandTotal}</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>AVERAGE</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.average}</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.average}</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>PERCENTAGE</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.percentage}%</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.percentage}%</div>
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;">
                         <span>POSITION</span>
-                        <div style="border:2px solid #000;width:70px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.position}</div>
+                        <div style="border:2px solid #000;width:50px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.summary.position}</div>
                     </div>
+                    ${t.showSubjectsOffered !== false ? `
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>SUBJECTS</span>
+                        <div style="border:2px solid #000;width:40px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;">${p.subjects.length}</div>
+                    </div>` : ''}
+                    ${t.showPromotionStatus !== false ? `
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <span>PROMOTION</span>
+                        <div style="border:2px solid #000;padding:0 8px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;color:${p.summary.promotionStatus==='PROMOTED'?'#16a34a':'#dc2626'};">${p.summary.promotionStatus}</div>
+                    </div>` : ''}
                 </div>
+                ${t.showGradeTally !== false ? `
+                <div style="font-size:10px;font-weight:800;color:#000;margin-bottom:8px;text-align:center;border:1px dashed #ccc;padding:4px;">
+                    GRADE TALLY: ${aCount}As, ${bCount}Bs, ${cCount}Cs, ${dCount}Ds, ${fCount}Fs
+                </div>` : ''}
 
                 <!-- ACADEMIC TABLE -->
                 <table style="border-collapse:collapse;width:100%;margin-bottom:8px;">
@@ -410,19 +545,46 @@
                     <tbody>${tbRows}</tbody>
                 </table>
 
-                <!-- BOTTOM 3-COLUMN LAYOUT -->
+                <!-- BOTTOM 2-COLUMN LAYOUT -->
                 <div style="display:flex;gap:15px;align-items:flex-start;margin-bottom:8px;">
-                    <div style="flex:1;">
+                    <!-- DOMAINS -->
+                    <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                        ${t.showAffective !== false ? `
                         <table style="border-collapse:collapse;width:100%;text-align:center;">
                             <thead><tr>
-                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">DOMAINS</th>
-                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">RATING</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">AFFECTIVE TRAITS</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;width:40px;">RATING</th>
                             </tr></thead>
                             <tbody>${domRows}</tbody>
                         </table>
+                        ` : ''}
+                        ${t.showPsychomotor !== false ? `
+                        <table style="border-collapse:collapse;width:100%;text-align:center;">
+                            <thead><tr>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;">PSYCHOMOTOR</th>
+                                <th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;width:40px;">RATING</th>
+                            </tr></thead>
+                            <tbody>
+                                ${(() => {
+                                    const pKeys = Object.keys(p.evaluation.psychomotorDomains || {});
+                                    const safePList = p.psychomotorList || [];
+                                    const cKeys = [...new Set([...pKeys, ...safePList])].slice(0, 6);
+                                    let html = '';
+                                    cKeys.forEach(d => {
+                                        let val = p.evaluation.psychomotorDomains && p.evaluation.psychomotorDomains[d] ? p.evaluation.psychomotorDomains[d] : '';
+                                        html += `<tr><td style="border:1px solid #000;padding:2px 4px;font-size:8px;font-weight:600;text-transform:uppercase;text-align:left;">${d}</td><td style="border:1px solid #000;padding:2px;font-size:8px;font-weight:800;">${val}</td></tr>`;
+                                    });
+                                    if(cKeys.length === 0) html += `<tr><td style="border:1px solid #000;padding:2px 4px;height:12px;"></td><td style="border:1px solid #000;"></td></tr>`;
+                                    return html;
+                                })()}
+                            </tbody>
+                        </table>
+                        ` : ''}
                     </div>
 
+                    <!-- KEYS -->
                     <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+                        ${t.showGradingKey !== false ? `
                         <table style="border-collapse:collapse;width:100%;text-align:center;">
                             <thead><tr><th style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:900;color:red;text-decoration:underline;">KEYS TO GRADING</th></tr></thead>
                             <tbody>${gradingRows}</tbody>
@@ -435,32 +597,45 @@
                                 <tr><td style="border:1px solid #000;padding:2px 4px;font-size:8px;">1= Very Poor</td></tr>
                             </tbody>
                         </table>
-                    </div>
-
-                    <div style="flex:1;">
-                        <table style="border-collapse:collapse;width:100%;">
-                            <thead><tr><th colspan="2" style="border:1px solid #000;padding:3px 4px;font-size:9px;font-weight:700;text-align:center;">SCHOOL BILL</th></tr></thead>
-                            <tbody>${billRows}</tbody>
-                        </table>
+                        ` : ''}
                     </div>
                 </div>
 
                 <!-- FOOTER REMARKS -->
                 <div style="margin-top:auto;font-size:9px;font-weight:700;color:#000;">
-                    <div style="display:flex;align-items:flex-end;margin-bottom:8px;">
+                    ${t.showNotice !== false && p.noticeMessage ? `
+                    <div style="border:1px dashed #000; padding:4px 8px; margin-bottom:8px; background:#fafafa; text-align:center; font-style:italic;">
+                        <span style="font-weight:900;text-transform:uppercase;margin-right:6px;">Notice:</span> ${p.noticeMessage}
+                    </div>` : ''}
+
+                    ${t.showTeacherComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
                         <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">FORM TEACHER'S COMMENTS</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.teacherRemark}</div>
                     </div>
-                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:8px;">
+                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:6px;">
                         <span style="text-transform:uppercase;">NAME</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.signatories.teacher.name}</div>
                         <span style="text-transform:uppercase;">SIGNATURE</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;position:relative;min-height:14px;">${teacherSigImg}</div>
                         <span style="text-transform:uppercase;">DATE</span>
-                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.dates.closingDate || '___________'}</div>
-                    </div>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.dates.closingDate}</div>
+                    </div>` : ''}
                     
-                    <div style="display:flex;align-items:flex-end;margin-bottom:8px;">
+                    ${t.showHeadTeacherComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
+                        <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">HEAD TEACHER'S COMMENTS</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.headTeacherRemark || ''}</div>
+                    </div>
+                    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:6px;">
+                        <span style="text-transform:uppercase;">SIGNATURE</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;position:relative;min-height:14px;"></div>
+                        <span style="text-transform:uppercase;">DATE</span>
+                        <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;">${p.dates.closingDate}</div>
+                    </div>` : ''}
+
+                    ${t.showPrincipalComment !== false ? `
+                    <div style="display:flex;align-items:flex-end;margin-bottom:6px;">
                         <span style="white-space:nowrap;text-transform:uppercase;margin-right:8px;">REMARKS BY PRINCIPAL</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:2px;font-weight:600;min-height:14px;">${p.evaluation.principalRemark}</div>
                     </div>
@@ -468,9 +643,9 @@
                         <span style="white-space:nowrap;text-transform:uppercase;">NAME & SIGNATURE, DATE & STAMP</span>
                         <div style="flex:1;border-bottom:2px solid #000;text-align:center;padding-bottom:1px;font-weight:600;position:relative;min-height:14px;display:flex;justify-content:center;align-items:flex-end;">
                             <span style="z-index:2;background:#fff;padding:0 4px;">${p.signatories.principal.name}</span>
-                            ${principalSigImg ? `<span style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:1;">${principalSigImg}</span>` : ''}
+                            ${principalSigImg && t.showStamp !== false ? `<span style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:1;">${principalSigImg}</span>` : ''}
                         </div>
-                    </div>
+                    </div>` : ''}
                 </div>
             </div>`;
         }

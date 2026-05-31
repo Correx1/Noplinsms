@@ -106,6 +106,9 @@
                 <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.academicYear}</td>
                 <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.startDate}</td>
                 <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.endDate}</td>
+                <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.holidays || 0}</td>
+                <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.daysOpened || 0}</td>
+                <td class="px-6 py-4 text-gray-700 dark:text-gray-300">${term.resumptionDate || '-'}</td>
                 <td class="px-6 py-4"><span class="bg-${statusColor}-100 text-${statusColor}-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-${statusColor}-900 dark:text-${statusColor}-300">${term.status}</span></td>
                 <td class="px-6 py-4 text-right">
                     <button onclick="editAcadConfig('terms', '${term.id}')" class="font-medium text-primary-600 dark:text-primary-500 hover:underline mr-3"><i class="fas fa-edit"></i></button>
@@ -185,12 +188,34 @@
 
     function saveTerm() {
         const id = document.getElementById('termId').value;
+        const startDate = document.getElementById('termStart').value;
+        const endDate = document.getElementById('termEnd').value;
+        const holidays = parseInt(document.getElementById('termHolidays').value) || 0;
+
+        // Calculate Days Opened
+        let daysOpened = 0;
+        if(startDate && endDate) {
+            let start = new Date(startDate);
+            let end = new Date(endDate);
+            let totalDays = 0;
+            while(start <= end) {
+                const day = start.getDay();
+                if(day !== 0 && day !== 6) totalDays++; // skip Sunday(0) and Saturday(6)
+                start.setDate(start.getDate() + 1);
+            }
+            daysOpened = totalDays - holidays;
+            if(daysOpened < 0) daysOpened = 0;
+        }
+
         const payload = {
             id: id || 'TM' + Date.now().toString().slice(-4),
             name: document.getElementById('termName').value,
             academicYear: document.getElementById('termAY').value,
-            startDate: document.getElementById('termStart').value,
-            endDate: document.getElementById('termEnd').value,
+            startDate: startDate,
+            endDate: endDate,
+            holidays: holidays,
+            resumptionDate: document.getElementById('termResumption').value,
+            daysOpened: daysOpened,
             status: document.getElementById('termStatus').value
         };
         
@@ -234,6 +259,7 @@
         } else {
             configData[collectionName].push(payload);
         }
+        localStorage.setItem('sms_academic_config', JSON.stringify(configData));
     }
 
     // --- GLOBAL ACTIONS ---
@@ -256,6 +282,8 @@
             document.getElementById('termAY').value = item.academicYear;
             document.getElementById('termStart').value = item.startDate;
             document.getElementById('termEnd').value = item.endDate;
+            document.getElementById('termHolidays').value = item.holidays || 0;
+            document.getElementById('termResumption').value = item.resumptionDate || '';
             document.getElementById('termStatus').value = item.status;
             document.getElementById('modal-title-term').innerText = "Update Term";
             window.openModal('add-term-modal');
@@ -279,6 +307,7 @@
     window.deleteAcadConfig = function(type, id) {
         if(confirm(`Are you sure you want to delete this configuration?`)) {
             configData[type] = configData[type].filter(x => x.id !== id);
+            localStorage.setItem('sms_academic_config', JSON.stringify(configData));
             
             if(type === 'academicYears') renderAcademicYears();
             if(type === 'terms') renderTerms();
@@ -321,8 +350,14 @@
 
     async function fetchConfigData() {
         try {
+            const saved = localStorage.getItem('sms_academic_config');
+            if(saved) {
+                return JSON.parse(saved);
+            }
             const res = await fetch('../../data/academic-config.json');
-            return await res.json();
+            const data = await res.json();
+            localStorage.setItem('sms_academic_config', JSON.stringify(data));
+            return data;
         } catch (e) {
             console.error('Fetch error:', e);
             return { academicYears: [], terms: [], classGroups: [], subjectGroups: [] };

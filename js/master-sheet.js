@@ -16,6 +16,24 @@
         return { g: 'F9', r: 'Fail', c: 'text-red-600 dark:text-red-400' };
     }
 
+    // Tally function to count grades
+    function calculateGradeTally(scores) {
+        const counts = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0 };
+        scores.forEach(sc => {
+            const gStr = grade(sc).g;
+            const letter = gStr.charAt(0);
+            if (counts[letter] !== undefined) counts[letter]++;
+        });
+        const parts = [];
+        if(counts.A) parts.push(`${counts.A}A`);
+        if(counts.B) parts.push(`${counts.B}B`);
+        if(counts.C) parts.push(`${counts.C}C`);
+        if(counts.D) parts.push(`${counts.D}D`);
+        if(counts.E) parts.push(`${counts.E}E`);
+        if(counts.F) parts.push(`${counts.F}F`);
+        return parts.join(', ') || '-';
+    }
+
     function buildSheet(cls, term) {
         let students = JSON.parse(localStorage.getItem('sms_students') || '[]');
         if (cls) students = students.filter(s => (s.className || s.class || '') === cls);
@@ -34,7 +52,8 @@
             const scores = SUBJECTS.map(() => getRandScore());
             const total = scores.reduce((a, b) => a + b, 0);
             const avg = Math.round(total / scores.length);
-            return { ...s, scores, total, avg, grade: grade(avg) };
+            const tally = calculateGradeTally(scores);
+            return { ...s, scores, total, avg, grade: grade(avg), tally, subjectsOffered: scores.length };
         });
     }
 
@@ -119,9 +138,11 @@
                     <td class="px-3 py-2.5 text-xs text-gray-500 dark:text-gray-400 border-r dark:border-gray-700">${s.admissionNo || s.id}</td>
                     <td class="px-3 py-2.5 text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap border-r dark:border-gray-700">${s.name}</td>
                     ${scoreCells}
-                    <td class="px-3 py-2.5 text-center font-black text-gray-900 dark:text-white border-l border-r dark:border-gray-700">${s.total}</td>
+                    <td class="px-3 py-2.5 text-center font-bold text-gray-600 dark:text-gray-400 border-l border-r dark:border-gray-700">${s.subjectsOffered}</td>
+                    <td class="px-3 py-2.5 text-center font-black text-gray-900 dark:text-white border-r dark:border-gray-700">${s.total}</td>
                     <td class="px-3 py-2.5 text-center font-bold ${grade(s.avg).c} border-r dark:border-gray-700 text-[14px]">${s.avg}%</td>
                     <td class="px-3 py-2.5 text-center text-xs font-bold ${grade(s.avg).c} border-r dark:border-gray-700">${grade(s.avg).g}</td>
+                    <td class="px-3 py-2.5 text-center text-xs font-bold text-gray-600 dark:text-gray-400 border-r dark:border-gray-700">${s.tally}</td>
                     <td class="px-3 py-2.5 text-center text-xs border-r dark:border-gray-700 whitespace-nowrap">${grade(s.avg).r}</td>
                 </tr>`;
             }).join('');
@@ -130,17 +151,17 @@
                 <tr class="bg-gray-50 dark:bg-gray-800 font-bold border-t-2 border-primary-500">
                     <td colspan="3" class="px-3 py-3 text-right text-xs uppercase text-primary-600 border-r dark:border-gray-700">Subject Average</td>
                     ${subjectAverages.map(avg => `<td class="px-3 py-3 text-center text-primary-600 text-[13px] border-r dark:border-gray-700">${avg}</td>`).join('')}
-                    <td colspan="4"></td>
+                    <td colspan="6"></td>
                 </tr>
                 <tr class="bg-green-50/50 dark:bg-green-900/10 font-bold border-t dark:border-gray-700">
                     <td colspan="3" class="px-3 py-3 text-right text-xs uppercase text-green-600 border-r dark:border-gray-700">Highest Score</td>
                     ${subjectHighest.map(h => `<td class="px-3 py-3 text-center text-green-600 text-[13px] border-r dark:border-gray-700">${h}</td>`).join('')}
-                    <td colspan="4"></td>
+                    <td colspan="6"></td>
                 </tr>
                 <tr class="bg-red-50/50 dark:bg-red-900/10 font-bold border-t border-b dark:border-gray-700">
                     <td colspan="3" class="px-3 py-3 text-right text-xs uppercase text-red-600 border-r dark:border-gray-700">Lowest Score</td>
                     ${subjectLowest.map(l => `<td class="px-3 py-3 text-center text-red-600 text-[13px] border-r dark:border-gray-700">${l}</td>`).join('')}
-                    <td colspan="4"></td>
+                    <td colspan="6"></td>
                 </tr>
             `;
 
@@ -149,12 +170,14 @@
                     <thead class="text-xs uppercase bg-primary-700 text-white sticky top-0 z-10">
                         <tr>
                             <th class="px-3 py-3 text-center border-r border-primary-600">Pos</th>
-                            <th class="px-3 py-3 whitespace-nowrap border-r border-primary-600">ID</th>
+                            <th class="px-3 py-3 whitespace-nowrap border-r border-primary-600">Adm No</th>
                             <th class="px-3 py-3 whitespace-nowrap border-r border-primary-600">Student Name</th>
                             ${SUBJECTS.map(s => `<th class="px-3 py-3 whitespace-nowrap text-center border-r border-primary-600" title="${s}">${s.substring(0,6)}.</th>`).join('')}
+                            <th class="px-3 py-3 text-center border-r border-primary-600">Subs</th>
                             <th class="px-3 py-3 text-center border-r border-primary-600">Total</th>
                             <th class="px-3 py-3 text-center border-r border-primary-600">Avg</th>
                             <th class="px-3 py-3 text-center border-r border-primary-600">Grade</th>
+                            <th class="px-3 py-3 text-center border-r border-primary-600">Tally</th>
                             <th class="px-3 py-3 whitespace-nowrap border-r border-primary-600">Remark</th>
                         </tr>
                     </thead>
@@ -170,7 +193,7 @@
             const cls  = document.getElementById('cms-class')?.value  || 'All';
             const term = document.getElementById('cms-term')?.value   || 'All';
 
-            const headers = ['Pos', 'Adm No', 'Student Name', ...SUBJECTS, 'Total', 'Average %', 'Grade', 'Remark'];
+            const headers = ['Pos', 'Adm No', 'Student Name', ...SUBJECTS, 'Subs Offered', 'Total', 'Average %', 'Grade', 'Grade Tally', 'Remark'];
 
             const rows = _filtered.map((s, i) => {
                 const subjectCells = s.scores.map(sc => {
@@ -182,9 +205,11 @@
                     `"${s.admissionNo || s.id}"`,
                     `"${s.name}"`,
                     ...subjectCells,
+                    s.subjectsOffered,
                     s.total,
                     `${s.avg}%`,
                     grade(s.avg).g,
+                    `"${s.tally}"`,
                     grade(s.avg).r
                 ];
             });
@@ -206,31 +231,33 @@
             const label = `${cls} — ${term} Term Master Sheet`;
 
             // Build plain table HTML (no Tailwind classes — just clean inline styles for print)
-            const subjectThs = SUBJECTS.map(s => `<th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">${s}</th>`).join('');
+            const subjectThs = SUBJECTS.map(s => `<th style="border:1px solid #ccc;padding:6px 2px;font-size:10px;background:#1e429f;color:#fff;writing-mode: vertical-rl;text-orientation: mixed;">${s}</th>`).join('');
 
             const bodyRows = _filtered.map((s, idx) => {
                 const scoreCells = s.scores.map(sc => {
                     const g = grade(sc);
                     const color = sc >= 70 ? '#15803d' : sc >= 50 ? '#1d4ed8' : sc >= 45 ? '#ca8a04' : '#dc2626';
-                    return `<td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;color:${color};font-weight:600;">${sc}<br><span style="font-size:9px;color:#666;">${g.g}</span></td>`;
+                    return `<td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-size:11px;color:${color};font-weight:600;">${sc}<br><span style="font-size:9px;color:#666;">${g.g}</span></td>`;
                 }).join('');
                 const avg = s.avg;
                 const g   = grade(avg);
                 const color = avg >= 70 ? '#15803d' : avg >= 50 ? '#1d4ed8' : avg >= 45 ? '#ca8a04' : '#dc2626';
                 return `<tr style="background:${idx % 2 === 0 ? '#fff' : '#f9fafb'}">
-                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;font-weight:700;">${idx+1}</td>
-                    <td style="border:1px solid #ccc;padding:5px 4px;font-size:10px;color:#555;">${s.admissionNo||s.id}</td>
-                    <td style="border:1px solid #ccc;padding:5px 8px;font-size:12px;font-weight:600;white-space:nowrap;">${s.name}</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-size:11px;font-weight:700;">${idx+1}</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;font-size:10px;color:#555;text-align:center;">${s.admissionNo||s.id}</td>
+                    <td style="border:1px solid #ccc;padding:5px 6px;font-size:11px;font-weight:600;white-space:nowrap;">${s.name}</td>
                     ${scoreCells}
-                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:800;font-size:12px;">${s.total}</td>
-                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:700;color:${color};font-size:12px;">${avg}%</td>
-                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-weight:700;color:${color};font-size:11px;">${g.g}</td>
-                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:11px;">${g.r}</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-size:11px;font-weight:600;">${s.subjectsOffered}</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-weight:800;font-size:12px;">${s.total}</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-weight:700;color:${color};font-size:12px;">${avg}%</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-weight:700;color:${color};font-size:11px;">${g.g}</td>
+                    <td style="border:1px solid #ccc;padding:5px 4px;text-align:center;font-size:10px;font-weight:600;white-space:nowrap;">${s.tally}</td>
+                    <td style="border:1px solid #ccc;padding:5px 2px;text-align:center;font-size:10px;">${g.r}</td>
                 </tr>`;
             }).join('');
 
             const html = `<!DOCTYPE html><html><head><title>${label}</title>
-                <style>body{font-family:Arial,sans-serif;margin:15px;}h2{font-size:15px;margin-bottom:8px;}table{border-collapse:collapse;width:100%;}@media print{@page{size:landscape;}}</style>
+                <style>body{font-family:Arial,sans-serif;margin:15px;}h2{font-size:15px;margin-bottom:8px;}table{border-collapse:collapse;width:100%;}@media print{@page{size:landscape;margin:10mm;}}</style>
             </head><body>
                 <h2>${label}</h2>
                 <table>
@@ -239,9 +266,11 @@
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Adm No</th>
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Student Name</th>
                         ${subjectThs}
+                        <th style="border:1px solid #ccc;padding:6px 2px;font-size:10px;background:#1e429f;color:#fff;writing-mode: vertical-rl;text-orientation: mixed;">Subs</th>
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Total</th>
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Avg%</th>
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Grade</th>
+                        <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Tally</th>
                         <th style="border:1px solid #ccc;padding:6px;font-size:11px;background:#1e429f;color:#fff;">Remark</th>
                     </tr></thead>
                     <tbody>${bodyRows}</tbody>

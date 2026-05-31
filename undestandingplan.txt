@@ -1,0 +1,550 @@
+===========================================================================
+       SCHOOL MANAGEMENT SYSTEM — RESULT ENGINE UPGRADE
+       Understanding Document (Client Version)
+===========================================================================
+
+
+INTRODUCTION
+============
+
+This document explains, in simple terms, every upgrade and new feature we
+will be building into the school management system's result engine. The goal
+is to make the system produce professional, comprehensive, and fully
+customizable student result sheets that meet the standards of modern schools.
+
+Everything described below is designed to be flexible. Each school using the
+platform will be able to turn features on or off, adjust rules, and
+customize what appears on their students' report cards — all from a simple
+settings page, without needing any technical knowledge.
+
+
+---------------------------------------------------------------------------
+1. ADMISSION / REGISTRATION NUMBERS
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+Every student in a school has a unique admission number or registration
+number. This is the official identifier that follows the student throughout
+their time at the school. It is different from the system-generated ID that
+the software uses internally. Think of it as the number printed on a
+student's ID card and report card — the one the school recognises.
+
+HOW IT WILL WORK:
+
+The system will automatically generate admission numbers for every new
+student. The format will be customizable by each school. For example, a
+school called "Noplin Prestige School" might choose the format:
+
+    NPS/2025/001
+    NPS/2025/002
+    NPS/2025/003
+
+Where "NPS" is the school's abbreviation, "2025" is the year, and "001" is
+the student's sequence number. The school can set the abbreviation, choose
+whether to use a full year (2025) or short year (25), and pick the starting
+number.
+
+For schools that already have existing admission numbers from previous years
+or a different system, they will not lose those numbers. They can simply
+upload an Excel or CSV file containing their old student records with the
+existing admission numbers, and the system will import and retain them
+exactly as they are.
+
+Going forward, any new student added to the system will automatically
+receive the next number in the sequence, unless the admin manually types in
+a specific number instead.
+
+
+---------------------------------------------------------------------------
+2. SCHOOL FEES ON THE RESULT CARD
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+Many schools print a breakdown of next term's school fees directly on the
+student's report card. This serves as both a notice and a record for
+parents. Currently, the system has a fixed set of four fee types (Tuition,
+Equipment, Library, and Sports). This is not flexible enough for most
+schools.
+
+HOW IT WILL WORK:
+
+We are replacing the fixed fees with a fully dynamic fee manager. The school
+admin will be able to:
+
+  - Create any number of fee items with custom names (e.g., "Tuition Fee",
+    "Computer Lab Fee", "Hostel Fee", "Uniform Levy", "PTA Levy", etc.)
+  - Set the amount for each fee item
+  - Assign fee items to specific classes (for example, "Laboratory Fee"
+    might only apply to SS1, SS2, and SS3, not junior classes)
+  - Toggle whether each fee item should appear on the report card or not
+
+This means every school can define their own fee structure, and only the
+fees relevant to a particular student's class will appear on that student's
+report card. If a school decides they do not want fees on the report card at
+all, they can simply turn the entire section off.
+
+
+---------------------------------------------------------------------------
+3. STUDENT POSITIONS — ARM AND OVERALL
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+Positions tell parents where their child ranks academically compared to
+other students. Currently, the system only calculates a student's position
+within their specific section (arm). We are expanding this.
+
+HOW IT WILL WORK:
+
+There will now be two types of positions calculated for every student:
+
+  A) Position in Arm:
+     This is the student's rank within their specific class section. For
+     example, if a student is in JSS1-A, their arm position tells them
+     where they rank among all the students in JSS1-A specifically.
+
+  B) Position in Class (Overall):
+     This is the student's rank across the entire class level. For example,
+     if JSS1 has three arms — JSS1-A, JSS1-B, and JSS1-C — the overall
+     position tells the student where they rank among ALL JSS1 students
+     combined.
+
+Both positions will appear on the report card. The school admin can choose
+to show one, both, or neither through the settings.
+
+
+---------------------------------------------------------------------------
+4. SUBJECT POSITIONS, HIGHEST AND LOWEST SCORES
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+For each subject on the report card, the system will show additional
+context so parents can understand how their child performed relative to
+others.
+
+HOW IT WILL WORK:
+
+Beside each subject's score on the report card, the following will appear:
+
+  - Subject Position: Where the student ranks in that specific subject
+    (e.g., "5th out of 40")
+  - Highest Score: The best score achieved by any student in that subject
+  - Lowest Score: The weakest score in that subject
+
+This gives parents a clear picture. If their child scored 72 in Mathematics
+and the highest in the class was 75, the parent can see their child is very
+close to the top. If the lowest was 25, it provides further context.
+
+
+---------------------------------------------------------------------------
+5. GRADE TALLY (NUMBER OF As, Bs, Cs, etc.)
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+A summary count of how many A grades, B grades, C grades, and so on a
+student achieved across all their subjects. This is a quick way for parents
+and administrators to see the overall quality of a student's performance at
+a glance.
+
+HOW IT WILL WORK:
+
+After all subject scores are graded, the system will automatically count
+and display a summary like this:
+
+    "6As, 4Bs, 2Cs, 1F"
+
+This means the student got 6 subjects at grade A, 4 at grade B, 2 at grade
+C, and 1 failure. This summary will appear on both the individual student's
+report card and on the master sheet (the class-wide results overview used by
+administrators).
+
+
+---------------------------------------------------------------------------
+6. SUBJECTS OFFERED
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+A simple count showing how many subjects a student took in that term. Not
+all students in the same class necessarily offer the same number of
+subjects, especially in senior secondary where students choose between
+Science, Arts, and Commercial tracks.
+
+HOW IT WILL WORK:
+
+The number of subjects offered will be automatically counted and displayed
+on the report card. For example: "Subjects Offered: 12". This helps
+parents understand the workload and context of the total and average scores.
+
+
+---------------------------------------------------------------------------
+7. PASS / FAIL STATUS (TERMLY)
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+At the end of each term (First Term and Second Term), the system will
+clearly indicate whether a student has passed or failed that term based on
+rules defined by the school.
+
+HOW IT WILL WORK:
+
+The school admin will set up pass/fail rules through a simple settings
+page. The rules include:
+
+  - A minimum average percentage to pass (e.g., "Students must average at
+    least 40% across all subjects")
+  - Mandatory subjects that must be individually passed (e.g., "A student
+    must pass both Mathematics and English regardless of their overall
+    average")
+  - Different rules for different class levels if needed (e.g., SS3 might
+    require a 45% minimum while JSS1 requires 40%)
+
+Based on these rules, each student's report card will display either "PASS"
+or "FAIL" for that term. This is fully automatic — once the rules are set,
+the system handles everything.
+
+
+---------------------------------------------------------------------------
+8. PROMOTION STATUS (THIRD TERM / END OF SESSION)
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+At the end of the academic session (Third Term), the system will determine
+whether each student is promoted to the next class or not. This is
+different from the termly pass/fail because it considers the student's
+performance across all three terms combined.
+
+HOW IT WILL WORK:
+
+The promotion decision will be based on the cumulative average of all three
+terms. The system will take the student's First Term average, Second Term
+average, and Third Term average, combine them, and calculate an overall
+session average.
+
+If this session average meets the minimum threshold set by the school
+(e.g., 40%), the student is marked as "PROMOTED". If not, they are marked
+as "NOT PROMOTED".
+
+Just like the termly pass/fail, the school can also require that certain
+mandatory subjects (like Mathematics and English) must be passed across the
+session for promotion to apply.
+
+The promotion status will only appear on the Third Term report card, since
+promotion decisions only happen at the end of the session.
+
+
+---------------------------------------------------------------------------
+9. ATTENDANCE ON THE REPORT CARD
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+The report card will display how many times the school was open during the
+term and how many of those days the student was present, absent, late, or
+arrived early. Currently, this information has to be entered manually. We
+are automating it.
+
+HOW IT WILL WORK:
+
+The system will calculate attendance automatically using two sources:
+
+  A) Term Calendar (School Days):
+     The school admin will set the term start date and end date. They will
+     also mark any holidays or special days when the school was closed. The
+     system will then automatically calculate how many actual school days
+     existed in that term (excluding weekends and holidays). This becomes
+     the "Number of Times School Opened" figure.
+
+  B) Student Attendance Records (NFC / Biometric):
+     The system already tracks daily student attendance through the NFC card
+     scanning and fingerprint features. When a student taps their card or
+     scans their fingerprint each morning, the system records their
+     presence. At result generation time, the system will count how many
+     days each individual student clocked in during the term.
+
+The report card will then show:
+  - Times School Opened: e.g., 58 days
+  - Times Present: e.g., 55 days
+  - Times Absent: e.g., 3 days
+  - Times Late: e.g., 2 days
+  - Times Early: e.g., 53 days
+
+All of this is fully automatic. No manual counting needed.
+
+
+---------------------------------------------------------------------------
+10. QR CODE VERIFICATION
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+Each student's report card will contain a small QR code (a square barcode
+that can be scanned with any phone camera). This QR code serves as a
+security and verification feature.
+
+HOW IT WILL WORK:
+
+When a result is generated, a unique QR code will be placed on the report
+card. When scanned, the QR code will display the student's basic result
+summary — their name, admission number, class, average score, and position.
+
+This serves two important purposes:
+
+  1. Anti-Forgery: Parents, other schools, or employers can scan the QR
+     code to verify that the result is authentic and was genuinely issued by
+     the school. It prevents students from creating fake report cards.
+
+  2. Professionalism: QR codes on result sheets are an industry standard
+     for modern schools. They make the report card look more official and
+     trustworthy.
+
+
+---------------------------------------------------------------------------
+11. KEY TO GRADES (GRADING SCALE)
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+A reference table printed on the report card that shows what each grade
+means. For example:
+
+    A1 (75-100)  — Excellent
+    B2 (70-74)   — Very Good
+    B3 (65-69)   — Good
+    C4 (60-64)   — Credit
+    ...
+    F9 (0-39)    — Fail
+
+HOW IT WILL WORK:
+
+The grading scale is already defined in the system's settings (Grade
+Boundaries). We will ensure that this scale is always printed on every
+report card so that parents can understand what each letter grade means.
+The school admin can customise the grade boundaries and labels, and whatever
+they set will automatically reflect on all report cards.
+
+
+---------------------------------------------------------------------------
+12. RESULT PUBLISHING CONTROL
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+A feature that allows the school admin to control when students and parents
+can see their results. Just because results have been entered and generated
+does not mean they should be immediately visible to everyone.
+
+HOW IT WILL WORK:
+
+After results are entered and the report cards are generated, they remain
+in "unpublished" state by default. Students and parents logging into the
+portal will see a message saying "Results are not yet available."
+
+When the school is ready — after all verifications, signatures, and
+approvals — the admin clicks a "Publish Results" button for a specific
+class and term. Only then will students and parents be able to view and
+download their report cards.
+
+If the admin discovers an error after publishing, they can "Unpublish" the
+results, make corrections, and publish again. This gives the school full
+control over the release of results.
+
+
+---------------------------------------------------------------------------
+13. NOTICE ON THE REPORT CARDAffective & Psychomotor Domains Setup
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+A free-text area where the school admin can type a custom message or notice
+that will appear on every student's report card for that term. This is not
+the same as the school's general notice board. This is specifically for
+important information that the school wants every parent to see when they
+receive their child's result.
+
+HOW IT WILL WORK:
+
+In the result settings page, there will be a text box labeled "Report Card
+Notice". The admin simply types whatever message they want to communicate.
+For example:
+
+  - "Resumption date for Second Term is 13th January, 2025. All students
+    must report with their school fees receipt."
+
+  - "Inter-house sports competition will hold on 5th March, 2025. Parents
+    are cordially invited."
+
+  - "Outstanding fees must be cleared before the start of next term.
+    Defaulters will not be allowed to sit for examinations."
+
+  - "The school management congratulates all students who performed
+    excellently this term. Keep up the good work!"
+
+The notice will print in a clearly visible section on the report card,
+typically near the bottom, before the signatures. The admin can change the
+notice every term, and it will only appear on the report cards generated
+for that specific term.
+
+If the admin leaves the notice field empty, no notice section will appear
+on the report card. The toggle in the settings panel also allows the admin
+to turn the entire notice section on or off.
+
+
+---------------------------------------------------------------------------
+14. CUSTOMIZABLE RESULT SECTIONS (TOGGLE ON/OFF)
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+Not every school wants every possible section on their report card. Some
+schools do not need attendance displayed. Others do not want fees printed.
+Some prefer not to show positions. The system will accommodate all of these
+preferences.
+
+HOW IT WILL WORK:
+
+In the result settings page, the admin will see a panel of toggle switches.
+Each switch controls whether a specific section appears on the report card
+or not. The available toggles include:
+
+  - Show/Hide Admission Number
+  - Show/Hide Position in Arm
+  - Show/Hide Position in Class (Overall)
+  - Show/Hide Subjects Offered
+  - Show/Hide Grade Tally
+  - Show/Hide Term Status (Pass/Fail)
+  - Show/Hide Promotion Status
+  - Show/Hide Attendance Section
+  - Show/Hide School Fees
+  - Show/Hide QR Code
+  - Show/Hide Grading Key
+  - Show/Hide Affective Domains (Behaviour Assessment)
+  - Show/Hide Psychomotor Domains (Physical Skills Assessment)
+  - Show/Hide Teacher's Comment
+  - Show/Hide Head Teacher's Comment
+  - Show/Hide Principal's Comment
+  - Show/Hide Report Card Notice
+  - Show/Hide School Stamp Area
+  - Show/Hide Closing Date
+  - Show/Hide Next Term Begins Date
+
+This makes the system extremely flexible. Every school can build their
+ideal report card by simply toggling the sections they want.
+
+
+---------------------------------------------------------------------------
+15. TEMPLATE SELECTION
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+The visual design and layout of the report card. Different schools prefer
+different looks. The system already offers multiple report card designs, and
+all of the features described above will work with every design.
+
+AVAILABLE DESIGNS:
+
+  1. Classic Style — A traditional, clean report card layout
+  2. Modern Aesthetic — A contemporary design with modern fonts and spacing
+  3. Corporate Form — A formal, institution-style layout
+  4. Elegant Series — A premium, decorative design
+  5. Visual Chart — Includes performance graphs and visual indicators
+
+The school admin selects their preferred template from the settings, and all
+generated report cards will use that design. They can switch templates at
+any time, and all the data (scores, positions, fees, attendance, etc.) will
+automatically adapt to the new layout.
+
+
+---------------------------------------------------------------------------
+16. MASTER SHEET UPGRADES
+---------------------------------------------------------------------------
+
+WHAT IT IS:
+
+The master sheet is the administrative view that shows all students' results
+in one large table. It is used by teachers and administrators for
+record-keeping and analysis, not given to parents. We are upgrading it to
+include all the new data points.
+
+WHAT WILL CHANGE:
+
+The master sheet will now include:
+  - Admission Number column
+  - Grade Tally column (e.g., "6A, 3B, 2C, 1F")
+  - Subjects Offered count
+  - Promotion Status (on the Third Term / Cumulative master sheet)
+  - All existing columns (Position, Total, Average, Grade, Remark) remain
+
+The master sheet can be exported to Excel/CSV and printed in landscape
+format for physical filing.
+
+
+---------------------------------------------------------------------------
+17. WHAT STAYS THE SAME
+---------------------------------------------------------------------------
+
+The following features already exist and work well. They will not be
+changed, only improved to work seamlessly with the new additions:
+
+  - School Logo, Name, Address, and Motto on the report card header
+  - Student Photo on the report card
+  - Teacher's Comment, Head Teacher's Comment, and Principal's Comment
+  - Signature uploads for signatories
+  - Affective Domains (Behaviour Assessment — Punctuality, Neatness, etc.)
+  - Psychomotor Domains (Physical Skills — Handwriting, Sports, etc.)
+  - Grade Boundaries configuration
+  - Grading Structure and Component Weights (CA, Exam breakdown)
+  - Print-to-PDF functionality
+  - Notices module (the general school noticeboard remains separate)
+
+
+---------------------------------------------------------------------------
+SUMMARY
+---------------------------------------------------------------------------
+
+In summary, after this upgrade, every student's report card will be able to
+display the following (all optional and toggleable by the school):
+
+  1.  School branding (logo, name, address, motto)
+  2.  Student photo and personal details
+  3.  Admission / Registration number
+  4.  Class and section
+  5.  Term and academic session
+  6.  Subject scores with CA breakdown
+  7.  Subject grade and remark per subject
+  8.  Subject position (rank in each subject)
+  9.  Highest and lowest score per subject
+  10. Total score and average percentage
+  11. Position in Arm (section rank)
+  12. Position in Class (overall rank across all arms)
+  13. Number of subjects offered
+  14. Grade tally (count of As, Bs, Cs, etc.)
+  15. Term status (Pass or Fail)
+  16. Promotion status (Promoted or Not Promoted — Third Term only)
+  17. Attendance summary (days opened, present, absent, late, early)
+  18. School fees breakdown for next term
+  19. QR code for result verification
+  20. Key to grades (grading scale reference)
+  21. Affective domain assessment
+  22. Psychomotor domain assessment
+  23. Teacher's comment
+  24. Head Teacher's comment
+  25. Principal's comment
+  26. Report card notice (admin-typed message for parents)
+  27. Signatory names and signatures
+  28. School stamp area
+  29. Closing date and next term resumption date
+
+All of this will be built in phases, tested thoroughly, and rolled out
+without disrupting any existing functionality.
+
+===========================================================================
+                          END OF DOCUMENT
+===========================================================================
