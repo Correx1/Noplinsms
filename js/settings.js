@@ -108,6 +108,8 @@
         const setV = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
         setV('student-start-time', sched.student.startTime);
         setV('student-late-time',  sched.student.lateThreshold);
+        setV('student-out-time',   sched.student.expectedOut || '14:00');
+        setV('student-register-hours', localStorage.getItem('sms_school_register_hours') || '5');
         setV('staff-start-time',   sched.staff.startTime);
         setV('staff-late-time',    sched.staff.lateThreshold);
     };
@@ -133,6 +135,7 @@
             staff:   { startTime: val('staff-start-time'),   lateThreshold: val('staff-late-time'),   expectedOut: val('staff-out-time')    || '15:00' }
         };
         localStorage.setItem('sms_attendance_config', JSON.stringify(sched));
+        localStorage.setItem('sms_school_register_hours', val('student-register-hours') || '5');
         showToast('Settings saved');
     };
 

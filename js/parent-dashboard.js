@@ -46,7 +46,7 @@ window.loadMyChildren = function() {
 };
 
 window.loadParentAttendance = function() {
-    loadParentContent('attendance.html');
+    loadParentContent('attendance.html', '../../js/parent-attendance.js', 'parent-attendance-script');
 };
 
 window.loadParentMarks = function() {

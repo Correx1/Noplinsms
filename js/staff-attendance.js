@@ -210,6 +210,11 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             currentDate = dateInput ? dateInput.value : today;
+            if (dateDisplay && dateInput) {
+                const parts = dateInput.value.split('-');
+                const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                dateDisplay.textContent = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            }
             container.classList.remove('hidden');
             tableBody.innerHTML = '<tr><td colspan="9" class="p-6 text-center"><i class="fas fa-spinner fa-spin text-2xl text-primary-600"></i></td></tr>';
             setTimeout(loadStaff, 400);

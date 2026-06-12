@@ -46,7 +46,7 @@ window.loadMyProfile = function() {
 };
 
 window.loadStudentAttendance = function() {
-    loadStudentContent('attendance.html');
+    loadStudentContent('attendance.html', '../../js/student-attendance.js', 'student-attendance-script');
 };
 
 window.loadStudentMarks = function() {

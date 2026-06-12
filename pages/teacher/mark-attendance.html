@@ -1,213 +1,344 @@
-<!-- Mark Attendance Page -->
-<div class="p-6 bg-white block sm:flex items-center justify-between border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-    <div class="w-full mb-1">
-        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Mark Attendance</h1>
-        <p class="text-gray-600 dark:text-gray-400">Record student attendance for your classes</p>
+<!-- Teacher Attendance & Scan Simulation Module -->
+<div class="px-4 pt-6 animate-fade-in pb-20 relative">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <div>
+            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Student Attendance Portal</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm text-primary-600 dark:text-primary-400">Manage subject-wise rosters, simulated biometric scanning, and classroom reports</p>
+        </div>
     </div>
-</div>
 
-<div class="p-4 dark:bg-gray-900">
-    <!-- Filters -->
-    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 mb-6 dark:bg-gray-800 dark:border-gray-700">
-        <form id="fetchStudentsForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Select Class</label>
-                <select id="classSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option value="">Select Class</option>
-                    <option value="JSS 2A">JSS 2A - Mathematics</option>
-                    <option value="SSS 1B">SSS 1B - Physics</option>
-                    <option value="SSS 2A">SSS 2A - Chemistry</option>
-                </select>
-            </div>
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Date</label>
-                <input type="date" id="attendanceDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-            </div>
-            <div>
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-100">Period</label>
-                <select id="periodSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <option>Period 1 (08:00-08:45)</option>
-                    <option>Period 2 (09:00-09:45)</option>
-                    <option>Period 3 (10:00-10:45)</option>
-                </select>
-            </div>
-            <div class="flex items-end">
-                <button type="submit" class="w-full text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5">
-                    <i class="fas fa-users mr-2"></i>Fetch Students
+    <!-- Tabs Header -->
+    <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="attendanceTabs" role="tablist">
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg transition-all text-primary-600 border-primary-600 dark:text-primary-500 dark:border-primary-500" id="tab-periodic" type="button" role="tab" onclick="window.teacherAttendanceController.switchTab('periodic')">
+                    <i class="fas fa-book-open mr-2"></i>Periodic (Subject) Attendance
                 </button>
-            </div>
-        </form>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 transition-all text-gray-500 dark:text-gray-400" id="tab-scanner" type="button" role="tab" onclick="window.teacherAttendanceController.switchTab('scanner')">
+                    <i class="fas fa-wifi mr-2"></i>Daily Biometric Scanner
+                </button>
+            </li>
+            <li role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 transition-all text-gray-500 dark:text-gray-400" id="tab-reports" type="button" role="tab" onclick="window.teacherAttendanceController.switchTab('reports')">
+                    <i class="fas fa-chart-line mr-2"></i>Subject Reports
+                </button>
+            </li>
+        </ul>
     </div>
 
-    <!-- Attendance Table -->
-    <div id="attendanceTableContainer" class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700" style="display: none;">
-        <div class="p-4 border-b border-gray-200 flex justify-between items-center dark:border-gray-700">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Attendance Sheet - <span id="selectedClass"></span>
+    <!-- ========================================== -->
+    <!-- TAB 1: PERIODIC (SUBJECT) ATTENDANCE      -->
+    <!-- ========================================== -->
+    <div id="content-periodic" class="block space-y-6">
+        <!-- Filters Form -->
+        <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary-600 mr-2"></span> Select Timetable Class & Period
             </h3>
-            <div class="flex gap-2">
-                <button onclick="markAllPresent()" class="px-4 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg">
-                    <i class="fas fa-check-double mr-2"></i>Mark All Present
+            <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-4 items-end">
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Class</label>
+                    <select id="periodicClass" onchange="window.teacherAttendanceController.onClassChange()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Select Class</option>
+                        <option value="JSS1">JSS 1</option>
+                        <option value="JSS2">JSS 2</option>
+                        <option value="JSS3">JSS 3</option>
+                        <option value="SS1">SS 1</option>
+                        <option value="SS2">SS 2</option>
+                        <option value="SS3">SS 3</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Section</label>
+                    <select id="periodicSection" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Select Section</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="C">Section C</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Subject</label>
+                    <select id="periodicSubject" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" disabled>
+                        <option value="">Select Subject</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Period</label>
+                    <select id="periodicPeriod" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">Select Period</option>
+                        <option value="Period 1">Period 1 (08:00 - 08:45)</option>
+                        <option value="Period 2">Period 2 (08:45 - 09:30)</option>
+                        <option value="Period 3">Period 3 (10:00 - 10:45)</option>
+                        <option value="Period 4">Period 4 (10:45 - 11:30)</option>
+                        <option value="Period 5">Period 5 (12:00 - 12:45)</option>
+                        <option value="Period 6">Period 6 (12:45 - 01:30)</option>
+                        <option value="Period 7">Period 7 (01:30 - 02:15)</option>
+                        <option value="Period 8">Period 8 (02:15 - 03:00)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Date</label>
+                    <input type="date" id="periodicDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <button onclick="window.teacherAttendanceController.fetchPeriodicRoster()" class="w-full text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
+                        <i class="fas fa-users mr-1.5"></i> Fetch Students
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Periodic Table Grid (Hidden by default) -->
+        <div id="periodicRosterContainer" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700 hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-gray-50 dark:bg-gray-800/50">
+                <div>
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                        <i class="fas fa-list-check mr-2 text-primary-600"></i>
+                        Periodic Attendance Register: <span id="periodicActiveHeader" class="text-primary-600 ml-1">SS3 A - Mathematics</span>
+                    </h3>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="window.teacherAttendanceController.markAll('present')" class="px-3.5 py-2 text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 rounded-lg dark:bg-green-900/20 dark:text-green-400 dark:hover:bg-green-900/40 transition-colors">
+                        <i class="fas fa-check-circle mr-1.5"></i> Mark All ✅ Present
+                    </button>
+                    <button onclick="window.teacherAttendanceController.markAll('absent')" class="px-3.5 py-2 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-lg dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors">
+                        <i class="fas fa-times-circle mr-1.5"></i> Mark All ❌ Absent
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th class="px-6 py-4">Roll No</th>
+                            <th class="px-6 py-4">Photo</th>
+                            <th class="px-6 py-4">Student Name</th>
+                            <th class="px-6 py-4">Attendance Toggle</th>
+                            <th class="px-6 py-4">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="periodicRosterTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer counts & actions -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50 dark:bg-gray-800/50">
+                <div class="text-sm text-gray-600 dark:text-gray-300">
+                    Present: <span id="periodicPresentCount" class="font-bold text-green-600 dark:text-green-400">0</span> |
+                    Absent: <span id="periodicAbsentCount" class="font-bold text-red-500">0</span> |
+                    Total: <span id="periodicTotalCount" class="font-bold text-gray-900 dark:text-white">0</span>
+                </div>
+                <button onclick="window.teacherAttendanceController.savePeriodicAttendance()" class="px-6 py-2.5 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm shadow-sm transition-all flex items-center">
+                    <i class="fas fa-save mr-2"></i> Save Periodic Attendance
                 </button>
             </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
-                    <tr>
-                        <th class="px-6 py-3">Roll No</th>
-                        <th class="px-6 py-3">Student Name</th>
-                        <th class="px-6 py-3">Status</th>
-                        <th class="px-6 py-3">Remarks</th>
-                    </tr>
-                </thead>
-                <tbody id="attendanceTableBody" class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200">
-                    <!-- Students will be loaded here -->
-                </tbody>
-            </table>
-        </div>
-        <div class="p-4 border-t border-gray-200 flex justify-between items-center dark:border-gray-700">
-            <div class="text-sm text-gray-600 dark:text-gray-300">
-                Present: <span id="presentCount" class="font-semibold text-green-600 dark:text-green-400">0</span> |
-                Absent: <span id="absentCount" class="font-semibold text-red-600 dark:text-red-400">0</span> |
-                Total: <span id="totalCount" class="font-semibold text-gray-900 dark:text-gray-100">0</span>
-            </div>
-            <button onclick="saveAttendance()" class="px-5 py-2.5 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm">
-                <i class="fas fa-save mr-2"></i>Save Attendance
-            </button>
+
+        <!-- Empty state periodic -->
+        <div id="periodicEmptyState" class="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center dark:bg-gray-800 dark:border-gray-700">
+            <i class="fas fa-users text-5xl text-gray-300 dark:text-gray-500 mb-4 block"></i>
+            <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">Roster Not Loaded</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+                Please select class details above and click "Fetch Students" to register subject periodic attendance.
+            </p>
         </div>
     </div>
 
-    <!-- Empty State -->
-    <div id="emptyState" class="bg-white border border-gray-200 rounded-lg shadow-sm p-12 text-center dark:bg-gray-800 dark:border-gray-700">
-        <i class="fas fa-users text-6xl text-gray-300 dark:text-gray-500 mb-4"></i>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No Students Loaded</h3>
-        <p class="text-gray-600 dark:text-gray-400">
-            Select a class and date, then click "Fetch Students" to begin marking attendance.
-        </p>
+    <!-- ========================================== -->
+    <!-- TAB 2: DAILY SCANNERS (NFC/BIOMETRIC)     -->
+    <!-- ========================================== -->
+    <div id="content-scanner" class="hidden space-y-6">
+        <!-- Selection Form -->
+        <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-500 mr-2 animate-pulse"></span> simulated Biometric / NFC Scanner Controls
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Scanner Date</label>
+                    <input type="date" id="scannerDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Class Filter</label>
+                    <select id="scannerClass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Classes</option>
+                        <option value="JSS1">JSS 1</option>
+                        <option value="JSS2">JSS 2</option>
+                        <option value="JSS3">JSS 3</option>
+                        <option value="SS1">SS 1</option>
+                        <option value="SS2">SS 2</option>
+                        <option value="SS3">SS 3</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Section Filter</label>
+                    <select id="scannerSection" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Sections</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="C">Section C</option>
+                    </select>
+                </div>
+                <div>
+                    <button onclick="window.teacherAttendanceController.loadDailyScannerLogs()" class="w-full text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 transition-colors">
+                        Filter Log List
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scanner Trigger Panel -->
+            <div class="mt-6 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                        <i class="fas fa-wifi text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900 dark:text-white">NFC Biometric Device Online</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Scan cards or simulate fingerprints to timestamp attendance</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button id="btnScanSimulator" onclick="window.teacherAttendanceController.triggerScanSim()" class="px-4 py-2.5 text-xs font-bold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-sm transition-all flex items-center">
+                        <i class="fas fa-fingerprint mr-1.5"></i> Simulate Quick Scan
+                    </button>
+                </div>
+            </div>
+            
+            <div id="scanDisplayBanner" class="hidden mt-4 p-4 rounded-xl border border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-800 flex items-center justify-between">
+                <!-- banner populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Daily Scanner Logs Table -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-wrap justify-between items-center gap-3 bg-gray-50 dark:bg-gray-800/50">
+                <h3 class="text-base font-bold text-gray-900 dark:text-white">Daily Biometric Log Sheet</h3>
+                
+                <div class="flex gap-2">
+                    <button onclick="window.teacherAttendanceController.bulkSetClock('in')" class="px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 hover:bg-green-100 rounded-lg dark:bg-gray-700 dark:text-green-300 transition-colors">
+                        <i class="fas fa-sign-in-alt mr-1"></i> Bulk Clock-In
+                    </button>
+                    <button onclick="window.teacherAttendanceController.bulkSetClock('out')" class="px-3 py-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg dark:bg-gray-700 dark:text-blue-300 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Bulk Clock-Out
+                    </button>
+                    <button onclick="window.teacherAttendanceController.bulkSetClock('absent')" class="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 rounded-lg dark:bg-gray-700 dark:text-red-300 transition-colors">
+                        <i class="fas fa-times-circle mr-1"></i> Reset/Absent
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th class="px-4 py-3 w-10">
+                                <input type="checkbox" id="scannerSelectAll" class="w-4 h-4 text-primary-600 rounded cursor-pointer" onchange="window.teacherAttendanceController.selectAllScannerRows(this.checked)">
+                            </th>
+                            <th class="px-6 py-4">Student ID</th>
+                            <th class="px-6 py-4">Name</th>
+                            <th class="px-6 py-4">Class</th>
+                            <th class="px-6 py-4 text-center">Clock In</th>
+                            <th class="px-6 py-4 text-center">Clock Out</th>
+                            <th class="px-6 py-4 text-center">Calculated Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scannerLogTableBody" class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end bg-gray-50 dark:bg-gray-800/50">
+                <button onclick="window.teacherAttendanceController.saveScannerLogs()" class="px-6 py-2.5 text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm shadow-sm transition-all flex items-center">
+                    <i class="fas fa-save mr-2"></i> Save Daily Logs
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: SUBJECT REPORTS                     -->
+    <!-- ========================================== -->
+    <div id="content-reports" class="hidden space-y-6">
+        <!-- Selection -->
+        <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-2"></span> Generate Attendance Stats
+            </h3>
+            
+            <div class="flex flex-wrap justify-between items-end gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end flex-grow max-w-3xl">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
+                        <select id="reportClass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="">Select Class</option>
+                            <option value="JSS1">JSS 1</option>
+                            <option value="JSS2">JSS 2</option>
+                            <option value="JSS3">JSS 3</option>
+                            <option value="SS1">SS 1</option>
+                            <option value="SS2">SS 2</option>
+                            <option value="SS3">SS 3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                        <select id="reportSection" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="">Select Section</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="window.teacherAttendanceController.generateReport()" class="px-6 py-2.5 text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm transition-all shadow-sm flex items-center justify-center">
+                            <i class="fas fa-chart-bar mr-2"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <button id="btnExportReport" onclick="window.teacherAttendanceController.exportReportExcel()" class="px-4 py-2.5 text-green-700 bg-green-50 hover:bg-green-100 font-semibold rounded-lg text-sm transition-all border border-green-200 dark:bg-gray-700 dark:text-green-400 dark:border-green-800 dark:hover:bg-gray-600 flex items-center hidden">
+                        <i class="fas fa-file-excel mr-2"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Table (Hidden by default) -->
+        <div id="reportContainer" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700 hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="reportsExcelTable">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th class="px-6 py-4">Student Name</th>
+                            <th class="px-6 py-4">Total Periods</th>
+                            <th class="px-6 py-4">Periods Attended (✅)</th>
+                            <th class="px-6 py-4">Periods Missed (❌)</th>
+                            <th class="px-6 py-4">Attendance Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty state reports -->
+        <div id="reportsEmptyState" class="bg-white border border-gray-200 rounded-xl shadow-sm p-12 text-center dark:bg-gray-800 dark:border-gray-700">
+            <i class="fas fa-chart-line text-5xl text-gray-300 dark:text-gray-500 mb-4 block"></i>
+            <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100 mb-1">No Report Generated</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
+                Select a class and section, then click "Generate Report" to build student periodic attendance stats.
+            </p>
+        </div>
     </div>
 </div>
-
-<script>
-// Sample student data
-const studentData = {
-    'JSS 2A': [
-        {rollNo: '001', name: 'John Doe'},
-        {rollNo: '002', name: 'Jane Smith'},
-        {rollNo: '003', name: 'David Brown'},
-        {rollNo: '004', name: 'Sarah Williams'},
-        {rollNo: '005', name: 'Michael Johnson'}
-    ],
-    'SSS 1B': [
-        {rollNo: '101', name: 'Alice Cooper'},
-        {rollNo: '102', name: 'Bob Martin'},
-        {rollNo: '103', name: 'Carol White'}
-    ],
-    'SSS 2A': [
-        {rollNo: '201', name: 'Emma Davis'},
-        {rollNo: '202', name: 'Frank Miller'},
-        {rollNo: '203', name: 'Grace Lee'}
-    ]
-};
-
-// Set today's date
-document.getElementById('attendanceDate').valueAsDate = new Date();
-
-// Fetch Students
-document.getElementById('fetchStudentsForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const selectedClass = document.getElementById('classSelect').value;
-
-    if (!selectedClass) {
-        alert('Please select a class');
-        return;
-    }
-
-    const students = studentData[selectedClass] || [];
-    const tbody = document.getElementById('attendanceTableBody');
-    tbody.innerHTML = '';
-
-students.forEach(student => {
-   const row = `
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-        <td class="px-6 py-4 text-gray-900 dark:text-white ">
-            ${student.rollNo}
-        </td>
-        <td class="px-6 py-4 text-gray-700 dark:text-gray-200 dark:bg-gray-800">
-            ${student.name}
-        </td>
-        <td class="px-6 py-4 dark:bg-gray-800">
-            <div class="flex gap-4">
-                <label class="flex items-center gap-2 text-green-600 dark:text-green-400">
-                    <input type="radio" name="att_${student.rollNo}" value="present" checked onchange="updateCounts()">
-                    Present
-                </label>
-                <label class="flex items-center gap-2 text-red-600 dark:text-red-400">
-                    <input type="radio" name="att_${student.rollNo}" value="absent" onchange="updateCounts()">
-                    Absent
-                </label>
-            </div>
-        </td>
-        <td class="px-6 py-4 dark:bg-gray-800">
-            <input type="text"
-                class="w-full p-2 rounded-lg border bg-gray-50 border-gray-300
-                       dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        </td>
-    </tr>
-`;
-    tbody.innerHTML += row;
-});
-
-    document.getElementById('selectedClass').textContent = selectedClass;
-    document.getElementById('attendanceTableContainer').style.display = 'block';
-    document.getElementById('emptyState').style.display = 'none';
-    updateCounts();
-});
-
-
-
-function updateCounts() {
-    const radios = document.querySelectorAll('input[type="radio"]:checked');
-    let present = 0, absent = 0;
-
-    radios.forEach(radio => {
-        if (radio.value === 'present') present++;
-        else if (radio.value === 'absent') absent++;
-    });
-
-    document.getElementById('presentCount').textContent = present;
-    document.getElementById('absentCount').textContent = absent;
-    document.getElementById('totalCount').textContent = present + absent;
-}
-
-function markAllPresent() {
-    const presentRadios = document.querySelectorAll('input[type="radio"][value="present"]');
-    presentRadios.forEach(radio => radio.checked = true);
-    updateCounts();
-}
-
-function saveAttendance() {
-    const classVal = document.getElementById('classSelect').value;
-    const date = document.getElementById('attendanceDate').value;
-
-    if (!classVal || !date) {
-        alert('Please select class and date');
-        return;
-    }
-
-    const attendanceData = [];
-    const rows = document.querySelectorAll('#attendanceTableBody tr');
-
-    rows.forEach(row => {
-        const rollNo = row.querySelector('td:first-child').textContent;
-        const name = row.querySelector('td:nth-child(2)').textContent;
-        const status = row.querySelector('input[type="radio"]:checked').value;
-        const remarks = row.querySelector('input[type="text"]').value;
-
-        attendanceData.push({rollNo, name, status, remarks});
-    });
-
-    console.log('Attendance Data:', {class: classVal, date, data: attendanceData});
-    alert('Attendance saved successfully!');
-}
-</script>

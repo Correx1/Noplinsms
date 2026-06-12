@@ -71,7 +71,7 @@ window.loadTeacherStudents = function() {
 };
 
 window.loadTeacherAttendance = function() {
-    loadTeacherContent('mark-attendance.html');
+    loadTeacherContent('mark-attendance.html', '../../js/teacher-attendance.js', 'teacher-attendance-script');
 };
 
 window.loadTeacherAssignments = function() {
