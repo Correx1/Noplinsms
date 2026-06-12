@@ -1,0 +1,329 @@
+<!-- Period Attendance Management Module -->
+<div class="px-4 pt-6 animate-fade-in pb-20 relative">
+    
+    <!-- ========================================== -->
+    <!-- VIEW 1: MAIN DASHBOARD (TEACHER OVERVIEW)  -->
+    <!-- ========================================== -->
+    <div id="view-dashboard" class="block">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+            <div>
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Period Attendance Management</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm">Home &raquo; Academic &raquo; Period Attendance</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="window.periodicAttendanceController.switchView('take-attendance')" class="px-4 py-2 text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm shadow-sm transition-all flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Take Period Attendance
+                </button>
+                <button onclick="window.periodicAttendanceController.switchView('student-attendance')" class="px-4 py-2 text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm shadow-sm transition-all flex items-center">
+                    <i class="fas fa-list-ul mr-2"></i> View Student Period Attendance
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="p-4 mb-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date From</label>
+                    <input type="date" id="filterDateFrom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date To</label>
+                    <input type="date" id="filterDateTo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teacher</label>
+                    <select id="filterTeacher" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Teachers</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <button onclick="window.periodicAttendanceController.loadDashboard()" class="w-full md:w-auto px-6 py-2.5 text-white bg-gray-500 hover:bg-gray-600 font-medium rounded-lg text-sm transition-all shadow-sm">
+                        Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Table -->
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">#</th>
+                            <th scope="col" class="px-6 py-4">Teacher</th>
+                            <th scope="col" class="px-6 py-4">Today's Classes</th>
+                            <th scope="col" class="px-6 py-4">Classes Attended</th>
+                            <th scope="col" class="px-6 py-4">Classes Missed</th>
+                            <th scope="col" class="px-6 py-4">Attendance Rate</th>
+                            <th scope="col" class="px-6 py-4">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: TAKE PERIOD ATTENDANCE             -->
+    <!-- ========================================== -->
+    <div id="view-take-attendance" class="hidden">
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Take Period Attendance</h1>
+            <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm cursor-pointer hover:text-primary-600" onclick="window.periodicAttendanceController.switchView('dashboard')">Home &raquo; Academic &raquo; Period Attendance</p>
+        </div>
+
+        <div class="p-6 mb-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h3 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                <div class="w-2 h-2 rounded-full bg-gray-400 mr-2"></div> Take class period attendance
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                <!-- Class, Section, Subject -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
+                    <select id="takeAttClass" onchange="window.periodicAttendanceController.onClassChange()" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm">
+                        <option value="">Select Class</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                    <select id="takeAttSection" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm">
+                        <option value="">Select Section</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject</label>
+                    <select id="takeAttSubject" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm" disabled>
+                        <option value="">Select Subject</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 items-end">
+                <!-- Date, Period -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attendance Date</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="far fa-calendar text-gray-400"></i>
+                        </div>
+                        <input type="date" id="takeAttDate" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Period</label>
+                    <select id="takeAttPeriod" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm">
+                        <option value="">Select Period</option>
+                        <option value="Period 1">Period 1</option>
+                        <option value="Period 2">Period 2</option>
+                        <option value="Period 3">Period 3</option>
+                        <option value="Period 4">Period 4</option>
+                        <option value="Period 5">Period 5</option>
+                        <option value="Period 6">Period 6</option>
+                        <option value="Period 7">Period 7</option>
+                        <option value="Period 8">Period 8</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="window.periodicAttendanceController.loadRosterForTakingAttendance()" class="px-6 py-2.5 text-white bg-gray-500 hover:bg-gray-600 font-medium rounded-lg text-sm shadow-sm transition-all">
+                Take Attendance
+            </button>
+            <button onclick="window.periodicAttendanceController.switchView('dashboard')" class="ml-2 px-6 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 font-medium rounded-lg text-sm shadow-sm transition-all dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                Cancel
+            </button>
+        </div>
+
+        <!-- Roster Grid (Hidden until "Take Attendance" is clicked) -->
+        <div id="rosterContainer" class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-gray-800 dark:border-gray-700 hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Student Roster</h3>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.periodicAttendanceController.markAllPresent()" class="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-lg dark:bg-gray-700 dark:text-primary-400 dark:hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-check-double mr-1.5"></i> Mark All Present
+                    </button>
+                    <button onclick="window.periodicAttendanceController.saveAttendance()" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                        <i class="fas fa-save mr-1.5"></i> Save
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Roll No</th>
+                            <th scope="col" class="px-6 py-4">Student Name</th>
+                            <th scope="col" class="px-6 py-4">Status</th>
+                            <th scope="col" class="px-6 py-4">Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="takeAttTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: STUDENT PERIOD ATTENDANCE          -->
+    <!-- ========================================== -->
+    <div id="view-student-attendance" class="hidden">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100">Student Period Attendance</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm cursor-pointer hover:text-primary-600" onclick="window.periodicAttendanceController.switchView('dashboard')">Home &raquo; Academic &raquo; Student Period Attendance</p>
+            </div>
+            <button onclick="window.periodicAttendanceController.switchView('dashboard')" class="px-4 py-2 text-white bg-primary-700 hover:bg-primary-800 font-medium rounded-lg text-sm shadow-sm">
+                Back to Dashboard
+            </button>
+        </div>
+
+        <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex flex-wrap justify-between items-end mb-8 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end flex-grow max-w-3xl">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Class</label>
+                        <select id="studentAttClass" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="">Select Class</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Section</label>
+                        <select id="studentAttSection" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <option value="">Select Section</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button onclick="window.periodicAttendanceController.filterStudentAttendance()" class="px-6 py-2.5 text-white bg-gray-500 hover:bg-gray-600 font-medium rounded-lg text-sm transition-all shadow-sm">
+                            Filter
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button id="btnExportStudentAtt" onclick="window.periodicAttendanceController.exportTableToExcel('studentAttResults', 'Student_Period_Attendance')" class="px-4 py-2.5 text-green-700 bg-green-50 hover:bg-green-100 font-medium rounded-lg text-sm transition-all shadow-sm flex items-center border border-green-200 dark:bg-gray-700 dark:text-green-400 dark:border-green-800 dark:hover:bg-gray-600 hidden">
+                        <i class="fas fa-file-excel mr-2"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Empty State / Placeholder -->
+            <div id="studentAttEmptyState" class="py-12 text-center">
+                <div class="inline-flex items-center justify-center mb-4">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486747.png" class="w-32 h-32 opacity-50" alt="Search icon">
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Please select a class and section to view attendance records</p>
+            </div>
+
+            <!-- Results Grid (Hidden by default) -->
+            <div id="studentAttResults" class="hidden overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Student Name</th>
+                            <th scope="col" class="px-6 py-4">Total Periods</th>
+                            <th scope="col" class="px-6 py-4">Present</th>
+                            <th scope="col" class="px-6 py-4">Absent</th>
+                            <th scope="col" class="px-6 py-4">Late</th>
+                            <th scope="col" class="px-6 py-4">Attendance %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentAttTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: TEACHER DETAILS (NFC INCLUDED)     -->
+    <!-- ========================================== -->
+    <div id="view-teacher-details" class="hidden">
+        <div class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-gray-100" id="teacherDetailsTitle">Teacher Period Attendance - Name</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1 text-sm cursor-pointer hover:text-primary-600" onclick="window.periodicAttendanceController.switchView('dashboard')">Home &raquo; Academic &raquo; Teacher Period Attendance</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button id="btnExportTeacherAtt" onclick="window.periodicAttendanceController.exportTableToExcel('teacherDetailsTable', 'Teacher_Period_Attendance')" class="px-4 py-2 text-green-700 bg-green-50 hover:bg-green-100 font-medium rounded-lg text-sm transition-all shadow-sm flex items-center border border-green-200 dark:bg-gray-700 dark:text-green-400 dark:border-green-800 dark:hover:bg-gray-600">
+                    <i class="fas fa-file-excel mr-2"></i> Export Excel
+                </button>
+                <button onclick="window.periodicAttendanceController.switchView('dashboard')" class="px-6 py-2 text-white bg-primary-800 hover:bg-primary-900 font-medium rounded-lg text-sm shadow-sm transition-all">
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <div class="flex flex-wrap gap-4 items-end mb-6">
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date From</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="far fa-calendar text-gray-400"></i>
+                        </div>
+                        <input type="date" id="teacherDetailDateFrom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date To</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="far fa-calendar text-gray-400"></i>
+                        </div>
+                        <input type="date" id="teacherDetailDateTo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 pr-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <button onclick="window.periodicAttendanceController.loadTeacherDetails()" class="px-6 py-2.5 text-white bg-gray-500 hover:bg-gray-600 font-medium rounded-lg text-sm shadow-sm transition-all">
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto border-t border-gray-200 dark:border-gray-700 pt-4" id="teacherDetailsTable">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-300">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">#</th>
+                            <th scope="col" class="px-6 py-4">Date</th>
+                            <th scope="col" class="px-6 py-4">Class</th>
+                            <th scope="col" class="px-6 py-4">Section</th>
+                            <th scope="col" class="px-6 py-4">Subject</th>
+                            <th scope="col" class="px-6 py-4">Period Time</th>
+                            <th scope="col" class="px-6 py-4">NFC Clock In</th>
+                            <th scope="col" class="px-6 py-4">NFC Clock Out</th>
+                            <th scope="col" class="px-6 py-4">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherDetailsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tr>
+                            <td colspan="9" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                                No data found
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

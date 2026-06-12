@@ -198,7 +198,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Attendance Section
                 'Staff Attendance': loadStaffAttendancePage,
                 'Student Attendance': loadAttendancePage,
-                'Card Scanner': loadNfcScannerPage,
+                'Periodic Attendance': loadPeriodicAttendancePage,
+                'ID Cards': loadIDCardsPage,
     
                 // Finance Section
                 'Income': loadIncomePage,
@@ -443,6 +444,8 @@ window.loadMarksEntryPage = () => loadPage('academics/marks/marks.html', '../../
 window.loadResultsPage = () => loadPage('academics/grading/results.html', '../../js/results.js', 'results-script');
 
 window.loadTimetablePage = () => loadPage('academics/timetable/create-timetable.html', '../../js/timetable.js', 'timetable-script');
+window.loadAttendancePage = () => loadPage('attendance/student-attendance.html', '../../js/attendance.js', 'attendance-script');
+window.loadPeriodicAttendancePage = () => loadPage('academics/periodic-attendance.html', '../../js/periodic-attendance.js', 'periodic-attendance-script');
 window.loadIDCardsPage = () => loadPage('academics/id-cards.html', '../../js/id-cards.js', 'id-cards-script');
 window.loadAIPage = () => loadPage('ai-automations.html', '../../js/ai-automations.js', 'ai-script');
 
