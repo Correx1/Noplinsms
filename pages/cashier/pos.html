@@ -1,0 +1,232 @@
+<!-- POS Terminal View -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Point of Sale (POS) Terminal</h1>
+                <p class="text-gray-600 dark:text-gray-300">Scan student card, select products, and authorize payment via fingerprint</p>
+            </div>
+            <!-- Live Indicator -->
+            <div class="flex items-center gap-2 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 px-3 py-1.5 rounded-full text-green-700 dark:text-green-300 text-xs font-semibold">
+                <span class="h-2 w-2 rounded-full bg-green-500 animate-ping"></span>
+                <span>Wedge Scanner Connected</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left Pane: Product Catalog (7 columns) -->
+    <div class="lg:col-span-7 space-y-6">
+        <!-- Search and Category Filters -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-4 space-y-4">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="posSearch" oninput="filterPOSProducts()"
+                        class="block w-full pl-10 pr-4 py-2.5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                        placeholder="Search by product name or SKU...">
+                </div>
+            </div>
+
+            <!-- Categories Tabs -->
+            <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+                <button onclick="switchPOSCategory('all', this)"
+                    class="px-4 py-2 text-sm font-medium rounded-lg bg-primary-600 text-white shadow-sm transition-all duration-200 pos-category-tab">
+                    All Items
+                </button>
+                <button onclick="switchPOSCategory('canteen', this)"
+                    class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 pos-category-tab">
+                    Canteen
+                </button>
+                <button onclick="switchPOSCategory('stationery', this)"
+                    class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 pos-category-tab">
+                    Stationery
+                </button>
+                <button onclick="switchPOSCategory('uniforms', this)"
+                    class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 pos-category-tab">
+                    Uniforms
+                </button>
+                <button onclick="switchPOSCategory('books', this)"
+                    class="px-4 py-2 text-sm font-medium rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 pos-category-tab">
+                    Books
+                </button>
+            </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="space-y-3" id="posProductsGrid">
+            <!-- Dynamic products go here -->
+        </div>
+    </div>
+
+    <!-- Right Pane: Cart, Student & Checkout (5 columns) -->
+    <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Student Identification Card -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-4 relative overflow-hidden">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <i class="fas fa-id-card-alt text-primary-500"></i> Student Account
+            </h3>
+
+            <!-- Swipe/Scan overlay indicator -->
+            <div class="flex gap-2">
+                <button onclick="triggerStudentNfcScan()"
+                    class="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-primary-600 to-blue-600 hover:from-primary-700 hover:to-blue-700 text-white font-bold rounded-lg text-sm shadow-md transition-all duration-200">
+                    <i class="fas fa-satellite-dish animate-pulse"></i> Scan Smart ID Card
+                </button>
+                
+                <div class="relative w-1/3">
+                    <input type="text" id="manualStudentId" onkeydown="handleStudentManualId(event)"
+                        class="block w-full px-3 py-3 text-sm text-center font-semibold text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        placeholder="Enter ID...">
+                </div>
+            </div>
+
+            <!-- Identified Student Profile -->
+            <div id="identifiedStudentBox" class="hidden border-t border-gray-100 dark:border-gray-700 pt-4 animate-fade-in">
+                <div class="flex items-center gap-4">
+                    <div class="h-16 w-16 rounded-full overflow-hidden border-2 border-primary-500 bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center shadow-sm" id="studentAvatar">
+                        <i class="fas fa-user text-2xl text-primary-400"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-base font-bold text-gray-900 dark:text-white truncate" id="studentName">Amara Okafor</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400" id="studentClass">Class: SSS3A</p>
+                        <p class="text-xs font-mono text-gray-400" id="studentIdDisplay">ID: STU001</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-gray-400 block">WALLET BALANCE</span>
+                        <span class="text-lg font-black text-primary-600 dark:text-primary-400" id="studentWalletBalance">₦15,000.00</span>
+                    </div>
+                </div>
+
+                <!-- Limits & Toggles Status -->
+                <div class="mt-4 grid grid-cols-2 gap-3 bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-100 dark:border-gray-800 text-xs">
+                    <div>
+                        <span class="text-gray-400 block">Daily Limit</span>
+                        <span class="font-bold text-gray-700 dark:text-gray-300" id="studentDailyLimit">₦2,000.00</span>
+                    </div>
+                    <div>
+                        <span class="text-gray-400 block">Spent Today</span>
+                        <span class="font-bold text-gray-700 dark:text-gray-300" id="studentSpentToday">₦0.00</span>
+                    </div>
+                </div>
+
+                <!-- Glow authorization badge -->
+                <div class="mt-3 flex items-center justify-center p-2.5 rounded-lg border text-center text-xs font-bold" id="authBadge">
+                    <i class="fas fa-check-circle mr-1.5"></i> Sufficient Balance & Authorized
+                </div>
+            </div>
+
+            <!-- Placeholder if no student selected -->
+            <div id="studentPlaceholderBox" class="py-8 text-center border-t border-dashed border-gray-200 dark:border-gray-700">
+                <i class="fas fa-user-slash text-gray-300 dark:text-gray-600 text-4xl mb-2.5"></i>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No student identified yet</p>
+                <p class="text-xs text-gray-400 mt-1">Scan a student's NFC card or type their ID to check balance and complete purchase</p>
+            </div>
+        </div>
+
+        <!-- Checkout Shopping Cart -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <i class="fas fa-shopping-cart text-primary-500"></i> Shopping Cart
+                </h3>
+                <button onclick="clearPOSCart()" class="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1">
+                    <i class="fas fa-trash-alt"></i> Clear Cart
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div class="p-4 divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-64 min-h-[10rem]" id="posCartItems">
+                <!-- Cart items dynamically rendered -->
+            </div>
+
+            <!-- Summary Block -->
+            <div class="p-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 space-y-3 text-sm">
+                <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                    <span>Subtotal</span>
+                    <span class="font-semibold text-gray-800 dark:text-white" id="cartSubtotal">₦0.00</span>
+                </div>
+                <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                    <span>Discount</span>
+                    <input type="number" id="cartDiscount" oninput="calculatePOSCartTotal()" value="0" min="0" max="100"
+                        class="w-16 text-right border border-gray-300 rounded px-1 py-0.5 text-xs focus:ring-primary-500 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+                    <span class="font-semibold text-gray-800 dark:text-white" id="cartDiscountAmount">-₦0.00</span>
+                </div>
+                <div class="flex justify-between border-t border-gray-200 dark:border-gray-700 pt-3 text-base font-black text-gray-900 dark:text-white">
+                    <span>Total Amount</span>
+                    <span class="text-lg font-black text-primary-600 dark:text-primary-400" id="cartTotal">₦0.00</span>
+                </div>
+            </div>
+
+            <!-- Checkout Trigger -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+                <button onclick="completePOSCheckout()" id="checkoutSubmitBtn" disabled
+                    class="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-400 text-white font-bold rounded-xl text-sm shadow-md transition-all duration-200 cursor-not-allowed">
+                    <i class="fas fa-fingerprint"></i> Complete Checkout (Verify Fingerprint)
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Receipt Modal Overlay -->
+<div id="receiptModal" class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 dark:border-gray-700 transform scale-95 transition-transform duration-300 relative">
+        <!-- Close icon -->
+        <button onclick="closeReceiptModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        
+        <!-- Receipt Body -->
+        <div id="receiptContent" class="text-center space-y-4">
+            <!-- Simulated thermal receipt content goes here -->
+        </div>
+        
+        <div class="mt-6 flex gap-2">
+            <button onclick="printPOSReceipt()" class="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg text-xs transition-colors">
+                <i class="fas fa-print"></i> Print Receipt
+            </button>
+            <button onclick="closeReceiptModal()" class="flex-1 flex items-center justify-center px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white font-bold rounded-lg text-xs transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- PIN Fallback Modal Overlay -->
+<div id="pinFallbackModal" class="fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-gray-100 dark:border-gray-700 transform scale-95 transition-transform duration-300 relative">
+        <button onclick="closePinFallbackModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <i class="fas fa-times text-lg"></i>
+        </button>
+        
+        <div class="text-center space-y-4">
+            <div class="h-12 w-12 bg-primary-100 dark:bg-primary-950/40 text-primary-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto">
+                <i class="fas fa-key"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Enter Student Wallet PIN</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Fallback authorization code required</p>
+            </div>
+            
+            <div>
+                <input type="password" id="studentPinInput" maxlength="4" placeholder="••••" class="block w-32 text-center text-2xl font-black tracking-widest border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white mx-auto focus:ring-primary-500 focus:border-primary-500">
+            </div>
+            <p class="text-[10px] text-gray-450 dark:text-gray-400">Standard test code default is 1234</p>
+        </div>
+        
+        <div class="mt-6 flex gap-2">
+            <button onclick="submitPinAuthorization()" class="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg text-xs transition-colors">
+                Verify PIN &amp; Pay
+            </button>
+            <button onclick="closePinFallbackModal()" class="flex-1 flex items-center justify-center px-4 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white font-bold rounded-lg text-xs transition-colors">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+

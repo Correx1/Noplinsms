@@ -1,0 +1,227 @@
+<!-- Parent Wallet Management Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Child Wallets & Controls</h1>
+            <p class="text-gray-600 dark:text-gray-300">Fund children's wallets, adjust daily spending limits, and block store categories</p>
+        </div>
+        
+        <!-- Children Selector Dropdown -->
+        <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 p-2 border border-gray-200 dark:border-gray-700 rounded-xl max-w-xs w-full">
+            <span class="text-xs font-bold text-gray-400 pl-1">SELECT CHILD:</span>
+            <select id="parentChildSelector"
+                class="flex-1 bg-white border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white font-bold">
+                <!-- Child options dynamically loaded -->
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="p-4 grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6">
+    <!-- Left Column: Child Card & Controls (5 columns) -->
+    <div class="md:col-span-5 lg:col-span-5 space-y-6">
+        
+        <!-- Selected Child Digital Wallet Card -->
+        <div id="parentWalletBalanceCard" class="relative rounded-2xl bg-gradient-to-br from-primary-700 via-primary-800 to-indigo-900 p-6 text-white shadow-xl overflow-hidden group border border-white/10">
+            <!-- Background glow lines -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-blue-500/20 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="absolute -left-16 -bottom-16 w-48 h-48 rounded-full bg-indigo-500/20 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+
+            <div class="relative flex flex-col justify-between h-48 z-10">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[9px] font-black tracking-widest text-white/40 uppercase block">CHILD SMART WALLET</span>
+                        <h3 class="text-sm font-black tracking-tight text-white/90 uppercase">Noplin Academy</h3>
+                    </div>
+                    <div class="h-9 w-12 bg-gradient-to-br from-amber-300 to-yellow-500 rounded-lg border border-amber-400 flex flex-col gap-1 p-1.5 justify-between shadow-sm shrink-0">
+                        <div class="h-full w-full border border-amber-600/40 rounded flex divide-x divide-amber-600/40">
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-[10px] text-white/50 font-bold uppercase tracking-wider block">Wallet Balance</span>
+                    <h2 class="text-3xl font-black tracking-tight" id="childWalletBalanceVal">₦0.00</h2>
+                </div>
+
+                <div class="flex justify-between items-end border-t border-white/10 pt-3 text-xs">
+                    <div>
+                        <span class="text-[9px] text-white/40 font-bold uppercase tracking-widest block" id="childVirtualBank">WEMA BANK</span>
+                        <span class="font-black font-mono tracking-widest" id="childVirtualAccNo">0000000000</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[8px] text-white/40 font-bold uppercase tracking-widest block">STUDENT ACCOUNT</span>
+                        <span class="font-extrabold truncate max-w-[12rem] block uppercase" id="childVirtualAccName">CHILD NAME</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Funding Form -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-4">
+            <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Fund Child Wallet</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Instantly credit your child's digital wallet using standard online payment gateways. Settlements route directly to the school's accounts.</p>
+            
+            <button onclick="openFundingModal()"
+                class="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer">
+                <i class="fas fa-credit-card"></i> Fund Wallet (Paystack/Flutterwave)
+            </button>
+        </div>
+
+        <!-- Parental Limit Setting Slider & Switches -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-6">
+            <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                <i class="fas fa-sliders-h text-primary-500"></i> Spending Allowance & Controls
+            </h3>
+
+            <!-- Limit Slider -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-gray-500 uppercase">Daily Spending Limit</span>
+                    <span class="text-sm font-black text-primary-600 dark:text-primary-400" id="parentLimitVal">₦2,000</span>
+                </div>
+                <input type="range" id="parentLimitSlider" min="0" max="10000" step="100" value="2000" oninput="handleParentLimitSlide(this.value)"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-primary-600">
+            </div>
+
+            <!-- Auto-Funding Rules -->
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-3">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-bold text-gray-800 dark:text-white block">Auto-Topup Settings</span>
+                        <span class="text-[10px] text-gray-400">Refills wallet when balance runs low</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer select-none">
+                        <input type="checkbox" id="toggle-parent-autotopup" onchange="saveParentWalletSettings()" class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                    </label>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 font-bold mb-1">Trigger Threshold (₦)</label>
+                        <input type="number" id="parentAutoThreshold" onchange="saveParentWalletSettings()" class="block w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white" value="500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 font-bold mb-1">Funding Amount (₦)</label>
+                        <input type="number" id="parentAutoAmount" onchange="saveParentWalletSettings()" class="block w-full px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-white" value="2000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggles for Allowed Categories -->
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-700 space-y-4">
+                <span class="text-xs font-bold text-gray-400 uppercase block">Category Purchase Approvals</span>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-2.5 rounded-lg border border-gray-100 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-900">
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <span class="text-xs font-bold text-gray-800 dark:text-white block">Canteen Purchases</span>
+                                <span class="text-[10px] text-gray-400">Allows buying snacks, lunches, beverages</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1">
+                                <span class="text-[10px] text-gray-400 font-bold">Limit: ₦</span>
+                                <input type="number" id="limit-canteen" onchange="saveParentWalletSettings()" class="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-xs text-right bg-white dark:bg-gray-850 dark:text-white" value="1000">
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="toggle-block-canteen" onchange="saveParentWalletSettings()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2.5 rounded-lg border border-gray-100 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-900">
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <span class="text-xs font-bold text-gray-800 dark:text-white block">Stationery Shop</span>
+                                <span class="text-[10px] text-gray-400">Allows buying books, pens, drawing sets</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1">
+                                <span class="text-[10px] text-gray-400 font-bold">Limit: ₦</span>
+                                <input type="number" id="limit-stationery" onchange="saveParentWalletSettings()" class="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-xs text-right bg-white dark:bg-gray-850 dark:text-white" value="2000">
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="toggle-block-stationery" onchange="saveParentWalletSettings()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2.5 rounded-lg border border-gray-100 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-900">
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <span class="text-xs font-bold text-gray-800 dark:text-white block">Uniform &amp; Apparel</span>
+                                <span class="text-[10px] text-gray-400">Allows buying uniforms, socks, sports kits</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1">
+                                <span class="text-[10px] text-gray-400 font-bold">Limit: ₦</span>
+                                <input type="number" id="limit-uniforms" onchange="saveParentWalletSettings()" class="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-xs text-right bg-white dark:bg-gray-850 dark:text-white" value="5000">
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="toggle-block-uniforms" onchange="saveParentWalletSettings()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2.5 rounded-lg border border-gray-100 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-900">
+                        <div class="flex items-center gap-3">
+                            <div>
+                                <span class="text-xs font-bold text-gray-800 dark:text-white block">Bookstore Catalog</span>
+                                <span class="text-[10px] text-gray-400">Allows buying text books, novels, guides</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1">
+                                <span class="text-[10px] text-gray-400 font-bold">Limit: ₦</span>
+                                <input type="number" id="limit-books" onchange="saveParentWalletSettings()" class="w-16 p-1 border border-gray-300 dark:border-gray-600 rounded text-xs text-right bg-white dark:bg-gray-850 dark:text-white" value="5000">
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="toggle-block-books" onchange="saveParentWalletSettings()" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Column: Child Ledger Transactions (7 columns) -->
+    <div class="md:col-span-7 lg:col-span-7 space-y-6">
+        
+        <!-- Ledger Table -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/40">
+                <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Financial Transactions Ledger</h3>
+                <span class="text-[10px] bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-400 px-2 py-0.5 rounded font-bold uppercase">Real-Time</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-3.5">Ref No</th>
+                            <th scope="col" class="px-6 py-3.5">Date &amp; Time</th>
+                            <th scope="col" class="px-6 py-3.5">Description</th>
+                            <th scope="col" class="px-6 py-3.5">Type</th>
+                            <th scope="col" class="px-6 py-3.5 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentWalletLedgerTable" class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <!-- Dynamic child wallet transaction rows go here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

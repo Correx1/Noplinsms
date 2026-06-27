@@ -1,0 +1,41 @@
+<aside
+  id="logo-sidebar"
+  class="fixed top-0 left-0 z-40 w-64 h-screen pt-[4.5rem] transition-transform -translate-x-full bg-primary-800 border-r border-primary-800 sm:translate-x-0 dark:bg-primary-800 dark:border-primary-900"
+  aria-label="Sidebar"
+>
+  <div class="h-full pb-4 overflow-y-auto bg-primary-600 dark:bg-primary-800">
+    <ul class="space-y-2 font-medium">
+
+      <!-- POS Terminal -->
+      <li onclick="loadCashierPOS(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group active-nav-link">
+        <a href="#" class="w-full flex items-center">
+          <i class="fas fa-cash-register w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">POS Terminal</span>
+        </a>
+      </li>
+
+      <!-- Inventory Stock -->
+      <li onclick="loadCashierInventory(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#" class="w-full flex items-center">
+          <i class="fas fa-boxes w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Inventory Stock</span>
+        </a>
+      </li>
+
+      <!-- Shift Transactions -->
+      <li onclick="loadCashierTransactions(); setActiveLink(this); return false;" class="border-b border-white/20 flex items-center p-4 text-white bg-inherit hover:bg-primary-700 dark:hover:bg-primary-900 group">
+        <a href="#" class="w-full flex items-center">
+          <i class="fas fa-history w-5 h-5 text-white transition duration-75 group-hover:text-white"></i>
+          <span class="ms-3">Shift Transactions</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+  <!-- Builder Credit: tiny, permanent, below all nav items -->
+  <div class="absolute bottom-0 left-0 right-0 py-2 px-4 flex items-center justify-center gap-1.5 bg-primary-800/80 ">
+      <img src="../../assets/images/logo.png" alt="Noplin" class="h-4 w-auto opacity-70">
+      <span class="text-[10px] text-white/50 font-medium">Powered by <span class="text-white/70">Noplin</span></span>
+  </div>
+</aside>

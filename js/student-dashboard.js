@@ -64,3 +64,7 @@ window.loadStudentFees = function() {
 window.loadStudentLibrary = function() {
     loadStudentContent('library.html');
 };
+
+window.loadStudentWallet = function() {
+    loadStudentContent('wallet.html', '../../js/wallet.js', 'wallet-script');
+};

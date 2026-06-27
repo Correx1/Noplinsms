@@ -214,3 +214,353 @@ window.SchoolDatabase = {
 
     libraryTransactions: []
 };
+
+// Dynamic Wallet, Transaction, and Inventory Initialization
+(function() {
+    console.log('Initializing wallet, transactions, and inventory databases...');
+
+    // ── Schema Version Guard ──────────────────────────────────────────────────
+    // Bump this string whenever the data schema changes.
+    // Any mismatch wipes and re-seeds ALL wallet/transaction data.
+    const SCHEMA_VERSION = 'v3';
+    const storedVersion = localStorage.getItem('sms_db_schema_version');
+
+    if (storedVersion !== SCHEMA_VERSION) {
+        console.log(`Schema version mismatch (stored: ${storedVersion}, expected: ${SCHEMA_VERSION}). Re-seeding all wallet data...`);
+        localStorage.removeItem('sms_wallets');
+        localStorage.removeItem('sms_wallet_transactions');
+        localStorage.removeItem('sms_inventory');
+        localStorage.setItem('sms_db_schema_version', SCHEMA_VERSION);
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // 1. Seed Inventory if missing
+    if (!localStorage.getItem('sms_inventory')) {
+        const defaultInventory = [
+            { "id": "INV001", "name": "Mathematical Set", "category": "stationery", "price": 850, "stock": 45, "reorderLevel": 10, "image": "📐" },
+            { "id": "INV002", "name": "School Uniform (Senior)", "category": "uniforms", "price": 7500, "stock": 20, "reorderLevel": 5, "image": "👔" },
+            { "id": "INV003", "name": "School Uniform (Junior)", "category": "uniforms", "price": 6500, "stock": 25, "reorderLevel": 5, "image": "👗" },
+            { "id": "INV004", "name": "Notebook (Single)", "category": "stationery", "price": 200, "stock": 120, "reorderLevel": 20, "image": "📓" },
+            { "id": "INV005", "name": "Canteen Lunch Ticket", "category": "canteen", "price": 450, "stock": 500, "reorderLevel": 50, "image": "🍛" },
+            { "id": "INV006", "name": "Canteen Snack Combo", "category": "canteen", "price": 300, "stock": 150, "reorderLevel": 30, "image": "🥪" },
+            { "id": "INV007", "name": "English Textbook (SS3)", "category": "books", "price": 3200, "stock": 30, "reorderLevel": 8, "image": "📕" },
+            { "id": "INV008", "name": "Physics Textbook (SS3)", "category": "books", "price": 3500, "stock": 28, "reorderLevel": 8, "image": "📘" }
+        ];
+        localStorage.setItem('sms_inventory', JSON.stringify(defaultInventory));
+    }
+
+    // Helper to get robust student list fallback
+    function getRobustStudentsList() {
+        let list = null;
+        try {
+            list = JSON.parse(localStorage.getItem('sms_students'));
+        } catch(e) {}
+        if (!Array.isArray(list) || list.length === 0) {
+            list = window.SchoolDatabase.students || [];
+        }
+        return list;
+    }
+
+    // 2. Seed Wallets for all students if missing or empty
+    const existingWallets = localStorage.getItem('sms_wallets');
+    let needsWalletSeed = !existingWallets;
+    if (existingWallets) {
+        try {
+            const parsed = JSON.parse(existingWallets);
+            if (Object.keys(parsed).length === 0) {
+                needsWalletSeed = true;
+            } else {
+                const students = getRobustStudentsList();
+                const firstKey = Object.keys(parsed)[0];
+                if (Object.keys(parsed).length < students.length || (firstKey && !parsed[firstKey].hasOwnProperty('studentName'))) {
+                    needsWalletSeed = true;
+                }
+            }
+        } catch(e) {
+            needsWalletSeed = true;
+        }
+    }
+
+    if (needsWalletSeed) {
+        console.log('Seeding wallets for all students...');
+        const wallets = {};
+        const students = getRobustStudentsList();
+        const banks = ["Providus Bank", "Wema Bank", "Sterling Bank", "Moniepoint Microfinance Bank"];
+        
+        students.forEach((student, index) => {
+            const id = student.id;
+            const bankName = banks[index % banks.length];
+            const accountNumber = "99" + Math.floor(10000000 + Math.random() * 90000000);
+            
+            // Tiered default balances to make the directory look realistic
+            let defaultBalance = 5000;
+            if (id === 'STU001') defaultBalance = 16200;
+            else if (id === 'STU002') defaultBalance = 17200;
+            else if (id === 'STU003') defaultBalance = 4600;
+            else if (id === 'STU005') defaultBalance = 4000;
+            else if (id === 'STU006') defaultBalance = 4550;
+            else if (id === 'STU008') defaultBalance = 6300;
+            else defaultBalance = 3000 + (index * 800);
+
+            wallets[id] = {
+                studentId: id,
+                studentName: student.name,
+                balance: defaultBalance,
+                dailyLimit: id === 'STU001' ? 3500 : 2000,
+                spentToday: id === 'STU001' ? 1300 : 0,
+                virtualAccount: {
+                    bankName: bankName,
+                    accountNumber: accountNumber,
+                    accountName: `Noplin Academy / ${student.name}`
+                },
+                allowedCategories: {
+                    canteen: id !== 'STU004',
+                    stationery: true,
+                    uniforms: true,
+                    books: id !== 'STU009'
+                }
+            };
+        });
+        localStorage.setItem('sms_wallets', JSON.stringify(wallets));
+    }
+
+    // 3. Seed Wallet Transactions if missing or empty
+    const existingTxns = localStorage.getItem('sms_wallet_transactions');
+    let needsTxnSeed = !existingTxns;
+    if (existingTxns) {
+        try {
+            const parsed = JSON.parse(existingTxns);
+            if (parsed.length === 0) {
+                needsTxnSeed = true;
+            }
+        } catch(e) {
+            needsTxnSeed = true;
+        }
+    }
+
+    if (needsTxnSeed) {
+        console.log('Seeding wallet transactions ledger...');
+        const defaultTransactions = [
+            // STU001 - Adebayo Ogunlesi
+            {
+                "id": "TXN_W_100001",
+                "studentId": "STU001",
+                "studentName": "Adebayo Ogunlesi",
+                "type": "deposit",
+                "amount": 15000,
+                "method": "Paystack (Credit Card)",
+                "date": "2026-06-26 08:30:00",
+                "status": "Successful",
+                "reference": "PSTK-8819203"
+            },
+            {
+                "id": "TXN_W_100002",
+                "studentId": "STU001",
+                "studentName": "Adebayo Ogunlesi",
+                "type": "purchase",
+                "amount": 450,
+                "item": "Canteen Lunch Ticket",
+                "date": "2026-06-26 12:15:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100003",
+                "studentId": "STU001",
+                "studentName": "Adebayo Ogunlesi",
+                "type": "purchase",
+                "amount": 850,
+                "item": "Mathematical Set",
+                "date": "2026-06-26 14:00:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100004",
+                "studentId": "STU001",
+                "studentName": "Adebayo Ogunlesi",
+                "type": "adjustment",
+                "amount": 2500,
+                "item": "Credit Adjustment: Principal Academic Scholarship",
+                "date": "2026-06-26 16:00:00",
+                "status": "Successful",
+                "reference": "ADJ-481029",
+                "verification": "Admin Manual",
+                "cashierId": "Admin"
+            },
+            // STU002 - Chioma Okereke
+            {
+                "id": "TXN_W_100005",
+                "studentId": "STU002",
+                "studentName": "Chioma Okereke",
+                "type": "deposit",
+                "amount": 25000,
+                "method": "Flutterwave (Bank Transfer)",
+                "date": "2026-06-25 09:00:00",
+                "status": "Successful",
+                "reference": "FLW-992014"
+            },
+            {
+                "id": "TXN_W_100006",
+                "studentId": "STU002",
+                "studentName": "Chioma Okereke",
+                "type": "purchase",
+                "amount": 7500,
+                "item": "School Uniform (Senior)",
+                "date": "2026-06-25 10:15:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100007",
+                "studentId": "STU002",
+                "studentName": "Chioma Okereke",
+                "type": "purchase",
+                "amount": 300,
+                "item": "Canteen Snack Combo",
+                "date": "2026-06-25 12:30:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            // STU003 - Emeka Nwadike
+            {
+                "id": "TXN_W_100008",
+                "studentId": "STU003",
+                "studentName": "Emeka Nwadike",
+                "type": "deposit",
+                "amount": 8000,
+                "method": "Paystack (Credit Card)",
+                "date": "2026-06-26 09:45:00",
+                "status": "Successful",
+                "reference": "PSTK-381920"
+            },
+            {
+                "id": "TXN_W_100009",
+                "studentId": "STU003",
+                "studentName": "Emeka Nwadike",
+                "type": "purchase",
+                "amount": 3200,
+                "item": "English Textbook (SS3)",
+                "date": "2026-06-26 10:30:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100010",
+                "studentId": "STU003",
+                "studentName": "Emeka Nwadike",
+                "type": "purchase",
+                "amount": 200,
+                "item": "Notebook (Single)",
+                "date": "2026-06-26 13:00:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            // STU005 - Grace Ojo
+            {
+                "id": "TXN_W_100011",
+                "studentId": "STU005",
+                "studentName": "Grace Ojo",
+                "type": "deposit",
+                "amount": 12000,
+                "method": "Flutterwave (Bank Transfer)",
+                "date": "2026-06-24 11:00:00",
+                "status": "Successful",
+                "reference": "FLW-102930"
+            },
+            {
+                "id": "TXN_W_100012",
+                "studentId": "STU005",
+                "studentName": "Grace Ojo",
+                "type": "purchase",
+                "amount": 6500,
+                "item": "School Uniform (Junior)",
+                "date": "2026-06-24 14:00:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100013",
+                "studentId": "STU005",
+                "studentName": "Grace Ojo",
+                "type": "adjustment",
+                "amount": 1500,
+                "item": "Debit Adjustment: Damaged Library Book Fine",
+                "date": "2026-06-25 15:30:00",
+                "status": "Successful",
+                "reference": "ADJ-991023",
+                "verification": "Admin Manual",
+                "cashierId": "Admin"
+            },
+            // STU006 - Hassan Bello
+            {
+                "id": "TXN_W_100014",
+                "studentId": "STU006",
+                "studentName": "Hassan Bello",
+                "type": "deposit",
+                "amount": 5000,
+                "method": "Paystack (Credit Card)",
+                "date": "2026-06-26 07:30:00",
+                "status": "Successful",
+                "reference": "PSTK-019283"
+            },
+            {
+                "id": "TXN_W_100015",
+                "studentId": "STU006",
+                "studentName": "Hassan Bello",
+                "type": "purchase",
+                "amount": 450,
+                "item": "Canteen Lunch Ticket",
+                "date": "2026-06-26 12:05:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            // STU008 - Joy Eze
+            {
+                "id": "TXN_W_100016",
+                "studentId": "STU008",
+                "studentName": "Joy Eze",
+                "type": "deposit",
+                "amount": 10000,
+                "method": "Flutterwave (Bank Transfer)",
+                "date": "2026-06-25 08:15:00",
+                "status": "Successful",
+                "reference": "FLW-881029"
+            },
+            {
+                "id": "TXN_W_100017",
+                "studentId": "STU008",
+                "studentName": "Joy Eze",
+                "type": "purchase",
+                "amount": 3500,
+                "item": "Physics Textbook (SS3)",
+                "date": "2026-06-25 11:00:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            },
+            {
+                "id": "TXN_W_100018",
+                "studentId": "STU008",
+                "studentName": "Joy Eze",
+                "type": "purchase",
+                "amount": 200,
+                "item": "Notebook (Single)",
+                "date": "2026-06-25 14:30:00",
+                "status": "Successful",
+                "verification": "Fingerprint",
+                "cashierId": "STF003"
+            }
+        ];
+        localStorage.setItem('sms_wallet_transactions', JSON.stringify(defaultTransactions));
+    }
+    console.log('✅ Wallet, transactions, and inventory databases initialized!');
+})();

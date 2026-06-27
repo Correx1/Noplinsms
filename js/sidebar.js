@@ -30,7 +30,11 @@ function loadScript(src, id) {
     const script = document.createElement('script');
     script.src = src;
     script.id = id;
-    script.async = true;
+    // Do NOT set async — we need it to execute after the HTML is already in the DOM.
+    // Fire a custom event when the script has fully loaded so modules can self-init.
+    script.onload = () => {
+        document.dispatchEvent(new CustomEvent('moduleScriptReady', { detail: { id } }));
+    };
     document.body.appendChild(script);
 }
 
@@ -81,6 +85,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         sidebarTemplate = '../../components/parent-sidebar.html';
     } else if (userRole === 'Owner') {
         sidebarTemplate = '../../components/owner-sidebar.html';
+    } else if (userRole === 'Cashier') {
+        sidebarTemplate = '../../components/cashier-sidebar.html';
     }
 
     // Restore sidebar collapse state from localStorage immediately on load
@@ -484,6 +490,7 @@ window.loadFeeCollectionPage = () => loadPage('finance/fee-collection.html', '..
 // ============================================
 window.loadVisitorsLogPage = () => loadPage('record/visitors-log.html', '../../js/visitors-log.js', 'visitors-script');
 window.loadPhoneLogPage = () => loadPage('record/phone-log.html', '../../js/phone-log.js', 'phone-script');
+window.loadEmailLogsPage = () => loadPage('record/email-logs.html', '../../js/email-logs.js', 'email-logs-script');
 window.loadSMSLogsPage = () => loadPage('record/sms-logs.html', null, null);
 
 
@@ -561,4 +568,13 @@ window.loadSettingsUsersPage = () => loadPage('settings/users.html', '../../js/u
 window.loadThemeSettingsPage = () => loadPage('settings/theme.html', '../../js/theme-settings.js', 'theme-settings-script');
 window.loadTemplatesPage = () => loadPage('settings/templates.html', '../../js/templates.js', 'templates-script');
 window.loadNfcSettingsPage = () => loadPage('settings/nfc.html', '../../js/settings.js', 'settings-script');
+
+// ============================================
+// CASHIER & WALLET SECTION
+// ============================================
+window.loadCashierPOS = () => loadPage('pos.html', '../../js/cashier.js', 'cashier-script');
+window.loadCashierInventory = () => loadPage('inventory.html', '../../js/cashier.js', 'cashier-script');
+window.loadCashierTransactions = () => loadPage('transactions.html', '../../js/cashier.js', 'cashier-script');
+window.loadWalletAuditPage = () => loadPage('finance/wallet-audit.html', '../../js/wallet.js', 'wallet-script');
+
 

@@ -60,3 +60,7 @@ window.loadParentFees = function() {
 window.loadParentMessages = function() {
     loadParentContent('messages.html');
 };
+
+window.loadParentWallet = function() {
+    loadParentContent('wallet.html', '../../js/wallet.js', 'wallet-script');
+};

@@ -139,9 +139,58 @@
         showToast('Settings saved');
     };
 
+    const DEFAULT_WALLET_SETTINGS = {
+        gateway: 'paystack',
+        mode: 'simulation',
+        feePercent: 1.5,
+        feeFlat: 100,
+        maxLimit: 15000,
+        lowThreshold: 500,
+        publicKey: '',
+        secretKey: ''
+    };
+
+    window.loadWalletSettings = function() {
+        const settings = JSON.parse(localStorage.getItem('sms_wallet_settings')) || DEFAULT_WALLET_SETTINGS;
+        const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+        
+        setVal('wallet-gateway-provider', settings.gateway);
+        setVal('wallet-gateway-mode', settings.mode);
+        setVal('wallet-fee-percent', settings.feePercent);
+        setVal('wallet-fee-flat', settings.feeFlat);
+        setVal('wallet-system-max-limit', settings.maxLimit);
+        setVal('wallet-system-low-threshold', settings.lowThreshold);
+        setVal('wallet-gateway-public-key', settings.publicKey);
+        setVal('wallet-gateway-secret-key', settings.secretKey);
+    };
+
+    window.saveWalletSettings = function(e) {
+        if (e) e.preventDefault();
+        const getVal = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+        
+        const settings = {
+            gateway: getVal('wallet-gateway-provider'),
+            mode: getVal('wallet-gateway-mode'),
+            feePercent: parseFloat(getVal('wallet-fee-percent')) || 0,
+            feeFlat: parseFloat(getVal('wallet-fee-flat')) || 0,
+            maxLimit: parseFloat(getVal('wallet-system-max-limit')) || 15000,
+            lowThreshold: parseFloat(getVal('wallet-system-low-threshold')) || 500,
+            publicKey: getVal('wallet-gateway-public-key'),
+            secretKey: getVal('wallet-gateway-secret-key')
+        };
+        
+        localStorage.setItem('sms_wallet_settings', JSON.stringify(settings));
+        showToast('Wallet and Gateway Settings saved successfully!');
+    };
+
     // Auto-load NFC settings if the nfc page elements exist
     if (document.getElementById('nfc-student-attendance')) {
         window.loadNFCSettings();
+    }
+
+    // Auto-load Wallet settings if element exists
+    if (document.getElementById('wallet-gateway-provider')) {
+        window.loadWalletSettings();
     }
 
     // Init (only if general tab exists on current page)

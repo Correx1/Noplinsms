@@ -64,6 +64,7 @@
                                 <option value="Owner">Owner</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Teacher">Teacher</option>
+                                <option value="Cashier">Cashier</option>
                             </select>
                         </div>
                         <a href="password-recovery.html" class="text-sm font-medium text-primary-600 hover:text-primary-700">Forgot Password?</a>
@@ -138,6 +139,8 @@
                 window.location.href = 'pages/admin/dashboard.html';
             } else if (role === 'Teacher') {
                 window.location.href = 'pages/teacher/dashboard.html';
+            } else if (role === 'Cashier') {
+                window.location.href = 'pages/cashier/dashboard.html';
             }
         });
     </script>

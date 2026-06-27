@@ -1,0 +1,118 @@
+<!-- Student Wallet Page -->
+<div class="p-6 bg-white dark:bg-gray-800 block sm:flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+    <div class="w-full mb-1">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">My Digital Wallet</h1>
+        <p class="text-gray-600 dark:text-gray-300">View your wallet balance, check parental limits, and view your transaction history</p>
+    </div>
+</div>
+
+<div class="p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Left Hand Side: Balance Card & Analytics (5 columns) -->
+    <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Premium Digital Wallet Card (CR80/Credit Card Ratio) -->
+        <div id="studentWalletBalanceCard" class="relative rounded-2xl bg-gradient-to-br from-primary-700 via-primary-800 to-indigo-900 p-6 text-white shadow-xl overflow-hidden group border border-white/10">
+            <!-- Background glow lines -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-blue-500/20 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+            <div class="absolute -left-16 -bottom-16 w-48 h-48 rounded-full bg-indigo-500/20 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+
+            <div class="relative flex flex-col justify-between h-48 z-10">
+                <!-- Top Row: Card Issuer & Chip -->
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-[9px] font-black tracking-widest text-white/40 uppercase block">DIGITAL SMART WALLET</span>
+                        <h3 class="text-sm font-black tracking-tight text-white/90 uppercase">Noplin Academy</h3>
+                    </div>
+                    <!-- Chip overlay -->
+                    <div class="h-9 w-12 bg-gradient-to-br from-amber-300 to-yellow-500 rounded-lg border border-amber-400 flex flex-col gap-1 p-1.5 justify-between shadow-sm shrink-0">
+                        <div class="h-full w-full border border-amber-600/40 rounded flex divide-x divide-amber-600/40">
+                            <div class="flex-1"></div>
+                            <div class="flex-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mid Row: Balance -->
+                <div>
+                    <span class="text-[10px] text-white/50 font-bold uppercase tracking-wider block">Available Balance</span>
+                    <h2 class="text-3xl font-black tracking-tight" id="studentWalletBalanceVal">₦0.00</h2>
+                </div>
+
+                <!-- Bottom Row: Virtual Account Info -->
+                <div class="flex justify-between items-end border-t border-white/10 pt-3">
+                    <div>
+                        <span class="text-[9px] text-white/40 font-bold uppercase tracking-widest block" id="walletVirtualBank">PROVIDUS BANK</span>
+                        <span class="text-sm font-black font-mono tracking-widest" id="walletVirtualAccNo">0000000000</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[8px] text-white/40 font-bold uppercase tracking-widest block">CARD HOLDER</span>
+                        <span class="text-[11px] font-extrabold truncate max-w-[12rem] block uppercase" id="walletVirtualAccName">STUDENT NAME</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Freeze Card Status Card -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-4 flex items-center justify-between">
+            <div>
+                <span class="text-xs font-bold text-gray-805 dark:text-white block">Freeze Wallet Account</span>
+                <span class="text-[10px] text-gray-400">Instantly block store scan checkout requests if card is lost</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer select-none">
+                <input type="checkbox" id="studentWalletFreezeToggle" onchange="toggleStudentWalletFreeze()" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+            </label>
+        </div>
+
+        <!-- Quick Actions & Funding info -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-4">
+            <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Quick Top-up</h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Add funds to your digital wallet instantly. Paystack and Flutterwave simulated gateways are active.</p>
+            
+            <button onclick="openFundingModal()"
+                class="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl text-sm shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer">
+                <i class="fas fa-plus-circle text-base"></i> Top-up Wallet Balance
+            </button>
+        </div>
+
+        <!-- Category Spend Analysis -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-5 space-y-4">
+            <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Spending Category Breakdown</h3>
+            <div id="walletCategoryChartBox" class="min-h-[10rem]">
+                <!-- Custom SVG Donut chart dynamically drawn -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Right Hand Side: Spending Limits & Transaction History (7 columns) -->
+    <div class="lg:col-span-7 space-y-6">
+        
+
+
+        <!-- Ledger Transactions Table -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/40">
+                <h3 class="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wider">Financial Transactions Ledger</h3>
+                <span class="text-[10px] bg-primary-100 text-primary-800 dark:bg-primary-950/40 dark:text-primary-400 px-2 py-0.5 rounded font-bold uppercase">Real-Time</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th scope="col" class="px-6 py-3.5">Ref No</th>
+                            <th scope="col" class="px-6 py-3.5">Date &amp; Time</th>
+                            <th scope="col" class="px-6 py-3.5">Description</th>
+                            <th scope="col" class="px-6 py-3.5">Type</th>
+                            <th scope="col" class="px-6 py-3.5 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentWalletLedgerTable" class="divide-y divide-gray-100 dark:divide-gray-700">
+                        <!-- Dynamic wallet transaction rows go here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
