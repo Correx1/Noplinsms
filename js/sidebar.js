@@ -218,7 +218,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'SMS Logs': loadSMSLogsPage,
 
                 // Communications / Notice
+                'Notice': loadNoticesList,
                 'Notices': loadNoticesList,
+                'Message': loadMessagesPage,
                 'Messages': loadTeacherMessages,
 
                 // Events
@@ -527,8 +529,9 @@ window.loadEventsPage = () => loadPage('events.html', '../../js/events.js', 'eve
 window.loadViewEventPage = () => loadPage('events/view-event.html', '../../js/events.js', 'events-script');
 window.loadAddEventPage = () => loadPage('events/add-event.html', '../../js/events.js', 'events-script');
 
-window.loadNoticesList = () => loadPage('notices/notices-list.html', '../../js/notices.js', 'notices-script');
-window.loadCreateNoticePage = () => loadPage('notices/create-notice.html', '../../js/notices.js', 'notices-script');
+window.loadNoticesList = () => loadPage('communication/notices-list.html', '../../js/notices.js', 'notices-script');
+window.loadCreateNoticePage = () => loadPage('communication/create-notice.html', '../../js/notices.js', 'notices-script');
+window.loadMessagesPage = () => loadPage('communication/messages.html', '../../js/messages.js', 'messages-script');
 
 // Library
 window.loadLibraryDashboard = () => loadPage('library/library-books.html', '../../js/library.js', 'library-script'); // Defaulting to books list for "Library" click

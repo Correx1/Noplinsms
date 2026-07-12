@@ -513,7 +513,10 @@ window.renderAdminWalletAudit = function() {
                         ${avatar}
                     </div>
                     <div>
-                        <span class="block text-sm font-bold text-gray-900 dark:text-white">${studentName}</span>
+                        <span class="block text-sm font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                            ${studentName}
+                            ${wallet.status === 'frozen' ? `<span class="text-[8px] bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400 px-1.5 py-0.5  rounded font-black uppercase tracking-wider">Frozen</span>` : ''}
+                        </span>
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Class: ${studentClass}</span>
                     </div>
                 </div>
@@ -583,6 +586,18 @@ window.openAdminStudentDrawer = function(studentId) {
     // Set configuration controls
     document.getElementById('drawerDailyLimitInput').value = wallet.dailyLimit;
     
+    const toggleFreeze = document.getElementById('drawerToggleFreeze');
+    if (toggleFreeze) toggleFreeze.checked = wallet.status === 'frozen';
+
+    const frozenBadge = document.getElementById('drawerFrozenBadge');
+    if (frozenBadge) {
+        if (wallet.status === 'frozen') {
+            frozenBadge.classList.remove('hidden');
+        } else {
+            frozenBadge.classList.add('hidden');
+        }
+    }
+
     document.getElementById('drawerToggleCanteen').checked = wallet.allowedCategories?.canteen !== false;
     document.getElementById('drawerToggleStationery').checked = wallet.allowedCategories?.stationery !== false;
     document.getElementById('drawerToggleUniforms').checked = wallet.allowedCategories?.uniforms !== false;
@@ -714,6 +729,20 @@ window.saveDrawerStudentSettings = function() {
         uniforms: document.getElementById('drawerToggleUniforms').checked,
         books: document.getElementById('drawerToggleBooks').checked
     };
+
+    const toggleFreeze = document.getElementById('drawerToggleFreeze');
+    if (toggleFreeze) {
+        wallet.status = toggleFreeze.checked ? 'frozen' : 'active';
+        
+        const frozenBadge = document.getElementById('drawerFrozenBadge');
+        if (frozenBadge) {
+            if (wallet.status === 'frozen') {
+                frozenBadge.classList.remove('hidden');
+            } else {
+                frozenBadge.classList.add('hidden');
+            }
+        }
+    }
 
     wallets[studentId] = wallet;
     localStorage.setItem('sms_wallets', JSON.stringify(wallets));

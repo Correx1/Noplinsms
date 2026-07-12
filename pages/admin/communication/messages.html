@@ -1,0 +1,337 @@
+<div class="p-4 sm:p-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Communication Console</h1>
+            <nav class="flex mt-1" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="#" onclick="loadDashboardHome()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-primary-600 dark:text-gray-400 dark:hover:text-white">
+                            <i class="fas fa-home mr-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Communication</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1"></i>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Messages</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tabs Header -->
+    <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="messages-tab" role="tablist">
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg text-primary-600 border-primary-600 active dark:text-primary-500 dark:border-primary-500" id="compose-tab-btn" onclick="switchMsgTab('compose')" type="button" role="tab">
+                    <i class="fas fa-paper-plane mr-2"></i>Compose Message
+                </button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="logs-tab-btn" onclick="switchMsgTab('logs')" type="button" role="tab">
+                    <i class="fas fa-history mr-2"></i>Dispatch Logs
+                </button>
+            </li>
+            <li class="me-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="templates-tab-btn" onclick="switchMsgTab('templates')" type="button" role="tab">
+                    <i class="fas fa-sliders-h mr-2"></i>Templates Manager
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="messages-tab-content">
+        <!-- ── TAB 1: COMPOSE MESSAGE ── -->
+        <div class="space-y-6" id="tab-compose" role="tabpanel">
+            <form id="msg-compose-form">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Form Main Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Message Content Configuration Card -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4 dark:border-gray-700">Write Message</h3>
+                            
+                            <!-- Channel Picker -->
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Channel</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="flex items-center justify-center p-3 border-2 border-primary-500 bg-primary-50/50 rounded-lg cursor-pointer dark:bg-primary-900/10 dark:border-primary-500 group select-none" id="channel-email-label">
+                                        <input type="radio" name="msg-channel" value="email" checked class="sr-only" onchange="toggleChannelFields('email')">
+                                        <i class="fas fa-envelope text-primary-600 text-lg mr-2 dark:text-primary-400"></i>
+                                        <span class="text-sm font-bold text-primary-700 dark:text-primary-400">Email Channel</span>
+                                    </label>
+                                    <label class="flex items-center justify-center p-3 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-500 dark:border-gray-600 group select-none" id="channel-sms-label">
+                                        <input type="radio" name="msg-channel" value="sms" class="sr-only" onchange="toggleChannelFields('sms')">
+                                        <i class="fas fa-sms text-gray-500 text-lg mr-2 group-hover:text-primary-500 dark:text-gray-400"></i>
+                                        <span class="text-sm font-bold text-gray-700 group-hover:text-primary-700 dark:text-gray-300">SMS Channel</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Preset Templates Lookup -->
+                            <div>
+                                <label for="msg-preset-template" class="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">Apply Preset Template</label>
+                                <select id="msg-preset-template" onchange="applyPresetMessage()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <option value="">-- Apply Template (None) --</option>
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+
+                            <!-- Email Subject Field -->
+                            <div id="field-email-subject">
+                                <label for="msg-subject" class="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">Email Subject</label>
+                                <input type="text" id="msg-subject" placeholder="Enter message subject..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            </div>
+
+                            <!-- Message Content Field -->
+                            <div>
+                                <label for="msg-body" class="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">Message Body</label>
+                                <textarea id="msg-body" rows="8" placeholder="Type your message body here... Use {{name}} to dynamically placeholder student names." class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required oninput="countSmsChars()"></textarea>
+                                
+                                <!-- SMS Chars Counter -->
+                                <div id="sms-counter-pane" class="hidden justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                    <span>Characters: <strong id="sms-char-count">0</strong></span>
+                                    <span>SMS Pages: <strong id="sms-pages-count">1</strong> (160 chars / page)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Filter Column -->
+                    <div class="lg:col-span-1 space-y-6">
+                        <!-- Recipients Targeting Card -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 space-y-4">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-2 dark:border-gray-700">Recipients Targeting</h3>
+                            
+                            <!-- Target Roles Checkboxes -->
+                            <div>
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Audience Group</label>
+                                <div class="space-y-2.5 p-3 bg-gray-50 rounded-lg dark:bg-gray-700/30 border border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center">
+                                        <input id="target-students" type="checkbox" value="Students" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="target-students" class="ms-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-user-graduate mr-1.5 opacity-60"></i>Students</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="target-parents" type="checkbox" value="Parents" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="target-parents" class="ms-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-users mr-1.5 opacity-60"></i>Parents</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input id="target-teachers" type="checkbox" value="Teachers" class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="target-teachers" class="ms-2.5 text-sm font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-chalkboard-teacher mr-1.5 opacity-60"></i>Teachers / Staff</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Class Filter Selector -->
+                            <div>
+                                <label for="target-classes" class="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">Filter by Class Level</label>
+                                <select id="target-classes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <option value="All">All Classes (No Class Filter)</option>
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+
+                            <!-- Individual Search Select -->
+                            <div>
+                                <label for="individual-search" class="block mb-1.5 text-sm font-medium text-gray-900 dark:text-white">Direct Search Lookup (Optional)</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                        <i class="fas fa-search text-gray-400 text-xs"></i>
+                                    </div>
+                                    <input type="text" id="individual-search" oninput="suggestIndividualRecipients()" placeholder="Search name/roll..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full ps-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <!-- Suggestions Dropdown -->
+                                    <ul id="individual-suggestions" class="hidden absolute left-0 right-0 z-30 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto dark:bg-gray-800 dark:border-gray-700 text-sm divide-y divide-gray-100 dark:divide-gray-700 mt-1">
+                                    </ul>
+                                </div>
+                                <!-- Selected Individuals List -->
+                                <div class="flex flex-wrap gap-1.5 mt-2" id="selected-recipients-tags">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schedule Card -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 space-y-4">
+                            <h3 class="text-sm font-bold text-gray-900 dark:text-white">Schedule Dispatch</h3>
+                            <div>
+                                <select id="msg-schedule" onchange="toggleSchedulePane()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                                    <option value="now">Send Immediately</option>
+                                    <option value="later">Schedule for Later</option>
+                                </select>
+                            </div>
+                            <div id="schedule-datetime-pane" class="hidden">
+                                <label for="msg-schedule-time" class="block mb-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400">Date/Time to Send</label>
+                                <input type="datetime-local" id="msg-schedule-time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <button type="submit" class="w-full text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-3 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800 text-center flex items-center justify-center shadow-md">
+                            <i class="fas fa-paper-plane mr-2 animate-bounce"></i>Broadcast Message
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- ── TAB 2: DISPATCH LOGS ── -->
+        <div class="hidden space-y-6" id="tab-logs" role="tabpanel">
+            <!-- Filter Options -->
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="w-full md:w-80 relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="log-search" oninput="renderDispatchLogs()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full ps-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Search logs...">
+                </div>
+                
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <select id="log-channel-filter" onchange="renderDispatchLogs()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full md:w-40 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="All">All Channels</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                    </select>
+                    <select id="log-status-filter" onchange="renderDispatchLogs()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full md:w-40 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="All">All Statuses</option>
+                        <option value="Sent">Sent</option>
+                        <option value="Queued">Queued</option>
+                        <option value="Failed">Failed</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg border border-gray-200 dark:border-gray-700">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Timestamp</th>
+                            <th scope="col" class="px-6 py-3">Recipient(s)</th>
+                            <th scope="col" class="px-6 py-3">Channel</th>
+                            <th scope="col" class="px-6 py-3">Subject / Preview</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatch-logs-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ── TAB 3: TEMPLATES MANAGER ── -->
+        <div class="hidden space-y-6" id="tab-templates" role="tabpanel">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Creator Form -->
+                <div class="lg:col-span-1 p-5 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white border-b pb-2 mb-4 dark:border-gray-700" id="tpl-editor-title">New Preset Template</h3>
+                    <form id="tpl-editor-form" class="space-y-4">
+                        <input type="hidden" id="tpl-edit-id">
+                        <div>
+                            <label for="tpl-title" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Template Name <span class="text-red-500">*</span></label>
+                            <input type="text" id="tpl-title" placeholder="e.g., Fees Reminder" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                        </div>
+                        <div>
+                            <label for="tpl-type" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Channel Context <span class="text-red-500">*</span></label>
+                            <select id="tpl-type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
+                                <option value="email">Email</option>
+                                <option value="sms">SMS</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tpl-subject" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Subject (Email Only)</label>
+                            <input type="text" id="tpl-subject" placeholder="Enter template subject..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        </div>
+                        <div>
+                            <label for="tpl-body" class="block mb-1 text-sm font-medium text-gray-900 dark:text-white">Content Body <span class="text-red-500">*</span></label>
+                            <textarea id="tpl-body" rows="6" placeholder="Template text body..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required></textarea>
+                        </div>
+                        <div class="flex gap-2 justify-end pt-2">
+                            <button type="button" onclick="resetTemplateEditor()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:border-gray-600">Clear</button>
+                            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 dark:bg-primary-600 dark:hover:bg-primary-700">Save Template</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Templates Grid -->
+                <div class="lg:col-span-2 space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Saved Layout Templates</h3>
+                    <div id="templates-grid-communication" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log Details View Modal -->
+<div id="log-view-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-gray-900 bg-opacity-50 flex">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white" id="modal-log-title">
+                    Message Log Details
+                </h3>
+                <button type="button" onclick="closeLogModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-5 space-y-4 text-sm">
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                    <div>
+                        <span class="text-xs text-gray-400 block font-semibold">RECIPIENTS</span>
+                        <strong class="text-gray-800 dark:text-gray-200 text-sm" id="modal-log-recipients">Parents & Students</strong>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-semibold">CHANNEL</span>
+                        <span class="inline-block mt-1 font-bold text-xs" id="modal-log-channel">SMS</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-semibold">TIMING</span>
+                        <strong class="text-gray-800 dark:text-gray-200 text-sm" id="modal-log-time">Now</strong>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 block font-semibold">STATUS</span>
+                        <span class="inline-block mt-1" id="modal-log-status">Sent</span>
+                    </div>
+                </div>
+                <div id="modal-log-subject-pane">
+                    <span class="text-xs text-gray-400 block font-semibold">SUBJECT</span>
+                    <strong class="text-gray-800 dark:text-gray-200 text-base" id="modal-log-subject">--</strong>
+                </div>
+                <div>
+                    <span class="text-xs text-gray-400 block font-semibold">MESSAGE BODY</span>
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 whitespace-pre-line text-gray-700 dark:text-gray-300 font-sans" id="modal-log-body">
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="flex items-center p-4 border-t border-gray-200 dark:border-gray-600">
+                <button type="button" onclick="closeLogModal()" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Close Log Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Global toast notice -->
+<div id="toast-message" class="hidden fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200" id="toast-message-icon">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/></svg>
+    </div>
+    <div class="ml-3 text-sm font-normal" id="toast-message-text">Message broadcasted successfully!</div>
+</div>

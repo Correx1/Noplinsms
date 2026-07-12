@@ -129,7 +129,10 @@
                 👧
             </div>
             <div class="min-w-0 flex-1">
-                <h4 class="text-base font-extrabold text-gray-900 dark:text-white truncate" id="drawerStudentName">Amara Okafor</h4>
+                <div class="flex items-center gap-1.5">
+                    <h4 class="text-base font-extrabold text-gray-900 dark:text-white truncate" id="drawerStudentName">Amara Okafor</h4>
+                    <span id="drawerFrozenBadge" class="hidden text-[8px] bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-400 px-1.5 py-0.5 rounded font-black uppercase tracking-wider">Frozen</span>
+                </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400" id="drawerStudentClass">Class: SSS3A</p>
                 <p class="text-xs font-mono font-bold text-primary-600 dark:text-primary-400 mt-0.5" id="drawerStudentId">STU001</p>
             </div>
@@ -171,6 +174,18 @@
                     </div>
                 </div>
                 <p class="text-[10px] text-gray-400">Maximum value the student is authorized to spend in a single day.</p>
+            </div>
+
+            <!-- Freeze Wallet Toggle -->
+            <div class="space-y-2 bg-gray-50 dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-gray-600 dark:text-gray-300">Freeze Wallet Account</span>
+                    <label class="relative inline-flex items-center cursor-pointer select-none">
+                        <input type="checkbox" id="drawerToggleFreeze" class="sr-only peer">
+                        <div class="w-9 h-5 bg-gray-200 rounded-full peer peer-focus:ring-2 peer-focus:ring-primary-300 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-red-650"></div>
+                    </label>
+                </div>
+                <p class="text-[10px] text-gray-400">Lock the account to prevent all store purchases and checkout authorizations.</p>
             </div>
 
             <!-- Category blocks toggles -->

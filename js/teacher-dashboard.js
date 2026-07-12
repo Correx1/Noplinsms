@@ -116,7 +116,7 @@ window.loadLibraryBooksPage = function() {
 };
 
 window.loadNoticesList = function() {
-    loadTeacherContent('../admin/notices/notices-list.html', '../../js/notices.js', 'notices-script');
+    loadTeacherContent('../admin/communication/notices-list.html', '../../js/notices.js', 'notices-script');
 };
 
 window.loadEventsPage = function() {
@@ -124,7 +124,7 @@ window.loadEventsPage = function() {
 };
 
 window.loadCreateNoticePage = function() {
-    loadTeacherContent('../admin/notices/create-notice.html', '../../js/notices.js', 'notices-script');
+    loadTeacherContent('../admin/communication/create-notice.html', '../../js/notices.js', 'notices-script');
 };
 
 window.loadAssessmentsPage = function() { // Actually Marks Entry based on sidebar binding

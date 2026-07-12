@@ -130,6 +130,16 @@ The backend must provide the following RESTful routing structures:
         ```
     *   **Response Status:** `200 OK`
 
+*   **`PUT /api/admin/wallets/{student_id}/status`**
+    *   **Description:** Lock/freeze or unlock/reactivate a specific student wallet.
+    *   **Payload Schema:**
+        ```json
+        {
+          "status": "frozen" -- "frozen" or "active"
+        }
+        ```
+    *   **Response Status:** `200 OK`
+
 *   **`GET /api/admin/wallets/settings`** & **`PUT /api/admin/wallets/settings`**
     *   **Description:** Get/update global gateway config keys, deposit fee policies, and transaction bounds.
     *   **Response Status:** `200 OK`
